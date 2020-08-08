@@ -5,7 +5,7 @@ use std::path::PathBuf;
 use structopt::StructOpt;
 use tidy::*;
 
-/// tidy
+/// tidy: Combine and clean word lists
 #[derive(StructOpt, Debug)]
 #[structopt(name = "tidy")]
 struct Opt {
