@@ -23,13 +23,11 @@ ARGS:
 
 ## Usage examples
 
-- `tidy --output new_list.txt word_list1.txt word_list2.txt` Combines the word lists in `word_list1.txt` and `word_list2.txt`, removing whitespace and duplicate words into one list. It sorts this list alphabetically, and then prints this new, combined list to the specified output location, in this case: `new_list.txt`.
+- `tidy --output new_list.txt word_list1.txt word_list2.txt` Combines the word lists in `word_list1.txt` and `word_list2.txt`, removing whitespace, empty lines, and duplicate words into one list. It sorts this list alphabetically, and then prints this new, combined list to the specified output location, in this case: `new_list.txt`.
 
-- `tidy -l -o new_list.txt inputted_word_list.txt` Removes whitespace and duplicate words from `inputted_word_list.txt`. Due tot he `-l` flag, it makes all the words lowercase. It sorts this list alphabetically and removes duplicates once again. It then prints this new list to the specified output location, in this case: `new_list.txt`.
+- `tidy -l -o new_list.txt inputted_word_list.txt` Removes whitespace, empty lines, and duplicate words from `inputted_word_list.txt`. Due to the `-l` flag, it makes all the words lowercase. It sorts this list alphabetically and removes duplicates once again. It then prints this new list to the specified output location, in this case: `new_list.txt`.
 
 - `tidy -lp -o new_list.txt inputted_word_list.txt` Same as above, but the added `-p` flag removes prefix words from the list. See below for more on prefix words.
-
-Empty lines are also always removed.
 
 ## Installation
 
