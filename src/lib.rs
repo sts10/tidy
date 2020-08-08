@@ -20,9 +20,17 @@ pub fn tidy_list(
     list: Vec<String>,
     to_lowercase: bool,
     should_remove_prefix_words: bool,
+    should_remove_integers: bool,
     reject_list: Option<Vec<String>>,
 ) -> Vec<String> {
-    let mut tidied_list = trim_whitespace(&list);
+    let mut tidied_list = if should_remove_integers {
+        list.iter()
+            .map(|w| remove_integers(w.to_string()))
+            .collect()
+    } else {
+        list
+    };
+    tidied_list = trim_whitespace(&tidied_list);
     tidied_list = remove_blank_lines(&tidied_list);
     tidied_list = sort_and_dedup(&mut tidied_list);
     tidied_list = if to_lowercase {
@@ -41,6 +49,11 @@ pub fn tidy_list(
     };
     tidied_list = sort_and_dedup(&mut tidied_list);
     tidied_list
+}
+
+fn remove_integers(mut w: String) -> String {
+    w.retain(|c| !c.is_numeric());
+    w
 }
 
 fn remove_blank_lines(list: &[String]) -> Vec<String> {

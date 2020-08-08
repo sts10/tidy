@@ -21,6 +21,10 @@ struct Opt {
     #[structopt(short = "p", long = "remove-prefix")]
     remove_prefix_words: bool,
 
+    /// Remove all integers from words
+    #[structopt(short = "i", long = "remove-integers")]
+    remove_integers: bool,
+
     /// Path for optional list of words to reject
     #[structopt(short = "r", long = "reject", parse(from_os_str))]
     reject_list: Option<PathBuf>,
@@ -51,6 +55,7 @@ fn main() {
         word_list,
         opt.to_lowercase,
         opt.remove_prefix_words,
+        opt.remove_integers,
         reject_list,
     );
 

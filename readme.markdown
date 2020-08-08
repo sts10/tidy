@@ -15,6 +15,7 @@ and print that new word list to a new text file.
 Optionally, it can...
 - combine two or more word lists
 - make all characters lowercase (`-l`)
+- remove all integers from words (`-i`)
 - remove an inputted list of words to reject (`-r`)
 - remove prefix words (see below) (`-p`)
 
@@ -24,11 +25,12 @@ USAGE:
     tidy [FLAGS] [OPTIONS] --output <output> [Inputted Word Lists]...
 
 FLAGS:
-    -h, --help             Prints help information
-    -p, --remove-prefix    Remove prefix words from list
-    -l, --to_lowercase     Lowercase all words
-    -V, --version          Prints version information
-    -v, --verbose          Prints verbose output, including parameters as received
+    -h, --help               Prints help information
+    -i, --remove-integers    Remove all integers from words
+    -p, --remove-prefix      Remove prefix words from list
+    -l, --to_lowercase       Lowercase all words
+    -V, --version            Prints version information
+    -v, --verbose            Prints verbose output, including parameters as received
 
 OPTIONS:
     -o, --output <output>         Path for outputted list file
@@ -45,6 +47,8 @@ ARGS:
 - `tidy -l -o new_list.txt inputted_word_list.txt` Removes whitespace, empty lines, and duplicate words from `inputted_word_list.txt`. Due to the `-l` flag, it makes all the words lowercase. It sorts this list alphabetically and removes duplicates once again. It then prints this new list to the specified output location, in this case: `new_list.txt`.
 
 - `tidy -lp -o new_list.txt inputted_word_list.txt` Same as above, but the added `-p` flag removes prefix words from the list. See below for more on prefix words.
+
+- `tidy -lip -o new_list.txt inputted_word_list.txt` Same as above, but the added `-i` flag removes any integers in words. Words with integers in them are not removed, only the integers within them. For example, "11326	agency" becomes "agency". 
 
 - `tidy -l -o new_list.txt -r bad_words.txt inputted_word_list.txt` Similar to above, but ensures that none of the words in the bad_words.txt file make it on to the final list that is printed to new_list.txt. The reject list is case sensitive.
 
