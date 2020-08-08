@@ -5,7 +5,7 @@ use std::path::PathBuf;
 use structopt::StructOpt;
 use tidy::*;
 
-/// tidy
+/// tidy: Combine and clean word lists
 #[derive(StructOpt, Debug)]
 #[structopt(name = "tidy")]
 struct Opt {
@@ -20,6 +20,10 @@ struct Opt {
     /// Remove prefix words from list
     #[structopt(short = "p", long = "remove-prefix")]
     remove_prefix_words: bool,
+
+    /// Path for optional list of words to reject
+    #[structopt(short = "r", long = "reject", parse(from_os_str))]
+    reject_list: Option<PathBuf>,
 
     /// Path for outputted list file
     #[structopt(short = "o", long = "output", parse(from_os_str))]
@@ -38,7 +42,17 @@ fn main() {
 
     let word_list: Vec<String> = make_vec(&opt.inputted_word_list);
 
-    let tidied_list = tidy_list(word_list, opt.to_lowercase, opt.remove_prefix_words);
+    let reject_list: Option<Vec<String>> = match opt.reject_list {
+        Some(list) => Some(make_vec(&[list])),
+        None => None,
+    };
+
+    let tidied_list = tidy_list(
+        word_list,
+        opt.to_lowercase,
+        opt.remove_prefix_words,
+        reject_list,
+    );
 
     let mut f = File::create(opt.output).expect("Unable to create file");
     for i in &tidied_list {

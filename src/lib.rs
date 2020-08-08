@@ -20,6 +20,7 @@ pub fn tidy_list(
     list: Vec<String>,
     to_lowercase: bool,
     should_remove_prefix_words: bool,
+    reject_list: Option<Vec<String>>,
 ) -> Vec<String> {
     let mut tidied_list = trim_whitespace(&list);
     tidied_list = remove_blank_lines(&tidied_list);
@@ -28,6 +29,10 @@ pub fn tidy_list(
         tidied_list.iter().map(|w| w.to_ascii_lowercase()).collect()
     } else {
         tidied_list
+    };
+    tidied_list = match reject_list {
+        Some(reject_list) => remove_reject_words(tidied_list, reject_list),
+        None => tidied_list,
     };
     tidied_list = if should_remove_prefix_words {
         remove_prefix_words(sort_and_dedup(&mut tidied_list))
@@ -81,6 +86,21 @@ fn find_prefix_words_to_remove(list: &[String]) -> Vec<usize> {
         }
     }
     prefixes_to_remove
+}
+
+fn remove_reject_words(list: Vec<String>, reject_list: Vec<String>) -> Vec<String> {
+    remove_by_position(find_reject_words_to_remove(&list, &reject_list), list)
+}
+
+fn find_reject_words_to_remove(list: &[String], reject_list: &[String]) -> Vec<usize> {
+    let mut rejects_to_remove: Vec<usize> = Vec::new();
+    for reject_word in reject_list {
+        let reject_position: Option<usize> = list.iter().position(|w| w == reject_word);
+        if let Some(pos) = reject_position {
+            rejects_to_remove.push(pos);
+        }
+    }
+    rejects_to_remove
 }
 
 fn remove_by_position(positions_to_remove: Vec<usize>, list: Vec<String>) -> Vec<String> {

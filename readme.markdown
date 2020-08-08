@@ -15,12 +15,13 @@ and print that new word list to a new text file.
 Optionally, it can...
 - combine two or more word lists
 - make all characters lowercase (`-l`)
+- remove an inputted list of words to reject (`-r`)
 - remove prefix words (see below) (`-p`)
 
 ## Usage
 ```txt
 USAGE:
-    tidy [FLAGS] --output <output> [Inputted Word Lists]...
+    tidy [FLAGS] [OPTIONS] --output <output> [Inputted Word Lists]...
 
 FLAGS:
     -h, --help             Prints help information
@@ -30,7 +31,8 @@ FLAGS:
     -v, --verbose          Prints verbose output, including parameters as received
 
 OPTIONS:
-    -o, --output <output>    Path for outputted list file
+    -o, --output <output>         Path for outputted list file
+    -r, --reject <reject-list>    Path for optional list of words to reject
 
 ARGS:
     <Inputted Word Lists>...    Word list input files
@@ -43,6 +45,8 @@ ARGS:
 - `tidy -l -o new_list.txt inputted_word_list.txt` Removes whitespace, empty lines, and duplicate words from `inputted_word_list.txt`. Due to the `-l` flag, it makes all the words lowercase. It sorts this list alphabetically and removes duplicates once again. It then prints this new list to the specified output location, in this case: `new_list.txt`.
 
 - `tidy -lp -o new_list.txt inputted_word_list.txt` Same as above, but the added `-p` flag removes prefix words from the list. See below for more on prefix words.
+
+- `tidy -l -o new_list.txt -r bad_words.txt inputted_word_list.txt` Similar to above, but ensures that none of the words in the bad_words.txt file make it on to the final list that is printed to new_list.txt. The reject list is case sensitive.
 
 ## Installation
 
@@ -65,5 +69,5 @@ A word list that doesn't have any prefix words (also known as "[prefix codes](ht
 
 ## To do
 
-[ ] Add ability to filter out an inputted list of words to reject
+[X] Add ability to filter out an inputted list of words to reject
 [ ] Add a flag for removing digits from words (this would help parse diceware word lists that still have the dice numbers in them)
