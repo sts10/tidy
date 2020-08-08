@@ -2,6 +2,21 @@
 
 A command-line tool for combining and cleaning large word list files. 
 
+## What this tool can do
+
+Given a text file with a word list, this tool will create a new word list that...
+- removes whitespace
+- removes empty lines
+- removes duplicate lines
+- sorts alphabetically
+
+and print that new word list to a new text file.
+
+Optionally, it can...
+- combine two or more word lists
+- make all characters lowercase (`-l`)
+- remove prefix words (see below) (`-p`)
+
 ## Usage
 ```txt
 USAGE:
