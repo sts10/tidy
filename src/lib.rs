@@ -21,14 +21,23 @@ pub fn tidy_list(
     to_lowercase: bool,
     should_remove_prefix_words: bool,
     should_remove_integers: bool,
+    should_remove_through_first_tab: bool,
     reject_list: Option<Vec<String>>,
 ) -> Vec<String> {
-    let mut tidied_list = if should_remove_integers {
+    let mut tidied_list = if should_remove_through_first_tab {
         list.iter()
-            .map(|w| remove_integers(w.to_string()))
+            .map(|w| remove_through_first_tab(w.to_string()))
             .collect()
     } else {
         list
+    };
+    tidied_list = if should_remove_integers {
+        tidied_list
+            .iter()
+            .map(|w| remove_integers(w.to_string()))
+            .collect()
+    } else {
+        tidied_list
     };
     tidied_list = trim_whitespace(&tidied_list);
     tidied_list = remove_blank_lines(&tidied_list);
@@ -56,6 +65,14 @@ fn remove_integers(mut w: String) -> String {
     w
 }
 
+fn remove_through_first_tab(l: String) -> String {
+    if l.contains("	") {
+        l.split("	").collect::<Vec<&str>>()[1].to_string()
+    } else {
+        l
+    }
+}
+
 fn remove_blank_lines(list: &[String]) -> Vec<String> {
     let mut new_list: Vec<String> = [].to_vec();
     for word in list {
@@ -65,6 +82,7 @@ fn remove_blank_lines(list: &[String]) -> Vec<String> {
     }
     new_list
 }
+
 fn trim_whitespace(list: &[String]) -> Vec<String> {
     let mut new_list: Vec<String> = [].to_vec();
     for word in list {

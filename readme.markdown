@@ -16,28 +16,30 @@ Optionally, it can...
 - combine two or more word lists
 - make all characters lowercase (`-l`)
 - remove all integers from words (`-i`)
+- remove through first tab from lines (`-t`)
 - remove an inputted list of words to reject (`-r`)
 - remove prefix words (see below) (`-p`)
 
 ## Usage
 ```txt
 USAGE:
-    tidy [FLAGS] [OPTIONS] --output <output> [Inputted Word Lists]...
+tidy [FLAGS] [OPTIONS] --output <output> [Inputted Word Lists]...
 
 FLAGS:
-    -h, --help               Prints help information
-    -i, --remove_integers    Remove all integers from words
-    -p, --remove_prefix      Remove prefix words from list
-    -l, --lowercase          Lowercase all words
-    -V, --version            Prints version information
-    -v, --verbose            Prints verbose output, including parameters as received
+-h, --help                  Prints help information
+-i, --remove_integers       Remove all integers from words
+-p, --remove_prefix         Remove prefix words from list
+-t, --remove_through_tab    Strip through first tab
+-l, --lowercase             Lowercase all words
+-V, --version               Prints version information
+-v, --verbose               Prints verbose output, including parameters as received
 
 OPTIONS:
-    -o, --output <output>         Path for outputted list file
-    -r, --reject <reject-list>    Path for optional list of words to reject
+-o, --output <output>         Path for outputted list file
+-r, --reject <reject-list>    Path for optional list of words to reject
 
 ARGS:
-    <Inputted Word Lists>...    Word list input files
+<Inputted Word Lists>...    Word list input files
 ```
 
 ## Usage examples
@@ -51,6 +53,8 @@ ARGS:
 - `tidy -ilp -o new_list.txt inputted_word_list.txt` Same as above, but the added `-i` flag removes any integers in words. Words with integers in them are not removed, only the integers within them. For example, "11326	agency" becomes "agency". 
 
 - `tidy -l -o new_list.txt -r bad_words.txt inputted_word_list.txt` Similar to above, but ensures that none of the words in the bad_words.txt file make it on to the final list that is printed to new_list.txt. The reject list is case sensitive.
+
+- `tidy -t -o just_the_words.txt diceware_list.txt` If you've got [a diceware list with numbers and a tab before each word](https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt), the `-t` flag will remove everything up to and including the first tab in each line ("11133	abruptly" becomes "abruptly").
 
 ## Installation
 
@@ -67,7 +71,7 @@ You can read more about this issue [here](https://github.com/ulif/diceware#id3).
 
 ## Where can I find some large word lists?
 
-- The [Electronic Frontier Foundation](https://www.eff.org/) has published [a few word lists for creating diceware passphrases](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases). As an example, Tidy can remove the dice numbers easily: `tidy -i -o clean_eff.txt eff_large_wordlist.txt`.
+- The [Electronic Frontier Foundation](https://www.eff.org/) has published [a few word lists for creating diceware passphrases](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases). As an example, Tidy can remove the dice numbers easily: `tidy -t -o clean_eff.txt eff_large_wordlist.txt`.
 
 - [SecureDrop](https://github.com/freedomofpress/securedrop/) has separate lists of [adjectives](https://github.com/freedomofpress/securedrop/blob/develop/securedrop/dictionaries/adjectives.txt) and [nouns](https://github.com/freedomofpress/securedrop/blob/develop/securedrop/dictionaries/nouns.txt).
 

@@ -25,6 +25,10 @@ struct Opt {
     #[structopt(short = "i", long = "remove_integers")]
     remove_integers: bool,
 
+    /// Strip through first tab
+    #[structopt(short = "t", long = "remove_through_tab")]
+    remove_through_first_tab: bool,
+
     /// Path for optional list of words to reject
     #[structopt(short = "r", long = "reject", parse(from_os_str))]
     reject_list: Option<PathBuf>,
@@ -56,6 +60,7 @@ fn main() {
         opt.to_lowercase,
         opt.remove_prefix_words,
         opt.remove_integers,
+        opt.remove_through_first_tab,
         reject_list,
     );
 
