@@ -129,3 +129,9 @@ fn remove_words_below_minimum_length(list: Vec<String>, minimum_length: usize) -
     new_list.retain(|w| w.len() >= minimum_length);
     new_list
 }
+
+// pretty sure this is an accurate, if wonky method of calculating
+// entropy of the list, given its size?
+pub fn calc_entropy(list_size: usize) -> f64 {
+    (list_size as f64).ln() / (2_f64.ln() as f64)
+}

@@ -13,6 +13,10 @@ struct Opt {
     #[structopt(short = "v", long = "verbose")]
     verbose: bool,
 
+    /// Display information about newly created list when done, including entropy-per-word
+    #[structopt(short = "e", long = "entropy")]
+    display_entropy: bool,
+
     /// Lowercase all words
     #[structopt(short = "l", long = "lowercase")]
     to_lowercase: bool,
@@ -72,5 +76,15 @@ fn main() {
     let mut f = File::create(opt.output).expect("Unable to create file");
     for i in &tidied_list {
         writeln!(f, "{}", i).expect("Unable to write data to file");
+    }
+    if opt.display_entropy || opt.verbose {
+        println!("Done");
+    }
+    if opt.display_entropy {
+        println!(
+            "New list is {} lines long, meaning each word adds approximately {:.4} bits of entropy",
+            tidied_list.len(),
+            calc_entropy(tidied_list.len())
+        );
     }
 }
