@@ -29,6 +29,10 @@ struct Opt {
     #[structopt(short = "t", long = "remove_through_tab")]
     remove_through_first_tab: bool,
 
+    /// Minimum word length
+    #[structopt(short = "m", long = "minimum")]
+    minimum_length: Option<usize>,
+
     /// Path for optional list of words to reject
     #[structopt(short = "r", long = "reject", parse(from_os_str))]
     reject_list: Option<PathBuf>,
@@ -62,6 +66,7 @@ fn main() {
         opt.remove_integers,
         opt.remove_through_first_tab,
         reject_list,
+        opt.minimum_length,
     );
 
     let mut f = File::create(opt.output).expect("Unable to create file");

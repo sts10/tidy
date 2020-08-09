@@ -15,6 +15,7 @@ and print that new word list to a new text file.
 Optionally, it can...
 - combine two or more word lists
 - make all characters lowercase (`-l`)
+- remove all words below a set character length (`-m 3`)
 - remove all integers from words (`-i`)
 - remove through first tab from lines (`-t`)
 - remove an inputted list of words to reject (`-r`)
@@ -23,23 +24,24 @@ Optionally, it can...
 ## Usage
 ```txt
 USAGE:
-tidy [FLAGS] [OPTIONS] --output <output> [Inputted Word Lists]...
+    tidy [FLAGS] [OPTIONS] --output <output> [Inputted Word Lists]...
 
 FLAGS:
--h, --help                  Prints help information
--i, --remove_integers       Remove all integers from words
--p, --remove_prefix         Remove prefix words from list
--t, --remove_through_tab    Strip through first tab
--l, --lowercase             Lowercase all words
--V, --version               Prints version information
--v, --verbose               Prints verbose output, including parameters as received
+    -h, --help                  Prints help information
+    -i, --remove_integers       Remove all integers from words
+    -p, --remove_prefix         Remove prefix words from list
+    -t, --remove_through_tab    Strip through first tab
+    -l, --lowercase             Lowercase all words
+    -V, --version               Prints version information
+    -v, --verbose               Prints verbose output, including parameters as received
 
 OPTIONS:
--o, --output <output>         Path for outputted list file
--r, --reject <reject-list>    Path for optional list of words to reject
+    -m, --minimum <minimum-length>    Minimum word length
+    -o, --output <output>             Path for outputted list file
+    -r, --reject <reject-list>        Path for optional list of words to reject
 
 ARGS:
-<Inputted Word Lists>...    Word list input files
+    <Inputted Word Lists>...    Word list input files
 ```
 
 ## Usage examples
@@ -53,6 +55,8 @@ ARGS:
 - `tidy -ilp -o new_list.txt inputted_word_list.txt` Same as above, but the added `-i` flag removes any integers in words. Words with integers in them are not removed, only the integers within them. For example, "11326	agency" becomes "agency". 
 
 - `tidy -l -o new_list.txt -r bad_words.txt inputted_word_list.txt` Similar to above, but ensures that none of the words in the bad_words.txt file make it on to the final list that is printed to new_list.txt. The reject list is case sensitive.
+
+- `tidy -l -m 3 -o new-list.txt inputted_word_list.txt` Similar to above, but the `-m 3` means new list won't have any words under 3 characters in length.
 
 - `tidy -t -o just_the_words.txt diceware_list.txt` If you've got [a diceware list with numbers and a tab before each word](https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt), the `-t` flag will remove everything up to and including the first tab in each line ("11133	abruptly" becomes "abruptly").
 

@@ -23,6 +23,7 @@ pub fn tidy_list(
     should_remove_integers: bool,
     should_remove_through_first_tab: bool,
     reject_list: Option<Vec<String>>,
+    minimum_length: Option<usize>,
 ) -> Vec<String> {
     let mut tidied_list = if should_remove_through_first_tab {
         list.iter()
@@ -49,6 +50,10 @@ pub fn tidy_list(
     };
     tidied_list = match reject_list {
         Some(reject_list) => remove_reject_words(tidied_list, reject_list),
+        None => tidied_list,
+    };
+    tidied_list = match minimum_length {
+        Some(minimum_length) => remove_words_below_minimum_length(tidied_list, minimum_length),
         None => tidied_list,
     };
     tidied_list = if should_remove_prefix_words {
@@ -116,5 +121,11 @@ fn remove_prefix_words(list: Vec<String>) -> Vec<String> {
 fn remove_reject_words(list: Vec<String>, reject_list: Vec<String>) -> Vec<String> {
     let mut new_list = list.to_vec();
     new_list.retain(|x| !reject_list.contains(x));
+    new_list
+}
+
+fn remove_words_below_minimum_length(list: Vec<String>, minimum_length: usize) -> Vec<String> {
+    let mut new_list = list.to_vec();
+    new_list.retain(|w| w.len() >= minimum_length);
     new_list
 }
