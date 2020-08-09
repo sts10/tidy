@@ -77,11 +77,5 @@ You can read more about this issue [here](https://github.com/ulif/diceware#id3).
 
 - AgileBits, the company that makes password manager [1Password](https://1password.com/), [published a word list](https://github.com/agilebits/crackme/blob/master/doc/AgileWords.txt) in 2018.
 
-- This diceware password generating program called ["diceware"](https://github.com/ulif/diceware) has [a few word lists](https://github.com/ulif/diceware/tree/master/diceware/wordlists) in its Github repo, along with [a separate page that explains each of the lists](https://github.com/ulif/diceware/blob/master/docs/wordlists.rst).
-
-## To do
-
-- [X] Add a flag for removing digits from words (this would help parse diceware word lists that still have the dice numbers in them)
-
-- [ ] Add option to remove through first tab. This would _better_ parse diceware word lists that still have the dice numbers in them)
+- This diceware password generating program called ["diceware"](https://github.com/ulif/diceware) seems to have collected [a few word lists](https://github.com/ulif/diceware/tree/master/diceware/wordlists) in its Github repo, along with [a separate page that explains each of the lists](https://github.com/ulif/diceware/blob/master/docs/wordlists.rst).
 
