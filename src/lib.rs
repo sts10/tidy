@@ -86,15 +86,11 @@ fn remove_prefix_words(list: Vec<String>) -> Vec<String> {
 }
 
 fn find_prefix_words_to_remove(list: &[String]) -> Vec<usize> {
-    // wonder if I can make this easier to read and/or more efficient if I use starts_with
     let mut prefixes_to_remove: Vec<usize> = Vec::new();
-    for word in list {
-        let length = word.len();
-        for i in 0..length - 1 {
-            let prefix_to_check = word.split_at(i + 1).0;
-            let prefix_position: Option<usize> = list.iter().position(|x| x == prefix_to_check);
-            if let Some(pos) = prefix_position {
-                prefixes_to_remove.push(pos);
+    for (i, potential_prefix_word) in list.iter().enumerate() {
+        for word in list {
+            if word.starts_with(potential_prefix_word) && word != potential_prefix_word {
+                prefixes_to_remove.push(i);
             }
         }
     }
