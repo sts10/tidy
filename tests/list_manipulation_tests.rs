@@ -31,6 +31,7 @@ mod list_manipulation_tests {
                 "",
                 "mistake",
                 "post-modern",
+                "  h as spaces ",
             ]
             .iter()
             .map(|x| x.to_string())
@@ -61,13 +62,25 @@ mod list_manipulation_tests {
     }
 
     #[test]
+    fn removes_starting_and_trailing_whitespace() {
+        let new_list = tidy_list(make_lists().1, false, false, false, false, None);
+        assert!(new_list.contains(&"wizard".to_string()));
+    }
+
+    #[test]
+    fn does_not_remove_inner_spaces() {
+        let new_list = tidy_list(make_lists().1, false, false, false, false, None);
+        assert!(new_list.contains(&"h as spaces".to_string()));
+    }
+
+    #[test]
     fn can_remove_integers_from_words() {
         let new_list = tidy_list(make_lists().1, true, false, true, false, None);
         assert!(new_list.contains(&"active".to_string()));
     }
 
     #[test]
-    fn can_strip_through_first_tab() {
+    fn can_remove_through_first_tab() {
         let new_list = tidy_list(make_lists().1, false, false, false, true, None);
         assert!(new_list.contains(&"active".to_string()));
         assert!(new_list.contains(&"acclaim".to_string()));

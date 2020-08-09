@@ -74,23 +74,15 @@ fn remove_through_first_tab(l: String) -> String {
 }
 
 fn remove_blank_lines(list: &[String]) -> Vec<String> {
-    let mut new_list: Vec<String> = [].to_vec();
-    for word in list {
-        if word != "" {
-            new_list.push(word.to_string());
-        }
-    }
+    let mut new_list = list.to_vec();
+    new_list.retain(|x| !x.is_empty());
     new_list
 }
 
 fn trim_whitespace(list: &[String]) -> Vec<String> {
-    let mut new_list: Vec<String> = [].to_vec();
-    for word in list {
-        if word != "" {
-            new_list.push(word.trim_start().trim_end().to_string());
-        }
-    }
-    new_list
+    list.iter()
+        .map(|w| w.trim_start().trim_end().to_string())
+        .collect()
 }
 
 fn sort_and_dedup(list: &mut Vec<String>) -> Vec<String> {
