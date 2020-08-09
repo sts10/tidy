@@ -77,5 +77,7 @@ You can read more about this issue [here](https://github.com/ulif/diceware#id3).
 
 ## To do
 
-[X] Add ability to filter out an inputted list of words to reject
-[ ] Add a flag for removing digits from words (this would help parse diceware word lists that still have the dice numbers in them)
+- [X] Add a flag for removing digits from words (this would help parse diceware word lists that still have the dice numbers in them)
+
+- [ ] Add option to remove through first tab. This would _better_ parse diceware word lists that still have the dice numbers in them)
+
