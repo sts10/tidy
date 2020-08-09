@@ -92,10 +92,35 @@ fn sort_and_dedup(list: &mut Vec<String>) -> Vec<String> {
 }
 
 fn remove_prefix_words(list: Vec<String>) -> Vec<String> {
-    remove_by_position(find_prefix_words_to_remove(&list), list)
+    // remove_by_position(find_prefix_words_to_remove(&list), list)
+    let mut list_without_prefix_words = list.to_vec();
+    list_without_prefix_words.retain(|potential_prefix_word| {
+        for word in &list {
+            if word.starts_with(potential_prefix_word) && word != potential_prefix_word {
+                // this is a prefix word, so we do NOT want to retain it. return false to the
+                // retain
+                return false;
+            } else {
+                // this particular word is not a prefix word of this potential_prefix_word.
+                // keep looping
+                continue;
+            };
+        }
+        // if we've made it here, we can be sure that potential_prefix_word is NOT a
+        // prefix word. So we want to retain it for the list_without_prefix_words. return true to the
+        // retain
+        true
+    });
+    list_without_prefix_words
 }
 
-fn find_prefix_words_to_remove(list: &[String]) -> Vec<usize> {
+fn remove_reject_words(list: Vec<String>, reject_list: Vec<String>) -> Vec<String> {
+    let mut new_list = list.to_vec();
+    new_list.retain(|x| !reject_list.contains(x));
+    new_list
+}
+
+fn _find_prefix_words_to_remove(list: &[String]) -> Vec<usize> {
     let mut prefixes_to_remove: Vec<usize> = Vec::new();
     for (i, potential_prefix_word) in list.iter().enumerate() {
         for word in list {
@@ -107,11 +132,7 @@ fn find_prefix_words_to_remove(list: &[String]) -> Vec<usize> {
     prefixes_to_remove
 }
 
-fn remove_reject_words(list: Vec<String>, reject_list: Vec<String>) -> Vec<String> {
-    remove_by_position(find_reject_words_to_remove(&list, &reject_list), list)
-}
-
-fn find_reject_words_to_remove(list: &[String], reject_list: &[String]) -> Vec<usize> {
+fn _find_reject_words_to_remove(list: &[String], reject_list: &[String]) -> Vec<usize> {
     let mut rejects_to_remove: Vec<usize> = Vec::new();
     for reject_word in reject_list {
         let reject_position: Option<usize> = list.iter().position(|w| w == reject_word);
@@ -122,7 +143,7 @@ fn find_reject_words_to_remove(list: &[String], reject_list: &[String]) -> Vec<u
     rejects_to_remove
 }
 
-fn remove_by_position(positions_to_remove: Vec<usize>, list: Vec<String>) -> Vec<String> {
+fn _remove_by_position(positions_to_remove: Vec<usize>, list: Vec<String>) -> Vec<String> {
     let mut cleaned_list: Vec<String> = Vec::new();
     for (i, word) in list.into_iter().enumerate() {
         if !positions_to_remove.contains(&i) {
