@@ -81,10 +81,19 @@ fn main() {
         println!("Done");
     }
     if opt.display_entropy {
-        println!(
-            "New list is {} lines long. Each word adds approximately {:.4} bits of entropy",
-            tidied_list.len(),
-            calc_entropy(tidied_list.len())
+        display_list_information(tidied_list.len(), opt.remove_prefix_words);
+    }
+}
+
+fn display_list_information(list_len: usize, removed_prefix_words: bool) {
+    println!("New list is {} lines long.", list_len);
+    if removed_prefix_words {
+        println!("Assuming you choose words randomly, each word adds approximately {:.4} bits of entropy.",
+        calc_entropy(list_len)
+    );
+    } else {
+        println!("Assuming you choose words randomly and you use a separator between the words, each word adds approximately {:.4} bits of entropy.",
+            calc_entropy(list_len)
         );
     }
 }
