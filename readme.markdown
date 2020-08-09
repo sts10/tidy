@@ -75,6 +75,10 @@ As a brief example, if a list have "boy", "hood", and "boyhood" users who specif
 
 You can read more about this issue [here](https://github.com/ulif/diceware#id3).
 
+## Language limitations 
+
+As a native English speaker, I wrote this with lists of English (American) words in mind. Unfortunately, I haven't test it with other languages. That said, if you have ideas for how to make it useful in more languages, please open an Issue. 
+
 ## Where can I find some large word lists?
 
 - The [Electronic Frontier Foundation](https://www.eff.org/) has published [a few word lists for creating diceware passphrases](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases). As an example, Tidy can remove the dice numbers easily: `tidy -t -o clean_eff.txt eff_large_wordlist.txt`.
