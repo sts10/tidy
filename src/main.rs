@@ -82,7 +82,7 @@ fn main() {
     }
     if opt.display_entropy {
         println!(
-            "New list is {} lines long, meaning each word adds approximately {:.4} bits of entropy",
+            "New list is {} lines long. Each word adds approximately {:.4} bits of entropy",
             tidied_list.len(),
             calc_entropy(tidied_list.len())
         );
