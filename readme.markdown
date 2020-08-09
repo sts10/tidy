@@ -26,9 +26,9 @@ USAGE:
 
 FLAGS:
     -h, --help               Prints help information
-    -i, --remove-integers    Remove all integers from words
-    -p, --remove-prefix      Remove prefix words from list
-    -l, --to_lowercase       Lowercase all words
+    -i, --remove_integers    Remove all integers from words
+    -p, --remove_prefix      Remove prefix words from list
+    -l, --lowercase          Lowercase all words
     -V, --version            Prints version information
     -v, --verbose            Prints verbose output, including parameters as received
 

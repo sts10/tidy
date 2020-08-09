@@ -14,15 +14,15 @@ struct Opt {
     verbose: bool,
 
     /// Lowercase all words
-    #[structopt(short = "l", long = "to_lowercase")]
+    #[structopt(short = "l", long = "lowercase")]
     to_lowercase: bool,
 
     /// Remove prefix words from list
-    #[structopt(short = "p", long = "remove-prefix")]
+    #[structopt(short = "p", long = "remove_prefix")]
     remove_prefix_words: bool,
 
     /// Remove all integers from words
-    #[structopt(short = "i", long = "remove-integers")]
+    #[structopt(short = "i", long = "remove_integers")]
     remove_integers: bool,
 
     /// Path for optional list of words to reject
