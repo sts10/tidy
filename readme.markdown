@@ -81,7 +81,7 @@ You can read more about this issue [here](https://github.com/ulif/diceware#id3).
 
 ## Language limitations 
 
-As a native English speaker, I wrote this with lists of English (American) words in mind. Unfortunately, I haven't test it with other languages. That said, if you have ideas for how to make it useful in more languages, please open an Issue. 
+As a native English speaker, I wrote this with lists of English (US) words in mind. Unfortunately, I haven't test it with other languages. That said, if you have ideas for how to make it useful in more languages, please open an Issue or submit a Pull Request. 
 
 ## Where can I find some large word lists?
 
