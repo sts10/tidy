@@ -3,7 +3,7 @@ use std::io::BufRead;
 use std::io::BufReader;
 use std::path::PathBuf;
 
-pub fn make_vec(filenames: &[PathBuf]) -> Vec<String> {
+pub fn make_vec_from_filenames(filenames: &[PathBuf]) -> Vec<String> {
     let mut word_list: Vec<String> = [].to_vec();
     for filename in filenames {
         let f = File::open(filename).unwrap();
@@ -23,6 +23,7 @@ pub fn tidy_list(
     should_remove_integers: bool,
     should_remove_through_first_tab: bool,
     reject_list: Option<Vec<String>>,
+    approved_list: Option<Vec<String>>,
     minimum_length: Option<usize>,
 ) -> Vec<String> {
     let mut tidied_list = if should_remove_through_first_tab {
@@ -50,6 +51,10 @@ pub fn tidy_list(
     };
     tidied_list = match reject_list {
         Some(reject_list) => remove_reject_words(tidied_list, reject_list),
+        None => tidied_list,
+    };
+    tidied_list = match approved_list {
+        Some(approved_list) => remove_words_not_on_approved_list(tidied_list, approved_list),
         None => tidied_list,
     };
     tidied_list = match minimum_length {
@@ -121,6 +126,12 @@ fn remove_prefix_words(list: Vec<String>) -> Vec<String> {
 fn remove_reject_words(list: Vec<String>, reject_list: Vec<String>) -> Vec<String> {
     let mut new_list = list.to_vec();
     new_list.retain(|x| !reject_list.contains(x));
+    new_list
+}
+
+fn remove_words_not_on_approved_list(list: Vec<String>, approved_list: Vec<String>) -> Vec<String> {
+    let mut new_list = list.to_vec();
+    new_list.retain(|x| approved_list.contains(x));
     new_list
 }
 

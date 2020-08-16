@@ -41,6 +41,10 @@ struct Opt {
     #[structopt(short = "r", long = "reject", parse(from_os_str))]
     reject_list: Option<PathBuf>,
 
+    /// Path for optional list of approved words
+    #[structopt(short = "a", long = "approve", parse(from_os_str))]
+    approved_list: Option<PathBuf>,
+
     /// Path for outputted list file
     #[structopt(short = "o", long = "output", parse(from_os_str))]
     output: PathBuf,
@@ -56,10 +60,15 @@ fn main() {
         println!("Received options: {:?}", opt);
     }
 
-    let word_list: Vec<String> = make_vec(&opt.inputted_word_list);
+    let word_list: Vec<String> = make_vec_from_filenames(&opt.inputted_word_list);
 
     let reject_list: Option<Vec<String>> = match opt.reject_list {
-        Some(list) => Some(make_vec(&[list])),
+        Some(list) => Some(make_vec_from_filenames(&[list])),
+        None => None,
+    };
+
+    let approved_list: Option<Vec<String>> = match opt.approved_list {
+        Some(list) => Some(make_vec_from_filenames(&[list])),
         None => None,
     };
 
@@ -70,6 +79,7 @@ fn main() {
         opt.remove_integers,
         opt.remove_through_first_tab,
         reject_list,
+        approved_list,
         opt.minimum_length,
     );
 

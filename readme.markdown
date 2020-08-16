@@ -19,31 +19,33 @@ Optionally, it can...
 - remove all integers from words (`-i`)
 - remove through first tab from lines (`-t`)
 - remove an inputted list of words to reject (`-r`)
+- only retain words from an approved list (`-a`)
 - remove prefix words (see below) (`-p`)
 - calculate and display entropy-per-word of new list (`-e`)
 
 ## Usage
 ```txt
 USAGE:
-tidy [FLAGS] [OPTIONS] --output <output> [Inputted Word Lists]...
+    tidy [FLAGS] [OPTIONS] --output <output> [Inputted Word Lists]...
 
 FLAGS:
--e, --entropy               Display information about newly created list when done, including entropy-per-word
--h, --help                  Prints help information
--i, --remove_integers       Remove all integers from words
--p, --remove_prefix         Remove prefix words from list
--t, --remove_through_tab    Strip through first tab
--l, --lowercase             Lowercase all words
--V, --version               Prints version information
--v, --verbose               Prints verbose output, including parameters as received
+    -e, --entropy               Display information about newly created list when done, including entropy-per-word
+    -h, --help                  Prints help information
+    -i, --remove_integers       Remove all integers from words
+    -p, --remove_prefix         Remove prefix words from list
+    -t, --remove_through_tab    Strip through first tab
+    -l, --lowercase             Lowercase all words
+    -V, --version               Prints version information
+    -v, --verbose               Prints verbose output, including parameters as received
 
 OPTIONS:
--m, --minimum <minimum-length>    Minimum word length
--o, --output <output>             Path for outputted list file
--r, --reject <reject-list>        Path for optional list of words to reject
+    -a, --approve <approved-list>     Path for optional list of approved words
+    -m, --minimum <minimum-length>    Minimum word length
+    -o, --output <output>             Path for outputted list file
+    -r, --reject <reject-list>        Path for optional list of words to reject
 
 ARGS:
-<Inputted Word Lists>...    Word list input files
+    <Inputted Word Lists>...    Word list input files
 ```
 
 ## Usage examples
@@ -57,6 +59,8 @@ ARGS:
 - `tidy -ilp -o new_list.txt inputted_word_list.txt` Same as above, but the added `-i` flag removes any integers in words. Words with integers in them are not removed, only the integers within them. For example, "11326	agency" becomes "agency". 
 
 - `tidy -l -o new_list.txt -r bad_words.txt inputted_word_list.txt` Similar to above, but ensures that none of the words in the bad_words.txt file make it on to the final list that is printed to new_list.txt. The reject list is case sensitive.
+
+- `tidy -l -o new_list.txt -a approved_words.txt inputted_word_list.txt` Similar to above, but ensures that only words in the approved_words.txt file make it on to the final list that is printed to new_list.txt. The approved list is case sensitive. (On Mac and some Linux distributions, `/usr/share/dict/words` should contain a list of words for spellcheck purposes.)
 
 - `tidy -le -m 3 -o new-list.txt inputted_word_list.txt` Similar to above, but the `-m 3` means new list won't have any words under 3 characters in length. Also, `-e` flag will cause program to display [entropy](https://en.wikipedia.org/wiki/Entropy_(information_theory)) information when it's done making the new list.
 
