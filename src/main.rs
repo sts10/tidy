@@ -60,26 +60,20 @@ fn main() {
         println!("Received options: {:?}", opt);
     }
 
-    let word_list: Vec<String> = make_vec_from_filenames(&opt.inputted_word_list);
-
-    let reject_list: Option<Vec<String>> = match opt.reject_list {
-        Some(list) => Some(make_vec_from_filenames(&[list])),
-        None => None,
-    };
-
-    let approved_list: Option<Vec<String>> = match opt.approved_list {
-        Some(list) => Some(make_vec_from_filenames(&[list])),
-        None => None,
-    };
-
     let this_tidy_request = TidyRequest {
-        list: word_list,
+        list: make_vec_from_filenames(&opt.inputted_word_list),
         to_lowercase: opt.to_lowercase,
         should_remove_prefix_words: opt.remove_prefix_words,
         should_remove_integers: opt.remove_integers,
         should_remove_through_first_tab: opt.remove_through_first_tab,
-        reject_list,
-        approved_list,
+        reject_list: match opt.reject_list {
+            Some(list) => Some(make_vec_from_filenames(&[list])),
+            None => None,
+        },
+        approved_list: match opt.approved_list {
+            Some(list) => Some(make_vec_from_filenames(&[list])),
+            None => None,
+        },
         minimum_length: opt.minimum_length,
     };
 
