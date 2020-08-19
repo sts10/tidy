@@ -6,9 +6,10 @@ mod list_manipulation_tests {
             vec![
                 "  zookeeper",
                 "apple",
-                "CharLie",
+                "cHarLie",
                 "app",
                 "tea",
+                "addiction",
                 "zoo",
                 "stationary ",
                 "tea",
@@ -55,15 +56,13 @@ mod list_manipulation_tests {
     #[test]
     fn can_sort_words_alphabetically() {
         let this_tidy_request = TidyRequest {
-            list: make_lists().1,
-            to_lowercase: true,
-            should_remove_integers: true,
+            list: make_lists().0,
             ..Default::default()
         };
         let new_list = tidy_list(this_tidy_request);
-        assert!(new_list[0] == "acclaim".to_string());
-        assert!(new_list.contains(&"ardor".to_string()));
-        assert!(new_list[new_list.len() - 1] == "wizard".to_string());
+        assert!(new_list[0] == "addiction".to_string());
+        assert!(new_list.contains(&"station".to_string()));
+        assert!(new_list[new_list.len() - 1] == "zookeeper".to_string());
     }
 
     #[test]
@@ -101,7 +100,6 @@ mod list_manipulation_tests {
         let this_tidy_request = TidyRequest {
             list: make_lists().1,
             should_remove_integers: true,
-            to_lowercase: true,
             ..Default::default()
         };
         let new_list = tidy_list(this_tidy_request);
