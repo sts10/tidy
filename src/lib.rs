@@ -13,7 +13,6 @@ pub struct TidyRequest {
     pub reject_list: Option<Vec<String>>,
     pub approved_list: Option<Vec<String>>,
     pub minimum_length: Option<usize>,
-    // pub output: PathBuf,
 }
 
 pub fn make_vec_from_filenames(filenames: &[PathBuf]) -> Vec<String> {
@@ -30,6 +29,7 @@ pub fn make_vec_from_filenames(filenames: &[PathBuf]) -> Vec<String> {
 }
 
 pub fn tidy_list(req: TidyRequest) -> Vec<String> {
+    // guess this function is what I should clean-up next...
     let mut tidied_list = if req.should_remove_through_first_tab {
         req.list
             .iter()
