@@ -81,8 +81,13 @@ fn remove_integers(mut w: String) -> String {
 }
 
 fn remove_through_first_tab(l: String) -> String {
-    if l.contains("	") {
-        l.split("	").collect::<Vec<&str>>()[1].to_string()
+    // if l.contains('	') {
+    //     l.split('	').collect::<Vec<&str>>()[1].to_string()
+    // } else {
+    //     l
+    // }
+    if l.contains('\t') {
+        l.split('\t').collect::<Vec<&str>>()[1].to_string()
     } else {
         l
     }
