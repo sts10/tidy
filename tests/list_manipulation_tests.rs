@@ -42,7 +42,11 @@ mod list_manipulation_tests {
 
     #[test]
     fn can_remove_duplicate_words() {
-        let new_list = tidy_list(make_lists().0, false, false, false, false, None, None, None);
+        let this_tidy_request = TidyRequest {
+            list: make_lists().0,
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
         assert!(new_list.contains(&"tea".to_string()));
         assert!(new_list.contains(&"apple".to_string()));
         assert!(new_list.len() == make_lists().0.len() - 2);
@@ -50,7 +54,13 @@ mod list_manipulation_tests {
 
     #[test]
     fn can_sort_words_alphabetically() {
-        let new_list = tidy_list(make_lists().1, true, false, true, true, None, None, None);
+        let this_tidy_request = TidyRequest {
+            list: make_lists().1,
+            to_lowercase: true,
+            should_remove_integers: true,
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
         assert!(new_list[0] == "acclaim".to_string());
         assert!(new_list.contains(&"ardor".to_string()));
         assert!(new_list[new_list.len() - 1] == "wizard".to_string());
@@ -58,46 +68,85 @@ mod list_manipulation_tests {
 
     #[test]
     fn removes_blank_lines() {
-        let new_list = tidy_list(make_lists().1, false, false, true, false, None, None, None);
+        let this_tidy_request = TidyRequest {
+            list: make_lists().1,
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
         assert!(new_list.len() == make_lists().1.len() - 2);
     }
 
     #[test]
     fn removes_starting_and_trailing_whitespace() {
-        let new_list = tidy_list(make_lists().1, false, false, false, false, None, None, None);
+        let this_tidy_request = TidyRequest {
+            list: make_lists().1,
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
         assert!(new_list.contains(&"wizard".to_string()));
     }
 
     #[test]
     fn does_not_remove_inner_spaces() {
-        let new_list = tidy_list(make_lists().1, false, false, false, false, None, None, None);
+        let this_tidy_request = TidyRequest {
+            list: make_lists().1,
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
         assert!(new_list.contains(&"h as spaces".to_string()));
     }
 
     #[test]
     fn can_remove_integers_from_words() {
-        let new_list = tidy_list(make_lists().1, true, false, true, false, None, None, None);
+        let this_tidy_request = TidyRequest {
+            list: make_lists().1,
+            should_remove_integers: true,
+            to_lowercase: true,
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
         assert!(new_list.contains(&"active".to_string()));
     }
 
     #[test]
     fn can_remove_through_first_tab() {
-        let new_list = tidy_list(make_lists().1, false, false, false, true, None, None, None);
+        let this_tidy_request = TidyRequest {
+            list: make_lists().1,
+            should_remove_through_first_tab: true,
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
         assert!(new_list.contains(&"active".to_string()));
         assert!(new_list.contains(&"acclaim".to_string()));
     }
+
     #[test]
     fn can_lowercase_words() {
-        let new_list = tidy_list(make_lists().0, true, false, false, false, None, None, None);
+        let this_tidy_request = TidyRequest {
+            list: make_lists().0,
+            to_lowercase: true,
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
         assert!(new_list.contains(&"charlie".to_string()));
-        let new_list = tidy_list(make_lists().1, true, false, true, false, None, None, None);
+        let this_tidy_request = TidyRequest {
+            list: make_lists().1,
+            to_lowercase: true,
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
         assert!(new_list.contains(&"vacation".to_string()));
         assert!(new_list.contains(&"ardor".to_string()));
     }
 
     #[test]
     fn can_remove_prefix_words() {
-        let new_list = tidy_list(make_lists().0, true, true, false, false, None, None, None);
+        let this_tidy_request = TidyRequest {
+            list: make_lists().0,
+            should_remove_prefix_words: true,
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
         assert!(!new_list.contains(&"station".to_string()));
         assert!(new_list.contains(&"stationary".to_string()));
         assert!(!new_list.contains(&"zoo".to_string()));
@@ -107,16 +156,12 @@ mod list_manipulation_tests {
 
     #[test]
     fn can_remove_words_shorter_than_a_specified_minimum_length() {
-        let new_list = tidy_list(
-            make_lists().1,
-            false,
-            false,
-            false,
-            false,
-            None,
-            None,
-            Some(3),
-        );
+        let this_tidy_request = TidyRequest {
+            list: make_lists().1,
+            minimum_length: Some(3),
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
         assert!(!new_list.contains(&"i".to_string()));
         assert!(!new_list.contains(&"be".to_string()));
         assert!(new_list.contains(&"tea".to_string()));
@@ -130,16 +175,13 @@ mod list_manipulation_tests {
             .map(|x| x.to_string())
             .collect();
 
-        let new_list = tidy_list(
-            make_lists().1,
-            true,
-            true,
-            false,
-            false,
-            Some(words_to_reject),
-            None,
-            None,
-        );
+        let this_tidy_request = TidyRequest {
+            list: make_lists().1,
+            reject_list: Some(words_to_reject),
+            to_lowercase: true,
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
         assert!(!new_list.contains(&"mistake".to_string()));
         assert!(!new_list.contains(&"carnival".to_string()));
         assert!(new_list.contains(&"wizard".to_string()));
@@ -152,16 +194,13 @@ mod list_manipulation_tests {
             .map(|x| x.to_string())
             .collect();
 
-        let new_list = tidy_list(
-            make_lists().1,
-            true,
-            false,
-            false,
-            false,
-            None,
-            Some(approved_words),
-            None,
-        );
+        let this_tidy_request = TidyRequest {
+            list: make_lists().1,
+            approved_list: Some(approved_words),
+            to_lowercase: true,
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
         assert!(new_list.contains(&"take".to_string()));
         assert!(new_list.contains(&"vacation".to_string()));
         assert!(!new_list.contains(&"carnival".to_string()));

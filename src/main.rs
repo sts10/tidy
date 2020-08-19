@@ -72,16 +72,18 @@ fn main() {
         None => None,
     };
 
-    let tidied_list = tidy_list(
-        word_list,
-        opt.to_lowercase,
-        opt.remove_prefix_words,
-        opt.remove_integers,
-        opt.remove_through_first_tab,
+    let this_tidy_request = TidyRequest {
+        list: word_list,
+        to_lowercase: opt.to_lowercase,
+        should_remove_prefix_words: opt.remove_prefix_words,
+        should_remove_integers: opt.remove_integers,
+        should_remove_through_first_tab: opt.remove_through_first_tab,
         reject_list,
         approved_list,
-        opt.minimum_length,
-    );
+        minimum_length: opt.minimum_length,
+    };
+
+    let tidied_list = tidy_list(this_tidy_request);
 
     let mut f = File::create(opt.output).expect("Unable to create file");
     for i in &tidied_list {

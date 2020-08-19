@@ -3,6 +3,19 @@ use std::io::BufRead;
 use std::io::BufReader;
 use std::path::PathBuf;
 
+#[derive(Default, Debug, Clone)]
+pub struct TidyRequest {
+    pub list: Vec<String>,
+    pub to_lowercase: bool,
+    pub should_remove_prefix_words: bool,
+    pub should_remove_integers: bool,
+    pub should_remove_through_first_tab: bool,
+    pub reject_list: Option<Vec<String>>,
+    pub approved_list: Option<Vec<String>>,
+    pub minimum_length: Option<usize>,
+    // pub output: PathBuf,
+}
+
 pub fn make_vec_from_filenames(filenames: &[PathBuf]) -> Vec<String> {
     let mut word_list: Vec<String> = [].to_vec();
     for filename in filenames {
@@ -16,24 +29,16 @@ pub fn make_vec_from_filenames(filenames: &[PathBuf]) -> Vec<String> {
     word_list
 }
 
-pub fn tidy_list(
-    list: Vec<String>,
-    to_lowercase: bool,
-    should_remove_prefix_words: bool,
-    should_remove_integers: bool,
-    should_remove_through_first_tab: bool,
-    reject_list: Option<Vec<String>>,
-    approved_list: Option<Vec<String>>,
-    minimum_length: Option<usize>,
-) -> Vec<String> {
-    let mut tidied_list = if should_remove_through_first_tab {
-        list.iter()
+pub fn tidy_list(req: TidyRequest) -> Vec<String> {
+    let mut tidied_list = if req.should_remove_through_first_tab {
+        req.list
+            .iter()
             .map(|w| remove_through_first_tab(w.to_string()))
             .collect()
     } else {
-        list
+        req.list
     };
-    tidied_list = if should_remove_integers {
+    tidied_list = if req.should_remove_integers {
         tidied_list
             .iter()
             .map(|w| remove_integers(w.to_string()))
@@ -44,24 +49,24 @@ pub fn tidy_list(
     tidied_list = trim_whitespace(&tidied_list);
     tidied_list = remove_blank_lines(&tidied_list);
     tidied_list = sort_and_dedup(&mut tidied_list);
-    tidied_list = if to_lowercase {
+    tidied_list = if req.to_lowercase {
         tidied_list.iter().map(|w| w.to_ascii_lowercase()).collect()
     } else {
         tidied_list
     };
-    tidied_list = match reject_list {
+    tidied_list = match req.reject_list {
         Some(reject_list) => remove_reject_words(tidied_list, reject_list),
         None => tidied_list,
     };
-    tidied_list = match approved_list {
+    tidied_list = match req.approved_list {
         Some(approved_list) => remove_words_not_on_approved_list(tidied_list, approved_list),
         None => tidied_list,
     };
-    tidied_list = match minimum_length {
+    tidied_list = match req.minimum_length {
         Some(minimum_length) => remove_words_below_minimum_length(tidied_list, minimum_length),
         None => tidied_list,
     };
-    tidied_list = if should_remove_prefix_words {
+    tidied_list = if req.should_remove_prefix_words {
         remove_prefix_words(sort_and_dedup(&mut tidied_list))
     } else {
         tidied_list
