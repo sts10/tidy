@@ -85,7 +85,7 @@ As a native English speaker, I wrote this with lists of English (US) words in mi
 
 ## To do
 
-[ ] Add option to remove words that have characters from certain character sets, for example non-ASCII characters
+- [ ] Add option to remove words that have characters from certain character sets, for example non-ASCII characters
 
 ## Where can I find some large word lists?
 
