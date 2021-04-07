@@ -21,7 +21,13 @@ pub fn make_vec_from_filenames(filenames: &[PathBuf]) -> Vec<String> {
         let f = File::open(filename).unwrap();
         let file = BufReader::new(&f);
         for line in file.lines() {
-            let l = line.unwrap();
+            let l = match line {
+                Ok(l) => l,
+                Err(e) => {
+                    eprintln!("Error reading a line from file: {}", e);
+                    continue;
+                }
+            };
             word_list.push(l);
         }
     }
