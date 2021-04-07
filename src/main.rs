@@ -33,6 +33,10 @@ struct Opt {
     #[structopt(short = "t", long = "remove_through_tab")]
     remove_through_first_tab: bool,
 
+    /// Strip through first space
+    #[structopt(short = "s", long = "remove_through_space")]
+    remove_through_first_space: bool,
+
     /// Minimum word length
     #[structopt(short = "m", long = "minimum")]
     minimum_length: Option<usize>,
@@ -66,6 +70,7 @@ fn main() {
         should_remove_prefix_words: opt.remove_prefix_words,
         should_remove_integers: opt.remove_integers,
         should_remove_through_first_tab: opt.remove_through_first_tab,
+        should_remove_through_first_space: opt.remove_through_first_space,
         reject_list: match opt.reject_list {
             Some(list) => Some(make_vec_from_filenames(&[list])),
             None => None,

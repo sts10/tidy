@@ -17,6 +17,7 @@ Optionally, it can...
 - make all characters lowercase (`-l`)
 - remove all words below a set character length (`-m 3`)
 - remove all integers from words (`-i`)
+- remove through first space from lines (`-s`)
 - remove through first tab from lines (`-t`)
 - remove an inputted list of words to reject (`-r`)
 - only retain words from an approved list (`-a`)
@@ -33,6 +34,7 @@ FLAGS:
     -h, --help                  Prints help information
     -i, --remove_integers       Remove all integers from words
     -p, --remove_prefix         Remove prefix words from list
+    -s, --remove_through_space    Strip through first space
     -t, --remove_through_tab    Strip through first tab
     -l, --lowercase             Lowercase all words
     -V, --version               Prints version information
@@ -89,7 +91,7 @@ As a native English speaker, I wrote this with lists of English (US) words in mi
 
 ## Where can I find some large word lists?
 
-- The [Electronic Frontier Foundation](https://www.eff.org/) has published [a few word lists for creating diceware passphrases](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases). Since there's a tab between the dice numbers and each word, Tidy can remove the dice numbers easily with something like `tidy -t -o clean_eff.txt eff_large_wordlist.txt` or using the `-i` flag.
+- The [Electronic Frontier Foundation](https://www.eff.org/) has published [a few word lists for creating diceware passphrases](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases). Since there's a tab between the dice numbers and each word, Tidy can remove the dice numbers easily with something like `tidy -t -o clean_eff.txt eff_large_wordlist.txt` or using the `-i` flag. The EFF also has some [fandom-inspired lists](https://www.eff.org/deeplinks/2018/08/dragon-con-diceware) that Tidy can clean with the `-s` flag.
 
 - [SecureDrop](https://github.com/freedomofpress/securedrop/) has separate lists of [adjectives](https://github.com/freedomofpress/securedrop/blob/develop/securedrop/dictionaries/adjectives.txt) and [nouns](https://github.com/freedomofpress/securedrop/blob/develop/securedrop/dictionaries/nouns.txt).
 

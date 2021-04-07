@@ -26,6 +26,7 @@ mod list_manipulation_tests {
                 "   ",
                 "11225	active",
                 "11152	acclaim",
+                "19-6-8 clad",
                 "be",
                 "I",
                 "vAcation",
@@ -116,6 +117,17 @@ mod list_manipulation_tests {
         let new_list = tidy_list(this_tidy_request);
         assert!(new_list.contains(&"active".to_string()));
         assert!(new_list.contains(&"acclaim".to_string()));
+    }
+
+    #[test]
+    fn can_remove_through_first_space() {
+        let this_tidy_request = TidyRequest {
+            list: make_lists().1,
+            should_remove_through_first_space: true,
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
+        assert!(new_list.contains(&"clad".to_string()));
     }
 
     #[test]

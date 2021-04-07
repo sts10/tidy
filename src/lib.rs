@@ -10,6 +10,7 @@ pub struct TidyRequest {
     pub should_remove_prefix_words: bool,
     pub should_remove_integers: bool,
     pub should_remove_through_first_tab: bool,
+    pub should_remove_through_first_space: bool,
     pub reject_list: Option<Vec<String>>,
     pub approved_list: Option<Vec<String>>,
     pub minimum_length: Option<usize>,
@@ -43,6 +44,14 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
             .collect()
     } else {
         req.list
+    };
+    tidied_list = if req.should_remove_through_first_space {
+        tidied_list
+            .iter()
+            .map(|w| remove_through_first_space(w.to_string()))
+            .collect()
+    } else {
+        tidied_list
     };
     tidied_list = if req.should_remove_integers {
         tidied_list
@@ -89,6 +98,14 @@ fn remove_integers(mut w: String) -> String {
 fn remove_through_first_tab(l: String) -> String {
     if l.contains('\t') {
         l.split('\t').collect::<Vec<&str>>()[1].to_string()
+    } else {
+        l
+    }
+}
+
+fn remove_through_first_space(l: String) -> String {
+    if l.contains(' ') {
+        l.split(' ').collect::<Vec<&str>>()[1].to_string()
     } else {
         l
     }
