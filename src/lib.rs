@@ -19,13 +19,19 @@ pub struct TidyRequest {
 pub fn make_vec_from_filenames(filenames: &[PathBuf]) -> Vec<String> {
     let mut word_list: Vec<String> = [].to_vec();
     for filename in filenames {
-        let f = File::open(filename).unwrap();
+        let f = match File::open(filename) {
+            Ok(file) => file,
+            Err(e) => panic!("Error opening file {:?}: {}", filename, e),
+        };
         let file = BufReader::new(&f);
         for line in file.lines() {
             let l = match line {
                 Ok(l) => l,
                 Err(e) => {
-                    eprintln!("Error reading a line from file: {}", e);
+                    eprintln!(
+                        "Error reading a line from file {:?}: {}\nWill continue reading file.",
+                        filename, e
+                    );
                     continue;
                 }
             };
