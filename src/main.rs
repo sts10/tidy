@@ -29,11 +29,11 @@ struct Opt {
     #[structopt(short = "i", long = "remove_integers")]
     remove_integers: bool,
 
-    /// Strip through first tab
+    /// Remove characters through first tab
     #[structopt(short = "t", long = "remove_through_tab")]
     remove_through_first_tab: bool,
 
-    /// Strip through first space
+    /// Remove characters through first space
     #[structopt(short = "s", long = "remove_through_space")]
     remove_through_first_space: bool,
 

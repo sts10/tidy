@@ -17,8 +17,8 @@ Optionally, it can...
 - make all characters lowercase (`-l`)
 - remove all words below a set character length (`-m 3`)
 - remove all integers from words (`-i`)
-- remove through first space from lines (`-s`)
-- remove through first tab from lines (`-t`)
+- remove characters through first space from lines (`-s`)
+- remove characters through first tab from lines (`-t`)
 - remove an inputted list of words to reject (`-r`)
 - only retain words from an approved list (`-a`)
 - remove prefix words (see below) (`-p`)
@@ -30,15 +30,15 @@ USAGE:
     tidy [FLAGS] [OPTIONS] --output <output> [Inputted Word Lists]...
 
 FLAGS:
-    -e, --entropy               Display information about newly created list when done, including entropy-per-word
-    -h, --help                  Prints help information
-    -i, --remove_integers       Remove all integers from words
-    -p, --remove_prefix         Remove prefix words from list
-    -s, --remove_through_space    Strip through first space
-    -t, --remove_through_tab    Strip through first tab
-    -l, --lowercase             Lowercase all words
-    -V, --version               Prints version information
-    -v, --verbose               Prints verbose output, including parameters as received
+    -e, --entropy                 Display information about newly created list when done, including entropy-per-word
+    -h, --help                    Prints help information
+    -i, --remove_integers         Remove all integers from words
+    -p, --remove_prefix           Remove prefix words from list
+    -s, --remove_through_space    Remove characters through first space
+    -t, --remove_through_tab      Remove characters through first tab
+    -l, --lowercase               Lowercase all words
+    -V, --version                 Prints version information
+    -v, --verbose                 Prints verbose output, including parameters as received
 
 OPTIONS:
     -a, --approve <approved-list>     Path for optional list of approved words
