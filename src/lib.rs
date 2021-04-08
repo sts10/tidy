@@ -46,7 +46,7 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     let mut tidied_list = if req.should_remove_through_first_tab {
         req.list
             .iter()
-            .map(|w| remove_through_first_tab(w.to_string()))
+            .map(|w| remove_through_first_char(w, '\t'))
             .collect()
     } else {
         req.list
@@ -54,7 +54,7 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     tidied_list = if req.should_remove_through_first_space {
         tidied_list
             .iter()
-            .map(|w| remove_through_first_space(w.to_string()))
+            .map(|w| remove_through_first_char(w, ' '))
             .collect()
     } else {
         tidied_list
@@ -101,19 +101,11 @@ fn remove_integers(mut w: String) -> String {
     w
 }
 
-fn remove_through_first_tab(l: String) -> String {
-    if l.contains('\t') {
-        l.split('\t').collect::<Vec<&str>>()[1].to_string()
+fn remove_through_first_char(l: &str, ch: char) -> String {
+    if l.contains(ch) {
+        l.split(ch).collect::<Vec<&str>>()[1].to_string()
     } else {
-        l
-    }
-}
-
-fn remove_through_first_space(l: String) -> String {
-    if l.contains(' ') {
-        l.split(' ').collect::<Vec<&str>>()[1].to_string()
-    } else {
-        l
+        l.to_string()
     }
 }
 
