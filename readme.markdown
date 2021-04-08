@@ -79,11 +79,11 @@ A word list that doesn't have any prefix words (also known as "[prefix codes](ht
 
 As a brief example, if a list have "boy", "hood", and "boyhood" users who specified they wanted two words worth of randomness (entropy) might end up with "boyhood", which an attacker guessing single words would try. Removing prefix words -- in this case "boy" -- prevents this possibility from occurring.
 
-You can read more about this issue [here](https://github.com/ulif/diceware#id3).
+You can read more about this issue [here](https://github.com/ulif/diceware#prefix-code).
 
 ## Language limitations 
 
-As a native English speaker, I wrote this with lists of English (US) words in mind. Unfortunately, I haven't tested it with other languages. That said, if you have ideas for how to make it useful in more languages, please open an Issue or submit a Pull Request. 
+As a native English speaker, I wrote this program with lists of English (US) words in mind. Unfortunately, I haven't tested it with other languages. That said, if you have ideas for how to make it more usable for other languages, please open an Issue or submit a Pull Request. 
 
 ## To do
 
@@ -91,7 +91,7 @@ As a native English speaker, I wrote this with lists of English (US) words in mi
 
 ## Where can I find some large word lists?
 
-- The [Electronic Frontier Foundation](https://www.eff.org/) has published [a few word lists for creating diceware passphrases](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases). Since there's a tab between the dice numbers and each word, Tidy can remove the dice numbers easily with something like `tidy -t -o clean_eff.txt eff_large_wordlist.txt` or using the `-i` flag. The EFF also has some [fandom-inspired lists](https://www.eff.org/deeplinks/2018/08/dragon-con-diceware) that Tidy can clean with the `-s` flag.
+- The [Electronic Frontier Foundation](https://www.eff.org/) has published [a few word lists for creating diceware passphrases](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases). Since there's a tab between the dice numbers and each word, Tidy can remove the dice numbers easily with something like `tidy -t -o clean_eff.txt eff_large_wordlist.txt` or using the `-i` flag. The EFF also has some [fandom-inspired lists](https://www.eff.org/deeplinks/2018/08/dragon-con-diceware) that Tidy can clean up with the `-s` flag.
 
 - [SecureDrop](https://github.com/freedomofpress/securedrop/) has separate lists of [adjectives](https://github.com/freedomofpress/securedrop/blob/develop/securedrop/dictionaries/adjectives.txt) and [nouns](https://github.com/freedomofpress/securedrop/blob/develop/securedrop/dictionaries/nouns.txt).
 
@@ -101,6 +101,6 @@ As a native English speaker, I wrote this with lists of English (US) words in mi
 
 - [Niceware list](https://github.com/diracdeltas/niceware/blob/master/lib/wordlist.js) (~65,000 words)
 
-- [Lists used webpassgen](https://github.com/atoponce/webpassgen/tree/master/lists)
+- [Lists used by a program called webpassgen](https://github.com/atoponce/webpassgen/tree/master/lists)
 
 
