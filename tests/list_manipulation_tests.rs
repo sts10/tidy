@@ -34,6 +34,7 @@ mod list_manipulation_tests {
                 "",
                 "mistake",
                 "post-modern",
+                "13910 word with spaces in it",
                 "  h as spaces ",
             ]
             .iter()
@@ -128,6 +129,9 @@ mod list_manipulation_tests {
         };
         let new_list = tidy_list(this_tidy_request);
         assert!(new_list.contains(&"clad".to_string()));
+        // Check that it only removes characters through first space, rather than just
+        // between first space and second space, for example
+        assert!(new_list.contains(&"word with spaces in it".to_string()));
     }
 
     #[test]
