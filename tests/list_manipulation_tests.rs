@@ -26,6 +26,7 @@ mod list_manipulation_tests {
                 "   ",
                 "11225	active",
                 "11152	acclaim",
+                "11156	word	tabs",
                 "19-6-8 clad",
                 "be",
                 "I",
@@ -118,6 +119,8 @@ mod list_manipulation_tests {
         let new_list = tidy_list(this_tidy_request);
         assert!(new_list.contains(&"active".to_string()));
         assert!(new_list.contains(&"acclaim".to_string()));
+        // Only remove through FIRST tab
+        assert!(new_list.contains(&"word\ttabs".to_string()));
     }
 
     #[test]
@@ -132,6 +135,11 @@ mod list_manipulation_tests {
         // Check that it only removes characters through first space, rather than just
         // between first space and second space, for example
         assert!(new_list.contains(&"word with spaces in it".to_string()));
+        // If has a leading space, just removes the first leading space
+        // Tidy trims whitespace AFTER the remove_through_character function,
+        // so that doesn't affect this example
+        // (Maybe should trim leading whitespace first though...)
+        assert!(new_list.contains(&"h as spaces".to_string()));
     }
 
     #[test]
