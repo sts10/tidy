@@ -46,6 +46,7 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     let mut tidied_list = if req.should_remove_through_first_tab {
         req.list
             .iter()
+            // Should figure out how to remove these to_string calls
             .map(|w| remove_through_first_char(w, '\t').to_string())
             .collect()
     } else {

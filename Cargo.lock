@@ -165,7 +165,7 @@ dependencies = [
 
 [[package]]
 name = "tidy"
-version = "0.1.43"
+version = "0.1.50"
 dependencies = [
  "structopt",
 ]
