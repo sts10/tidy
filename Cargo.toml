@@ -1,6 +1,6 @@
 [package]
 name = "tidy"
-version = "0.1.50"
+version = "0.1.51"
 authors = ["sts10 <sschlinkert@gmail.com>"]
 edition = "2018"
 
@@ -8,3 +8,4 @@ edition = "2018"
 
 [dependencies]
 structopt = "0.3"
+memchr = "2.3"

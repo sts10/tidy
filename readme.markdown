@@ -85,11 +85,17 @@ You can read more about this issue [here](https://github.com/ulif/diceware#prefi
 
 As a native English speaker, I wrote this program with lists of English (US) words in mind. Unfortunately, I haven't tested it with other languages. That said, if you have ideas for how to make it more usable for other languages, please open an Issue or submit a Pull Request. 
 
+## What's up with the memchr dependency? 
+
+Tidy's function for removing characters through the first space or tab uses a library called [memchr](https://docs.rs/memchr/2.3.4/memchr/), which "provides heavily optimized routines for searching bytes." The optimization gained from using this crate is far from noticeable or necessary for most uses of Tidy -- using Rust's built-in `find` is not much slower -- but I figured the extra speed was worth the dependency in this case.
+
+See [this repo](https://github.com/sts10/splitter) for more information.
+
 ## To do
 
 - [ ] Add option to remove words that have characters from certain character sets, for example non-ASCII characters
 
-## Where can I find some large word lists?
+## Appendix: Where can I find some large word lists?
 
 - The [Electronic Frontier Foundation](https://www.eff.org/) has published [a few word lists for creating diceware passphrases](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases). Since there's a tab between the dice numbers and each word, Tidy can remove the dice numbers easily with something like `tidy -t -o clean_eff.txt eff_large_wordlist.txt` or using the `-i` flag. The EFF also has some [fandom-inspired lists](https://www.eff.org/deeplinks/2018/08/dragon-con-diceware) that Tidy can clean up with the `-s` flag.
 
@@ -102,5 +108,9 @@ As a native English speaker, I wrote this program with lists of English (US) wor
 - [Niceware list](https://github.com/diracdeltas/niceware/blob/master/lib/wordlist.js) (~65,000 words)
 
 - [Lists used by a program called webpassgen](https://github.com/atoponce/webpassgen/tree/master/lists)
+
+- [Magic Wormhole](https://github.com/magic-wormhole/magic-wormhole/) uses a version of [the PGP Word List](https://github.com/magic-wormhole/magic-wormhole/blob/master/src/wormhole/_wordlist.py).
+
+- [Mnemonicode](https://github.com/schollz/mnemonicode/blob/master/word_list.go) is another word list optimized for pronunciation. 
 
 

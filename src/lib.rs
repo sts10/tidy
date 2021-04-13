@@ -3,6 +3,8 @@ use std::io::BufRead;
 use std::io::BufReader;
 use std::path::PathBuf;
 
+use memchr::memchr;
+
 #[derive(Default, Debug, Clone)]
 pub struct TidyRequest {
     pub list: Vec<String>,
@@ -102,21 +104,14 @@ fn remove_integers(mut w: String) -> String {
     w
 }
 
+// Use memchr library to find ch, then split string at that position
+// Other approaches to this function: https://github.com/sts10/splitter/blob/main/src/lib.rs
 fn remove_through_first_char(s: &str, ch: char) -> &str {
-    // Alternatively, could use str::splitn() here
-    match s.find(ch) {
+    match memchr(ch as u8, s.as_bytes()) {
         None => s, // not found => return the whole string
         Some(pos) => &s[pos + 1..],
     }
 }
-
-// fn remove_through_first_char(l: &str, ch: char) -> String {
-//     if l.contains(ch) {
-//         l.split(ch).collect::<Vec<&str>>()[1].to_string()
-//     } else {
-//         l.to_string()
-//     }
-// }
 
 fn remove_blank_lines(list: &[String]) -> Vec<String> {
     let mut new_list = list.to_vec();
@@ -141,18 +136,18 @@ fn remove_prefix_words(list: Vec<String>) -> Vec<String> {
     list_without_prefix_words.retain(|potential_prefix_word| {
         for word in &list {
             if word.starts_with(potential_prefix_word) && word != potential_prefix_word {
-                // this is a prefix word, so we do NOT want to retain it. return false to the
+                // This is a prefix word, so we do NOT want to retain it. return false to the
                 // retain
                 return false;
             } else {
-                // this particular word is not a prefix word of this potential_prefix_word.
+                // This particular word is not a prefix word of this potential_prefix_word.
                 // keep looping
                 continue;
             };
         }
-        // if we've made it here, we can be sure that potential_prefix_word is NOT a
+        // If we've made it here, we can be sure that potential_prefix_word is NOT a
         // prefix word. So we want to retain it for the list_without_prefix_words.
-        // return true to the retain
+        // To do this, we return true to the retain.
         true
     });
     list_without_prefix_words
@@ -176,8 +171,8 @@ fn remove_words_below_minimum_length(list: Vec<String>, minimum_length: usize) -
     new_list
 }
 
-// pretty sure this is an accurate, if wonky method of calculating
-// entropy of the list, given its size?
+// I'm pretty sure this is an accurate, if wonky method of calculating entropy
+// of a word list, given its size
 pub fn calc_entropy(list_size: usize) -> f64 {
     (list_size as f64).ln() / (2_f64.ln() as f64)
 }
