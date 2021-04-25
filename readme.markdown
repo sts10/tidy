@@ -94,6 +94,7 @@ See [this repo](https://github.com/sts10/splitter) for more information.
 ## To do
 
 - [ ] Add option to remove words that have characters from certain character sets, for example non-ASCII characters
+- [ ] Investigate making the list variable as [FxHashSet](https://docs.rs/fxhash/0.2.1/fxhash/type.FxHashSet.html)<String> rather than a `Vec<String>` to potentially boost performance, as is done in [csafe](https://github.com/sts10/csafe/blob/main/src/lib.rs). Will probably need to write some benchmarks with Criterion to measure potential performance gains.
 
 ## Appendix: Where can I find some large word lists?
 
