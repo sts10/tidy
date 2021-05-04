@@ -110,8 +110,10 @@ See [this repo](https://github.com/sts10/splitter) for more information.
 
 - [Lists used by a program called webpassgen](https://github.com/atoponce/webpassgen/tree/master/lists)
 
-- [Magic Wormhole](https://github.com/magic-wormhole/magic-wormhole/) uses a version of [the PGP Word List](https://github.com/magic-wormhole/magic-wormhole/blob/master/src/wormhole/_wordlist.py).
+- [Magic Wormhole](https://github.com/magic-wormhole/magic-wormhole/), a tool for transferring files, uses [a version of the PGP Word List](https://github.com/magic-wormhole/magic-wormhole/blob/master/src/wormhole/_wordlist.py), which specifically tries to use pairs of words that are phonetically distinct.
 
-- [Mnemonicode](https://github.com/schollz/mnemonicode/blob/master/word_list.go) is another word list optimized for pronunciation. 
+- [Mnemonicode](https://github.com/schollz/mnemonicode/blob/master/word_list.go) is another word list optimized for pronunciation. I believe [croc](https://github.com/schollz/croc), another file transferring tool, uses it.
+
+- Shameless plug: I created [a ~16k word list](https://github.com/sts10/common_word_list_maker/blob/main/example_word_list.txt) using [Google Books Ngram data](https://github.com/sts10/common_word_list_maker).
 
 
