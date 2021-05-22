@@ -49,6 +49,10 @@ struct Opt {
     #[structopt(short = "a", long = "approve", parse(from_os_str))]
     approved_list: Option<PathBuf>,
 
+    /// Path for optional list of homophone pairs, separated by a comma
+    #[structopt(short = "h", long = "homophones", parse(from_os_str))]
+    homophones_list: Option<PathBuf>,
+
     /// Path for outputted list file
     #[structopt(short = "o", long = "output", parse(from_os_str))]
     output: PathBuf,
@@ -77,6 +81,12 @@ fn main() {
         },
         approved_list: match opt.approved_list {
             Some(list) => Some(make_vec_from_filenames(&[list])),
+            None => None,
+        },
+        homophones_list: match opt.homophones_list {
+            Some(homophones_list_file) => {
+                Some(read_homophones_list_from_filenames(&[homophones_list_file]))
+            }
             None => None,
         },
         minimum_length: opt.minimum_length,

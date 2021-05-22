@@ -15,6 +15,7 @@ pub struct TidyRequest {
     pub should_remove_through_first_space: bool,
     pub reject_list: Option<Vec<String>>,
     pub approved_list: Option<Vec<String>>,
+    pub homophones_list: Option<Vec<(String, String)>>,
     pub minimum_length: Option<usize>,
 }
 
@@ -41,6 +42,39 @@ pub fn make_vec_from_filenames(filenames: &[PathBuf]) -> Vec<String> {
         }
     }
     word_list
+}
+
+pub fn read_homophones_list_from_filenames(filenames: &[PathBuf]) -> Vec<(String, String)> {
+    let mut homophones_list: Vec<(String, String)> = vec![];
+    for filename in filenames {
+        let f = match File::open(filename) {
+            Ok(file) => file,
+            Err(e) => panic!("Error opening file {:?}: {}", filename, e),
+        };
+        let file = BufReader::new(&f);
+        for line in file.lines() {
+            let l = match line {
+                Ok(l) => l,
+                Err(e) => {
+                    eprintln!(
+                        "Error reading a line from file {:?}: {}\nWill continue reading file.",
+                        filename, e
+                    );
+                    continue;
+                }
+            };
+            let pair: (String, String) = (
+                split_and_vectorize(&l, ",")[0].trim().to_string(),
+                split_and_vectorize(&l, ",")[1].trim().to_string(),
+            );
+            homophones_list.push(pair);
+        }
+    }
+    homophones_list
+}
+
+fn split_and_vectorize<'a>(string_to_split: &'a str, splitter: &str) -> Vec<&'a str> {
+    string_to_split.split(splitter).collect()
 }
 
 pub fn tidy_list(req: TidyRequest) -> Vec<String> {
@@ -84,6 +118,10 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     };
     tidied_list = match req.approved_list {
         Some(approved_list) => remove_words_not_on_approved_list(tidied_list, approved_list),
+        None => tidied_list,
+    };
+    tidied_list = match req.homophones_list {
+        Some(homophones_list) => remove_homophones(tidied_list, homophones_list),
         None => tidied_list,
     };
     tidied_list = match req.minimum_length {
@@ -168,6 +206,22 @@ fn remove_words_not_on_approved_list(list: Vec<String>, approved_list: Vec<Strin
 fn remove_words_below_minimum_length(list: Vec<String>, minimum_length: usize) -> Vec<String> {
     let mut new_list = list.to_vec();
     new_list.retain(|w| w.len() >= minimum_length);
+    new_list
+}
+
+fn remove_homophones(list: Vec<String>, homophones: Vec<(String, String)>) -> Vec<String> {
+    let mut words_to_remove = vec![];
+    for pair_of_homophones in homophones {
+        if list.contains(&pair_of_homophones.0)
+            && list.contains(&pair_of_homophones.1)
+            && !(words_to_remove.contains(&pair_of_homophones.0)
+                || words_to_remove.contains(&pair_of_homophones.1))
+        {
+            words_to_remove.push(pair_of_homophones.1);
+        }
+    }
+    let mut new_list = list.to_vec();
+    new_list.retain(|w| !words_to_remove.contains(w));
     new_list
 }
 

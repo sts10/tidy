@@ -34,6 +34,7 @@ mod list_manipulation_tests {
                 "take",
                 "",
                 "mistake",
+                "tee",
                 "post-modern",
                 "13910 word with spaces in it",
                 "  h as spaces ",
@@ -228,5 +229,23 @@ mod list_manipulation_tests {
         assert!(!new_list.contains(&"carnival".to_string()));
         assert!(!new_list.contains(&"wizard".to_string()));
         assert!(!new_list.contains(&"airplane".to_string()));
+    }
+
+    #[test]
+    fn can_remove_specified_homophones() {
+        let homophone1 = ("be".to_string(), "bee".to_string());
+        let homophone2 = ("right".to_string(), "write".to_string());
+        let homophone3 = ("tea".to_string(), "tee".to_string());
+        let this_tidy_request = TidyRequest {
+            list: make_lists().1,
+            homophones_list: Some(vec![homophone1, homophone2, homophone3]),
+            to_lowercase: true,
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
+        assert!(new_list.contains(&"tea".to_string()));
+        assert!(!new_list.contains(&"tee".to_string()));
+        assert!(new_list.contains(&"mistake".to_string()));
+        assert!(new_list.contains(&"be".to_string()));
     }
 }

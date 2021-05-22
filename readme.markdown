@@ -21,6 +21,7 @@ Optionally, it can...
 - remove characters through first tab from lines (`-t`)
 - remove an inputted list of words to reject (`-r`)
 - only retain words from an approved list (`-a`)
+- remove homophones from a provided list of pairs of homophones (`-h`)
 - remove prefix words (see below) (`-p`)
 - calculate and display entropy-per-word of new list (`-e`)
 
@@ -31,7 +32,7 @@ USAGE:
 
 FLAGS:
     -e, --entropy                 Display information about newly created list when done, including entropy-per-word
-    -h, --help                    Prints help information
+        --help                    Prints help information
     -i, --remove_integers         Remove all integers from words
     -p, --remove_prefix           Remove prefix words from list
     -s, --remove_through_space    Remove characters through first space
@@ -41,10 +42,11 @@ FLAGS:
     -v, --verbose                 Prints verbose output, including parameters as received
 
 OPTIONS:
-    -a, --approve <approved-list>     Path for optional list of approved words
-    -m, --minimum <minimum-length>    Minimum word length
-    -o, --output <output>             Path for outputted list file
-    -r, --reject <reject-list>        Path for optional list of words to reject
+    -a, --approve <approved-list>         Path for optional list of approved words
+    -h, --homophones <homophones-list>    Path for optional list of homophone pairs, separated by a comma
+    -m, --minimum <minimum-length>        Minimum word length
+    -o, --output <output>                 Path for outputted list file
+    -r, --reject <reject-list>            Path for optional list of words to reject
 
 ARGS:
     <Inputted Word Lists>...    Word list input files
@@ -63,6 +65,8 @@ ARGS:
 - `tidy -l -o new_list.txt -r bad_words.txt inputted_word_list.txt` Similar to above, but ensures that none of the words in the bad_words.txt file make it on to the final list that is printed to new_list.txt. The reject list is case sensitive.
 
 - `tidy -l -o new_list.txt -a approved_words.txt inputted_word_list.txt` Similar to above, but ensures that only words in the approved_words.txt file make it on to the final list that is printed to new_list.txt. The approved list is case sensitive. (On Mac and some Linux distributions, `/usr/share/dict/words` should contain a list of words for spellcheck purposes.)
+
+- `tidy -l -o new_list.txt -h homophone_pairs.txt inputted_word_list.txt` Similar to above, but expects `homophones_pairs.txt` to be a list of homophones pairs separated by a comma ("right,write" then next line: "epic,epoch"). If both words in the pair are on the inputted_word_list, Tidy will remove the second one. If only one of the words in the pair are on the list, Tidy won't remove it. Must be only two words per line.
 
 - `tidy -le -m 3 -o new-list.txt inputted_word_list.txt` Similar to above, but the `-m 3` means new list won't have any words under 3 characters in length. Also, `-e` flag will cause program to display [entropy](https://en.wikipedia.org/wiki/Entropy_(information_theory)) information when it's done making the new list.
 
