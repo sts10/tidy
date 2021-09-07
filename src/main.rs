@@ -55,7 +55,7 @@ struct Opt {
 
     /// Path for outputted list file
     #[structopt(short = "o", long = "output", parse(from_os_str))]
-    output: PathBuf,
+    output: Option<PathBuf>,
 
     /// Word list input files
     #[structopt(name = "Inputted Word Lists", parse(from_os_str))]
@@ -87,12 +87,21 @@ fn main() {
 
     let tidied_list = tidy_list(this_tidy_request);
 
-    let mut f = File::create(opt.output).expect("Unable to create file");
-    for i in &tidied_list {
-        writeln!(f, "{}", i).expect("Unable to write data to file");
+    match opt.output {
+        Some(output) => {
+            let mut f = File::create(output).expect("Unable to create file");
+            for word in &tidied_list {
+                writeln!(f, "{}", word).expect("Unable to write data to file");
+            }
+        }
+        None => {
+            for word in &tidied_list {
+                println!("{}", word)
+            }
+        }
     }
-    if opt.display_entropy || opt.verbose {
-        println!("Done");
+    if opt.verbose {
+        eprintln!("Done");
     }
     if opt.display_entropy {
         display_list_information(tidied_list.len(), opt.remove_prefix_words);
@@ -100,13 +109,13 @@ fn main() {
 }
 
 fn display_list_information(list_len: usize, removed_prefix_words: bool) {
-    println!("New list is {} lines long.", list_len);
+    eprintln!("New list is {} lines long.", list_len);
     if removed_prefix_words {
-        println!("Assuming you choose words randomly, each word adds approximately {:.4} bits of entropy.",
+        eprintln!("Assuming you choose words randomly, each word adds approximately {:.4} bits of entropy.",
         calc_entropy(list_len)
     );
     } else {
-        println!("Assuming you choose words randomly and you use a separator between the words, each word adds approximately {:.4} bits of entropy.",
+        eprintln!("Assuming you choose words randomly and you use a separator between the words, each word adds approximately {:.4} bits of entropy.",
             calc_entropy(list_len)
         );
     }
