@@ -94,6 +94,8 @@ fn main() {
                 writeln!(f, "{}", word).expect("Unable to write data to file");
             }
         }
+        // If no output file destination, print resulting like, word by word
+        // to println (which goest tostdout, allowing for use of > on command like)
         None => {
             for word in &tidied_list {
                 println!("{}", word)
@@ -108,12 +110,14 @@ fn main() {
     }
 }
 
+// We just want to "display" this information, rather than print it to files,
+// so we use eprintln!
 fn display_list_information(list_len: usize, removed_prefix_words: bool) {
     eprintln!("New list is {} lines long.", list_len);
     if removed_prefix_words {
         eprintln!("Assuming you choose words randomly, each word adds approximately {:.4} bits of entropy.",
-        calc_entropy(list_len)
-    );
+            calc_entropy(list_len)
+        );
     } else {
         eprintln!("Assuming you choose words randomly and you use a separator between the words, each word adds approximately {:.4} bits of entropy.",
             calc_entropy(list_len)
