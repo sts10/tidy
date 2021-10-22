@@ -2,7 +2,7 @@
 name = "tidy"
 version = "0.1.61"
 authors = ["sts10 <sschlinkert@gmail.com>"]
-edition = "2021"
+edition = "2018"
 
 [dependencies]
 structopt = "0.3"
