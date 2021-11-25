@@ -26,7 +26,7 @@ Optionally, it can...
 - remove an inputted list of words to reject (`-r`)
 - only retain words from an approved list (`-a`)
 - remove homophones from a provided list of comma-separated pairs of homophones (`-h`)
-- enforce a minimum edit distance between words (`-d`)
+- enforce a minimum [edit distance](https://en.wikipedia.org/wiki/Edit_distance) between words (`-d`)
 - remove prefix words (see below) (`-P`)
 - guarantee unique prefix lengths (see below) (`-u`)
 - calculate and display entropy-per-word of new list (`-e`)
@@ -119,7 +119,7 @@ You can read more about this issue [here](https://github.com/ulif/diceware#prefi
 
 ## On unique prefix length
 
-Setting this value to, say, 3 means that each word on the resulting list will have a unique 3-character prefix. This is useful if you intend the list to be used by software that uses auto-complete.
+Setting this value to, say, 3 means that each word on the resulting list will have a unique 3-character prefix. This is useful if you intend the list to be used by software that uses auto-complete. It is distinct from the operation of eliminating prefix words, though can be used in conjunction with that feature.
 
 ## Language limitations 
 
