@@ -49,6 +49,12 @@ struct Opt {
     #[structopt(short = "s", long = "delete_through_space")]
     delete_through_first_space: bool,
 
+    /// Only first N words from inputted word list. If two or more
+    /// word lists are inputted, it will combine arbitrarily and then
+    /// take first N words
+    #[structopt(long = "take_first")]
+    take_first: Option<usize>,
+
     /// Set minimum word length
     #[structopt(short = "m", long = "minimum_word_length")]
     minimum_length: Option<usize>,
@@ -98,6 +104,7 @@ fn main() {
 
     let this_tidy_request = TidyRequest {
         list: make_vec_from_filenames(&opt.inputted_word_list),
+        take_first: opt.take_first,
         to_lowercase: opt.to_lowercase,
         should_remove_prefix_words: opt.remove_prefix_words,
         should_remove_integers: opt.remove_integers,

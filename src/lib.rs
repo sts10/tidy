@@ -25,6 +25,7 @@ pub struct TidyRequest {
     pub maximum_length: Option<usize>,
     pub unique_prefix_length: Option<usize>,
     pub minimum_edit_distance: Option<usize>,
+    pub take_first: Option<usize>,
 }
 
 pub fn make_vec_from_filenames(filenames: &[PathBuf]) -> Vec<String> {
@@ -87,14 +88,16 @@ fn split_and_vectorize<'a>(string_to_split: &'a str, splitter: &str) -> Vec<&'a 
 
 pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     // guess this function is what I should clean-up next...
-    let mut tidied_list = if req.should_delete_through_first_tab {
-        req.list
+    // Remove blank lines first
+    let mut tidied_list = remove_blank_lines(&req.list);
+    tidied_list = if req.should_delete_through_first_tab {
+        tidied_list
             .iter()
             // Should figure out how to remove these to_string calls
             .map(|w| delete_through_first_char(w, '\t').to_string())
             .collect()
     } else {
-        req.list
+        tidied_list
     };
     tidied_list = if req.should_delete_through_first_space {
         tidied_list
@@ -121,13 +124,24 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         tidied_list
     };
     tidied_list = trim_whitespace(&tidied_list);
+    // We're going to check for blank lines again in
+    // case we made any lines blank with delete/trim calls
     tidied_list = remove_blank_lines(&tidied_list);
-    tidied_list = sort_and_dedup(&mut tidied_list);
+    // Now truncate list, if requested
+    // Maybe should move this up in the order though...
+    tidied_list = match req.take_first {
+        Some(amount_to_take) => {
+            tidied_list.truncate(amount_to_take);
+            tidied_list
+        }
+        None => tidied_list,
+    };
     tidied_list = if req.to_lowercase {
         tidied_list.iter().map(|w| w.to_ascii_lowercase()).collect()
     } else {
         tidied_list
     };
+    // Move on to word removals
     tidied_list = if req.should_remove_nonalphanumeric {
         remove_nonalphanumeric(&tidied_list)
     } else {
@@ -146,16 +160,16 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         Some(approved_list) => remove_words_not_on_approved_list(tidied_list, approved_list),
         None => tidied_list,
     };
-    tidied_list = match req.homophones_list {
-        Some(homophones_list) => remove_homophones(tidied_list, homophones_list),
-        None => tidied_list,
-    };
     tidied_list = match req.minimum_length {
         Some(minimum_length) => remove_words_below_minimum_length(tidied_list, minimum_length),
         None => tidied_list,
     };
     tidied_list = match req.maximum_length {
         Some(maximum_length) => remove_words_above_maximum_length(tidied_list, maximum_length),
+        None => tidied_list,
+    };
+    tidied_list = match req.homophones_list {
+        Some(homophones_list) => remove_homophones(tidied_list, homophones_list),
         None => tidied_list,
     };
     // I think this is a good order for these next 3 operations,
@@ -177,9 +191,7 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         }
         None => tidied_list,
     };
-    // Have to remove any and all blank lines again in case any of
-    // the delete calls made new blank lines
-    tidied_list = remove_blank_lines(&tidied_list);
+    // Finally, sort and dedup list
     tidied_list = sort_and_dedup(&mut tidied_list);
     tidied_list
 }

@@ -81,6 +81,20 @@ mod list_manipulation_tests {
     }
 
     #[test]
+    fn can_take_first_3_elements() {
+        let this_tidy_request = TidyRequest {
+            list: make_lists().1,
+            take_first: Some(4),
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
+        println!("List length now {}", new_list.len());
+        assert_eq!(new_list.len(), 4);
+        assert_ne!(new_list.len(), 3);
+        assert_ne!(new_list.len(), 15);
+    }
+
+    #[test]
     fn removes_starting_and_trailing_whitespace() {
         let this_tidy_request = TidyRequest {
             list: make_lists().1,
