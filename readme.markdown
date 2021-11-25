@@ -5,7 +5,7 @@ A command-line tool for combining and cleaning large word list files.
 ## What this tool can do
 
 Given a text file with a word list, this tool will create a new word list that...
-- removes whitespace
+- deletes whitespace
 - removes empty lines
 - removes duplicate lines
 - sorts alphabetically
@@ -16,38 +16,40 @@ Optionally, it can...
 - combine two or more word lists
 - make all characters lowercase (`-l`)
 - remove all words below a set character length (`-m 3`)
-- remove all integers from words (`-i`)
-- remove characters through first space from lines (`-s`)
-- remove characters through first tab from lines (`-t`)
+- deletes all integers from words (`-i`)
+- removes all words with integers (`-I`)
+- delete all characters through first space from lines (`-s`)
+- delete all characters through first tab from lines (`-t`)
 - remove an inputted list of words to reject (`-r`)
 - only retain words from an approved list (`-a`)
 - remove homophones from a provided list of pairs of homophones (`-h`)
-- remove prefix words (see below) (`-p`)
+- remove prefix words (see below) (`-P`)
 - calculate and display entropy-per-word of new list (`-e`)
 
 ## Usage
 
 ```txt
-tidy: Combine and clean word lists
-
 USAGE:
     tidy [FLAGS] [OPTIONS] [Inputted Word Lists]...
 
 FLAGS:
-    -e, --entropy                 Display information about newly created list when done, including entropy-per-word
-        --help                    Prints help information
-    -i, --remove_integers         Remove all integers from words
-    -p, --remove_prefix           Remove prefix words from list
-    -s, --remove_through_space    Remove characters through first space
-    -t, --remove_through_tab      Remove characters through first tab
-    -l, --lowercase               Lowercase all words
-    -V, --version                 Prints version information
-    -v, --verbose                 Prints verbose output, including parameters as received
+    -i, --delete_integers           Delete all integers from words
+    -n, --delete_nonalphanumeric    Delete all non-alphanumeric characters from list
+    -s, --delete_through_space      Delete characters through first space
+    -t, --delete_through_tab        Delete characters through first tab
+    -e, --entropy                   Display information about newly created list when done, including entropy-per-word
+        --help                      Prints help information
+    -I, --remove_integers           Remove all words with integers in them from list
+    -N, --remove_nonalphanumeric    Remove all words with non-alphanumeric characters from list
+    -P, --remove_prefix             Remove prefix words from list
+    -l, --lowercase                 Lowercase all words
+    -V, --version                   Prints version information
+    -v, --verbose                   Prints verbose output, including parameters as received
 
 OPTIONS:
     -a, --approve <approved-list>         Path for optional list of approved words
     -h, --homophones <homophones-list>    Path for optional list of homophone pairs, separated by a comma
-    -m, --minimum <minimum-length>        Minimum word length
+    -m, --minimum <minimum-length>        Set minimum word length
     -o, --output <output>                 Path for outputted list file
     -r, --reject <reject-list>            Path for optional list of words to reject
 
@@ -59,13 +61,15 @@ ARGS:
 
 - `tidy --output new_list.txt word_list1.txt word_list2.txt` Combines the word lists in `word_list1.txt` and `word_list2.txt`, removing whitespace, empty lines, and duplicate words into one list. It sorts this list alphabetically, and then prints this new, combined list to the specified output location, in this case: `new_list.txt`.
 
-- `tidy -l -o new_list.txt inputted_word_list.txt` Removes whitespace, empty lines, and duplicate words from `inputted_word_list.txt`. Due to the `-l` flag, it makes all the words lowercase. It sorts this list alphabetically and removes duplicates once again. It then prints this new list to the specified output location, in this case: `new_list.txt`.
+- `tidy -l -o new_list.txt inputted_word_list.txt` Deletes whitespace, removes empty lines and duplicate words from `inputted_word_list.txt`. Due to the `-l` flag, it makes all the words lowercase. It sorts this list alphabetically and removes duplicates once again. It then prints this new list to the specified output location, in this case: `new_list.txt`.
 
 - `tidy -l inputted_word_list.txt > new_list.txt` Alternatively, you can use `>` to print tidy's output to a file.
 
-- `tidy -lp -o new_list.txt inputted_word_list.txt` Same as above, but the added `-p` flag removes prefix words from the list. See below for more on prefix words.
+- `tidy -lP -o new_list.txt inputted_word_list.txt` Same as above, but the added `-P` flag removes prefix words from the list. See below for more on prefix words.
 
-- `tidy -lpi -o new_list.txt inputted_word_list.txt` Same as above, but the added `-i` flag removes any integers in words. Words with integers in them are not removed, only the integers within them. For example, "11326	agency" becomes "agency". 
+- `tidy -lPi -o new_list.txt inputted_word_list.txt` Same as above, but the added `-i` flag deletes any integers in words. Words with integers in them are not removed, only the integers within them. For example, "11326	agency" becomes "agency". 
+
+- `tidy -I -o new_list.txt inputted_word_list.txt` Using the `-I` flag removes any words with integers from the list. For example, "hello1" would be removed from the list.
 
 - `tidy -l -o new_list.txt -r bad_words.txt inputted_word_list.txt` Similar to above, but ensures that none of the words in the bad_words.txt file make it on to the final list that is printed to new_list.txt. The reject list is case sensitive.
 
@@ -75,7 +79,11 @@ ARGS:
 
 - `tidy -le -m 3 -o new-list.txt inputted_word_list.txt` Similar to above, but the `-m 3` means new list won't have any words under 3 characters in length. Also, `-e` flag will cause program to display [entropy](https://en.wikipedia.org/wiki/Entropy_(information_theory)) information when it's done making the new list.
 
-- `tidy -t -o just_the_words.txt diceware_list.txt` If you've got [a diceware list with numbers and a tab before each word](https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt), the `-t` flag will remove everything up to and including the first tab in each line ("11133	abruptly" becomes "abruptly").
+- `tidy -t -o just_the_words.txt diceware_list.txt` If you've got [a diceware list with numbers and a tab before each word](https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt), the `-t` flag will delete everything up to and including the first tab in each line ("11133	abruptly" becomes "abruptly").
+
+## On verbs used
+
+In both Tidy's code and documentation, "remove" means that a word will be removed (e.g. words with integers will be removed from the list), while "delete" means that a word will only be modified (e.g. integers removed from words). Uppercase flags remove words, while lowercase flags delete specified characters.
 
 ## Installation
 
@@ -107,7 +115,7 @@ See [this repo](https://github.com/sts10/splitter) for more information.
 
 ## Appendix: Where can I find some large word lists?
 
-- The [Electronic Frontier Foundation](https://www.eff.org/) has published [a few word lists for creating diceware passphrases](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases). Since there's a tab between the dice numbers and each word, Tidy can remove the dice numbers easily with something like `tidy -t -o clean_eff.txt eff_large_wordlist.txt` or using the `-i` flag. The EFF also has some [fandom-inspired lists](https://www.eff.org/deeplinks/2018/08/dragon-con-diceware) that Tidy can clean up with the `-s` flag.
+- The [Electronic Frontier Foundation](https://www.eff.org/) has published [a few word lists for creating diceware passphrases](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases). Since there's a tab between the dice numbers and each word, Tidy can delete the dice numbers easily with something like `tidy -t -o clean_eff.txt eff_large_wordlist.txt` or using the `-i` flag. The EFF also has some [fandom-inspired lists](https://www.eff.org/deeplinks/2018/08/dragon-con-diceware) that Tidy can clean up with the `-s` flag.
 
 - [SecureDrop](https://github.com/freedomofpress/securedrop/) has separate lists of [adjectives](https://github.com/freedomofpress/securedrop/blob/develop/securedrop/dictionaries/adjectives.txt) and [nouns](https://github.com/freedomofpress/securedrop/blob/develop/securedrop/dictionaries/nouns.txt).
 

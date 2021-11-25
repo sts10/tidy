@@ -22,22 +22,34 @@ struct Opt {
     to_lowercase: bool,
 
     /// Remove prefix words from list
-    #[structopt(short = "p", long = "remove_prefix")]
+    #[structopt(short = "P", long = "remove_prefix")]
     remove_prefix_words: bool,
 
-    /// Remove all integers from words
-    #[structopt(short = "i", long = "remove_integers")]
+    /// Remove all words with non-alphanumeric characters from list
+    #[structopt(short = "N", long = "remove_nonalphanumeric")]
+    remove_nonalphanumeric: bool,
+
+    /// Delete all non-alphanumeric characters from list
+    #[structopt(short = "n", long = "delete_nonalphanumeric")]
+    delete_nonalphanumeric: bool,
+
+    /// Remove all words with integers in them from list
+    #[structopt(short = "I", long = "remove_integers")]
     remove_integers: bool,
 
-    /// Remove characters through first tab
-    #[structopt(short = "t", long = "remove_through_tab")]
-    remove_through_first_tab: bool,
+    /// Delete all integers from words
+    #[structopt(short = "i", long = "delete_integers")]
+    delete_integers: bool,
 
-    /// Remove characters through first space
-    #[structopt(short = "s", long = "remove_through_space")]
-    remove_through_first_space: bool,
+    /// Delete characters through first tab
+    #[structopt(short = "t", long = "delete_through_tab")]
+    delete_through_first_tab: bool,
 
-    /// Minimum word length
+    /// Delete characters through first space
+    #[structopt(short = "s", long = "delete_through_space")]
+    delete_through_first_space: bool,
+
+    /// Set minimum word length
     #[structopt(short = "m", long = "minimum")]
     minimum_length: Option<usize>,
 
@@ -73,8 +85,11 @@ fn main() {
         to_lowercase: opt.to_lowercase,
         should_remove_prefix_words: opt.remove_prefix_words,
         should_remove_integers: opt.remove_integers,
-        should_remove_through_first_tab: opt.remove_through_first_tab,
-        should_remove_through_first_space: opt.remove_through_first_space,
+        should_delete_integers: opt.delete_integers,
+        should_remove_nonalphanumeric: opt.remove_nonalphanumeric,
+        should_delete_nonalphanumeric: opt.delete_nonalphanumeric,
+        should_delete_through_first_tab: opt.delete_through_first_tab,
+        should_delete_through_first_space: opt.delete_through_first_space,
         reject_list: opt.reject_list.map(|list| make_vec_from_filenames(&[list])),
         approved_list: opt
             .approved_list

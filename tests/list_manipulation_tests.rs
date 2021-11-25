@@ -32,6 +32,7 @@ mod list_manipulation_tests {
                 "I",
                 "vAcation",
                 "take",
+                "world999",
                 "",
                 "mistake",
                 "tee",
@@ -100,10 +101,10 @@ mod list_manipulation_tests {
     }
 
     #[test]
-    fn can_remove_integers_from_words() {
+    fn can_delete_integers_from_words() {
         let this_tidy_request = TidyRequest {
             list: make_lists().1,
-            should_remove_integers: true,
+            should_delete_integers: true,
             ..Default::default()
         };
         let new_list = tidy_list(this_tidy_request);
@@ -111,10 +112,22 @@ mod list_manipulation_tests {
     }
 
     #[test]
-    fn can_remove_through_first_tab() {
+    fn can_delete_nonalphanumeric_from_words() {
         let this_tidy_request = TidyRequest {
             list: make_lists().1,
-            should_remove_through_first_tab: true,
+            should_delete_nonalphanumeric: true,
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
+        assert!(new_list.contains(&"1968clad".to_string()));
+        assert!(new_list.contains(&"take".to_string()));
+    }
+
+    #[test]
+    fn can_delete_through_first_tab() {
+        let this_tidy_request = TidyRequest {
+            list: make_lists().1,
+            should_delete_through_first_tab: true,
             ..Default::default()
         };
         let new_list = tidy_list(this_tidy_request);
@@ -125,10 +138,10 @@ mod list_manipulation_tests {
     }
 
     #[test]
-    fn can_remove_through_first_space() {
+    fn can_delete_through_first_space() {
         let this_tidy_request = TidyRequest {
             list: make_lists().1,
-            should_remove_through_first_space: true,
+            should_delete_through_first_space: true,
             ..Default::default()
         };
         let new_list = tidy_list(this_tidy_request);
@@ -137,7 +150,7 @@ mod list_manipulation_tests {
         // between first space and second space, for example
         assert!(new_list.contains(&"word with spaces in it".to_string()));
         // If has a leading space, just removes the first leading space
-        // Tidy trims whitespace AFTER the remove_through_character function,
+        // Tidy trims whitespace AFTER the delete_through_character function,
         // so that doesn't affect this example
         // (Maybe should trim leading whitespace first though...)
         assert!(new_list.contains(&"h as spaces".to_string()));
@@ -178,6 +191,32 @@ mod list_manipulation_tests {
     }
 
     #[test]
+    fn can_remove_words_with_nonalphanumeric_characters() {
+        let this_tidy_request = TidyRequest {
+            list: make_lists().1,
+            should_remove_nonalphanumeric: true,
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
+        assert!(!new_list.contains(&"19-6-8 clad".to_string()));
+        assert!(new_list.contains(&"world999".to_string()));
+        assert!(new_list.contains(&"take".to_string()));
+    }
+
+    #[test]
+    fn can_remove_words_with_integers() {
+        let this_tidy_request = TidyRequest {
+            list: make_lists().1,
+            should_remove_integers: true,
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
+        assert!(!new_list.contains(&"19-6-8 clad".to_string()));
+        assert!(!new_list.contains(&"world999".to_string()));
+        assert!(new_list.contains(&"be".to_string()));
+        assert!(new_list.contains(&"I".to_string()));
+    }
+    #[test]
     fn can_remove_words_shorter_than_a_specified_minimum_length() {
         let this_tidy_request = TidyRequest {
             list: make_lists().1,
@@ -185,7 +224,7 @@ mod list_manipulation_tests {
             ..Default::default()
         };
         let new_list = tidy_list(this_tidy_request);
-        assert!(!new_list.contains(&"i".to_string()));
+        assert!(!new_list.contains(&"I".to_string()));
         assert!(!new_list.contains(&"be".to_string()));
         assert!(new_list.contains(&"tea".to_string()));
         assert!(new_list.contains(&"mistake".to_string()));

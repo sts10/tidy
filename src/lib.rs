@@ -10,9 +10,12 @@ pub struct TidyRequest {
     pub list: Vec<String>,
     pub to_lowercase: bool,
     pub should_remove_prefix_words: bool,
+    pub should_remove_nonalphanumeric: bool,
+    pub should_delete_nonalphanumeric: bool,
     pub should_remove_integers: bool,
-    pub should_remove_through_first_tab: bool,
-    pub should_remove_through_first_space: bool,
+    pub should_delete_integers: bool,
+    pub should_delete_through_first_tab: bool,
+    pub should_delete_through_first_space: bool,
     pub reject_list: Option<Vec<String>>,
     pub approved_list: Option<Vec<String>>,
     pub homophones_list: Option<Vec<(String, String)>>,
@@ -79,27 +82,35 @@ fn split_and_vectorize<'a>(string_to_split: &'a str, splitter: &str) -> Vec<&'a 
 
 pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     // guess this function is what I should clean-up next...
-    let mut tidied_list = if req.should_remove_through_first_tab {
+    let mut tidied_list = if req.should_delete_through_first_tab {
         req.list
             .iter()
             // Should figure out how to remove these to_string calls
-            .map(|w| remove_through_first_char(w, '\t').to_string())
+            .map(|w| delete_through_first_char(w, '\t').to_string())
             .collect()
     } else {
         req.list
     };
-    tidied_list = if req.should_remove_through_first_space {
+    tidied_list = if req.should_delete_through_first_space {
         tidied_list
             .iter()
-            .map(|w| remove_through_first_char(w, ' ').to_string())
+            .map(|w| delete_through_first_char(w, ' ').to_string())
             .collect()
     } else {
         tidied_list
     };
-    tidied_list = if req.should_remove_integers {
+    tidied_list = if req.should_delete_integers {
         tidied_list
             .iter()
-            .map(|w| remove_integers(w.to_string()))
+            .map(|w| delete_integers(w.to_string()))
+            .collect()
+    } else {
+        tidied_list
+    };
+    tidied_list = if req.should_delete_nonalphanumeric {
+        tidied_list
+            .iter()
+            .map(|w| delete_nonalphanumeric(w.to_string()))
             .collect()
     } else {
         tidied_list
@@ -109,6 +120,16 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     tidied_list = sort_and_dedup(&mut tidied_list);
     tidied_list = if req.to_lowercase {
         tidied_list.iter().map(|w| w.to_ascii_lowercase()).collect()
+    } else {
+        tidied_list
+    };
+    tidied_list = if req.should_remove_nonalphanumeric {
+        remove_nonalphanumeric(&tidied_list)
+    } else {
+        tidied_list
+    };
+    tidied_list = if req.should_remove_integers {
+        remove_integers(&tidied_list)
     } else {
         tidied_list
     };
@@ -137,14 +158,19 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     tidied_list
 }
 
-fn remove_integers(mut w: String) -> String {
+fn delete_integers(mut w: String) -> String {
     w.retain(|c| !c.is_numeric());
+    w
+}
+
+fn delete_nonalphanumeric(mut w: String) -> String {
+    w.retain(|c| c.is_alphanumeric());
     w
 }
 
 // Use memchr library to find ch, then split string at that position
 // Other approaches to this function: https://github.com/sts10/splitter/blob/main/src/lib.rs
-fn remove_through_first_char(s: &str, ch: char) -> &str {
+fn delete_through_first_char(s: &str, ch: char) -> &str {
     match memchr(ch as u8, s.as_bytes()) {
         None => s, // not found => return the whole string
         Some(pos) => &s[pos + 1..],
@@ -154,6 +180,22 @@ fn remove_through_first_char(s: &str, ch: char) -> &str {
 fn remove_blank_lines(list: &[String]) -> Vec<String> {
     let mut new_list = list.to_vec();
     new_list.retain(|x| !x.is_empty());
+    new_list
+}
+
+fn remove_nonalphanumeric(list: &[String]) -> Vec<String> {
+    let mut new_list = list.to_vec();
+    // This logic trips me out a bit, but I think it
+    // works correctly
+    new_list.retain(|word| !word.chars().any(|c| !c.is_alphanumeric()));
+    new_list
+}
+
+fn remove_integers(list: &[String]) -> Vec<String> {
+    let mut new_list = list.to_vec();
+    // This logic trips me out a bit, but I think it
+    // works correctly
+    new_list.retain(|word| !word.chars().any(|c| c.is_numeric()));
     new_list
 }
 
