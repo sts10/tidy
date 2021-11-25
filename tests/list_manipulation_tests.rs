@@ -231,6 +231,21 @@ mod list_manipulation_tests {
     }
 
     #[test]
+    fn can_remove_words_longer_than_a_specified_maximum_length() {
+        let this_tidy_request = TidyRequest {
+            list: make_lists().0,
+            maximum_length: Some(7),
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
+        assert!(!new_list.contains(&"addiction".to_string()));
+        assert!(!new_list.contains(&"zookeeper".to_string()));
+        assert!(!new_list.contains(&"stationary".to_string()));
+        assert!(new_list.contains(&"tea".to_string()));
+        assert!(new_list.contains(&"station".to_string()));
+    }
+
+    #[test]
     fn can_remove_reject_words() {
         let words_to_reject: Vec<String> = vec!["mistake", "carnival"]
             .iter()

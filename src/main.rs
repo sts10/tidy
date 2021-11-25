@@ -50,8 +50,12 @@ struct Opt {
     delete_through_first_space: bool,
 
     /// Set minimum word length
-    #[structopt(short = "m", long = "minimum")]
+    #[structopt(short = "m", long = "minimum_word_length")]
     minimum_length: Option<usize>,
+
+    /// Set maximum word length
+    #[structopt(long = "maxium_word_length")]
+    maximum_length: Option<usize>,
 
     /// Path for optional list of words to reject
     #[structopt(short = "r", long = "reject", parse(from_os_str))]
@@ -102,6 +106,7 @@ fn main() {
             read_homophones_list_from_filenames(&[homophones_list_file])
         }),
         minimum_length: opt.minimum_length,
+        maximum_length: opt.maximum_length,
     };
 
     let tidied_list = tidy_list(this_tidy_request);

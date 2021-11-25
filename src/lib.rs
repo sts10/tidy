@@ -20,6 +20,7 @@ pub struct TidyRequest {
     pub approved_list: Option<Vec<String>>,
     pub homophones_list: Option<Vec<(String, String)>>,
     pub minimum_length: Option<usize>,
+    pub maximum_length: Option<usize>,
 }
 
 pub fn make_vec_from_filenames(filenames: &[PathBuf]) -> Vec<String> {
@@ -149,6 +150,10 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         Some(minimum_length) => remove_words_below_minimum_length(tidied_list, minimum_length),
         None => tidied_list,
     };
+    tidied_list = match req.maximum_length {
+        Some(maximum_length) => remove_words_above_maximum_length(tidied_list, maximum_length),
+        None => tidied_list,
+    };
     tidied_list = if req.should_remove_prefix_words {
         remove_prefix_words(sort_and_dedup(&mut tidied_list))
     } else {
@@ -251,6 +256,12 @@ fn remove_words_not_on_approved_list(list: Vec<String>, approved_list: Vec<Strin
 fn remove_words_below_minimum_length(list: Vec<String>, minimum_length: usize) -> Vec<String> {
     let mut new_list = list.to_vec();
     new_list.retain(|w| w.len() >= minimum_length);
+    new_list
+}
+
+fn remove_words_above_maximum_length(list: Vec<String>, maximum_length: usize) -> Vec<String> {
+    let mut new_list = list.to_vec();
+    new_list.retain(|w| w.len() <= maximum_length);
     new_list
 }
 
