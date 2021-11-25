@@ -173,7 +173,7 @@ dependencies = [
 
 [[package]]
 name = "tidy"
-version = "0.1.78"
+version = "0.1.79"
 dependencies = [
  "memchr",
  "structopt",

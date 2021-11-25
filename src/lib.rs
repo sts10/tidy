@@ -304,10 +304,7 @@ fn remove_prefix_words(list: Vec<String>) -> Vec<String> {
 fn enfore_minimum_edit_distance(list: Vec<String>, minimum_edit_distance: usize) -> Vec<String> {
     let minimum_edit_distance: u32 = minimum_edit_distance.try_into().unwrap();
     let mut new_list = list.to_vec();
-    let mut count = 0;
     new_list.retain(|potential_too_close_word| {
-        count += 1;
-        println!("On word {} of {}", count, list.len());
         for word in &list {
             // Skip if we're looking at the same word
             if word == potential_too_close_word {
