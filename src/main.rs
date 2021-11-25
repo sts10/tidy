@@ -22,53 +22,53 @@ struct Opt {
     to_lowercase: bool,
 
     /// Remove prefix words from list
-    #[structopt(short = "P", long = "remove_prefix")]
+    #[structopt(short = "P", long = "remove-prefix")]
     remove_prefix_words: bool,
 
     /// Remove all words with non-alphanumeric characters from list
-    #[structopt(short = "N", long = "remove_nonalphanumeric")]
+    #[structopt(short = "N", long = "remove-nonalphanumeric")]
     remove_nonalphanumeric: bool,
 
     /// Delete all non-alphanumeric characters from list
-    #[structopt(short = "n", long = "delete_nonalphanumeric")]
+    #[structopt(short = "n", long = "delete-nonalphanumeric")]
     delete_nonalphanumeric: bool,
 
     /// Remove all words with integers in them from list
-    #[structopt(short = "I", long = "remove_integers")]
+    #[structopt(short = "I", long = "remove-integers")]
     remove_integers: bool,
 
     /// Delete all integers from words
-    #[structopt(short = "i", long = "delete_integers")]
+    #[structopt(short = "i", long = "delete-integers")]
     delete_integers: bool,
 
     /// Delete characters through first tab
-    #[structopt(short = "t", long = "delete_through_tab")]
+    #[structopt(short = "t", long = "delete-through_tab")]
     delete_through_first_tab: bool,
 
     /// Delete characters through first space
-    #[structopt(short = "s", long = "delete_through_space")]
+    #[structopt(short = "s", long = "delete-through-space")]
     delete_through_first_space: bool,
 
     /// Only first N words from inputted word list. If two or more
     /// word lists are inputted, it will combine arbitrarily and then
     /// take first N words
-    #[structopt(long = "take_first")]
+    #[structopt(long = "take-first")]
     take_first: Option<usize>,
 
     /// Set minimum word length
-    #[structopt(short = "m", long = "minimum_word_length")]
+    #[structopt(short = "m", long = "minimum-word-length")]
     minimum_length: Option<usize>,
 
     /// Set maximum word length
-    #[structopt(long = "maxium_word_length")]
+    #[structopt(long = "maxium-word-length")]
     maximum_length: Option<usize>,
 
     /// Set minium edit distance between words
-    #[structopt(short = "d", long = "minimum_edit_distance")]
+    #[structopt(short = "d", long = "minimum-edit-distance")]
     minimum_edit_distance: Option<usize>,
 
     /// Set unique prefix length
-    #[structopt(short = "u", long = "unique_prefix_length")]
+    #[structopt(short = "u", long = "unique-prefix-length")]
     unique_prefix_length: Option<usize>,
 
     /// Path for optional list of words to reject
