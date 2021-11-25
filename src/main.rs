@@ -147,7 +147,7 @@ fn main() {
     if opt.verbose {
         eprintln!("Done");
     }
-    if opt.display_entropy {
+    if opt.display_entropy && !is_below_brute_force_line(&tidied_list) {
         display_list_information(tidied_list.len(), opt.remove_prefix_words);
     }
 }
