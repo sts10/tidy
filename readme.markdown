@@ -10,19 +10,21 @@ Given a text file with a word list, this tool will create a new word list that..
 - removes duplicate lines
 - sorts alphabetically
 
-and print that new word list to a new text file.
+and print that new word list to the terminal or to a new text file.
 
 Optionally, it can...
 - combine two or more word lists
 - make all characters lowercase (`-l`)
 - remove all words below a set character length (`-m 3`)
-- deletes all integers from words (`-i`)
-- removes all words with integers (`-I`)
+- delete all integers from words (`-i`)
+- remove all words with integers (`-I`)
+- delete all non-alphanumeric characters from words (`-n`)
+- remove all words with non-alphanumeric characters (`-N`)
 - delete all characters through first space from lines (`-s`)
 - delete all characters through first tab from lines (`-t`)
 - remove an inputted list of words to reject (`-r`)
 - only retain words from an approved list (`-a`)
-- remove homophones from a provided list of pairs of homophones (`-h`)
+- remove homophones from a provided list of comma-separated pairs of homophones (`-h`)
 - remove prefix words (see below) (`-P`)
 - calculate and display entropy-per-word of new list (`-e`)
 
