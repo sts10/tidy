@@ -2,6 +2,8 @@ use std::fs::File;
 use std::io::BufRead;
 use std::io::BufReader;
 use std::path::PathBuf;
+pub mod edit_distance;
+use crate::edit_distance::find_edit_distance;
 
 use memchr::memchr;
 
@@ -22,6 +24,7 @@ pub struct TidyRequest {
     pub minimum_length: Option<usize>,
     pub maximum_length: Option<usize>,
     pub unique_prefix_length: Option<usize>,
+    pub minimum_edit_distance: Option<usize>,
 }
 
 pub fn make_vec_from_filenames(filenames: &[PathBuf]) -> Vec<String> {
@@ -155,9 +158,11 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         Some(maximum_length) => remove_words_above_maximum_length(tidied_list, maximum_length),
         None => tidied_list,
     };
-    tidied_list = match req.unique_prefix_length {
-        Some(unique_prefix_length) => {
-            guarantee_unique_prefix_length(&tidied_list, unique_prefix_length)
+    // I think this is a good order for these next 3 operations,
+    // but I'm not super confident
+    tidied_list = match req.minimum_edit_distance {
+        Some(minimum_edit_distance) => {
+            enfore_minimum_edit_distance(tidied_list, minimum_edit_distance)
         }
         None => tidied_list,
     };
@@ -165,6 +170,12 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         remove_prefix_words(sort_and_dedup(&mut tidied_list))
     } else {
         tidied_list
+    };
+    tidied_list = match req.unique_prefix_length {
+        Some(unique_prefix_length) => {
+            guarantee_unique_prefix_length(&tidied_list, unique_prefix_length)
+        }
+        None => tidied_list,
     };
     // Have to remove any and all blank lines again in case any of
     // the delete calls made new blank lines
@@ -276,6 +287,37 @@ fn remove_prefix_words(list: Vec<String>) -> Vec<String> {
         true
     });
     list_without_prefix_words
+}
+
+fn enfore_minimum_edit_distance(list: Vec<String>, minimum_edit_distance: usize) -> Vec<String> {
+    let minimum_edit_distance: u32 = minimum_edit_distance.try_into().unwrap();
+    let mut new_list = list.to_vec();
+    let mut count = 0;
+    new_list.retain(|potential_too_close_word| {
+        count += 1;
+        println!("On word {} of {}", count, list.len());
+        for word in &list {
+            // Skip if we're looking at the same word
+            if word == potential_too_close_word {
+                continue;
+            }
+            if find_edit_distance(word, potential_too_close_word) < minimum_edit_distance {
+                // This potential_too_close_word is too close to another word on the list,
+                // so we do NOT want to retain it.
+                // return false to the retain
+                return false;
+            } else {
+                // This particular word is not too close to this potential_prefix_word.
+                // keep looping
+                continue;
+            };
+        }
+        // If we've made it here, we can be sure that potential_prefix_word is NOT too
+        // close to another  word. So we want to retain it for the new_list.
+        // To do this, we return true to the retain.
+        true
+    });
+    new_list
 }
 
 fn remove_reject_words(list: Vec<String>, reject_list: Vec<String>) -> Vec<String> {

@@ -26,8 +26,9 @@ Optionally, it can...
 - remove an inputted list of words to reject (`-r`)
 - only retain words from an approved list (`-a`)
 - remove homophones from a provided list of comma-separated pairs of homophones (`-h`)
+- enforce a minimum edit distance between words (`-d`)
 - remove prefix words (see below) (`-P`)
-- guarantee unique autocomplete prefix lengths of a set length (see below) (`-u`)
+- guarantee unique prefix lengths (see below) (`-u`)
 - calculate and display entropy-per-word of new list (`-e`)
 
 ## Usage
@@ -52,12 +53,16 @@ FLAGS:
     -v, --verbose                   Prints verbose output, including parameters as received
 
 OPTIONS:
-    -a, --approve <approved-list>                 Path for optional list of approved words
-    -h, --homophones <homophones-list>            Path for optional list of homophone pairs, separated by a comma
-        --maxium_word_length <maximum-length>     Set maximum word length
-    -m, --minimum_word_length <minimum-length>    Set minimum word length
-    -o, --output <output>                         Path for outputted list file
-    -r, --reject <reject-list>                    Path for optional list of words to reject
+    -a, --approve <approved-list>                          Path for optional list of approved words
+    -h, --homophones <homophones-list>
+            Path for optional list of homophone pairs, separated by a comma
+
+        --maxium_word_length <maximum-length>              Set maximum word length
+    -d, --minimum_edit_distance <minimum-edit-distance>    Set minium edit distance between words
+    -m, --minimum_word_length <minimum-length>             Set minimum word length
+    -o, --output <output>                                  Path for outputted list file
+    -r, --reject <reject-list>                             Path for optional list of words to reject
+    -u, --unique_prefix_length <unique-prefix-length>      Set unique prefix length
 
 ARGS:
     <Inputted Word Lists>...    Word list input files

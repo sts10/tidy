@@ -57,6 +57,10 @@ struct Opt {
     #[structopt(long = "maxium_word_length")]
     maximum_length: Option<usize>,
 
+    /// Set minium edit distance between words
+    #[structopt(short = "d", long = "minimum_edit_distance")]
+    minimum_edit_distance: Option<usize>,
+
     /// Set unique prefix length
     #[structopt(short = "u", long = "unique_prefix_length")]
     unique_prefix_length: Option<usize>,
@@ -112,6 +116,7 @@ fn main() {
         minimum_length: opt.minimum_length,
         maximum_length: opt.maximum_length,
         unique_prefix_length: opt.unique_prefix_length,
+        minimum_edit_distance: opt.minimum_edit_distance,
     };
 
     let tidied_list = tidy_list(this_tidy_request);
