@@ -65,6 +65,10 @@ struct Opt {
     #[structopt(short = "h", long = "homophones", parse(from_os_str))]
     homophones_list: Option<PathBuf>,
 
+    /// Force outputting of lists that fall below the brute force line
+    #[structopt(short = "f", long = "force")]
+    force_ignore_brute_line: bool,
+
     /// Path for outputted list file
     #[structopt(short = "o", long = "output", parse(from_os_str))]
     output: Option<PathBuf>,
@@ -101,6 +105,14 @@ fn main() {
     };
 
     let tidied_list = tidy_list(this_tidy_request);
+
+    if is_below_brute_force_line(&tidied_list) {
+        eprintln!("WARNING: The shortest word(s) on this new list is {} and the list is {} words-long. Assuming the list is made up of lowercase English characers, that places it BELOW the brute force line!\nConsider increasing minium word length (-m flag).", get_shortest_word_length(&tidied_list), tidied_list.len());
+        if !opt.force_ignore_brute_line {
+            eprintln!("You may force an override of this warning by using the --force/-f flag");
+            return;
+        }
+    }
 
     match opt.output {
         Some(output) => {

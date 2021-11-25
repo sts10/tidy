@@ -92,6 +92,14 @@ In both Tidy's code and documentation, "remove" means that a word will be remove
 1. [Install Rust](https://www.rust-lang.org/tools/install) if you haven't already
 2. Run: `cargo install --git https://github.com/sts10/tidy --branch main`
 
+## What is this "brute force line" warning? 
+
+If the shortest word on a word list is shorter than log26(word_list_length), there's a possibility that users generate a passphrase that has a lower entropy through brute-forcing. 
+
+As an example, let's say we had a 10,000-word list that contained the one-character word "a" on it. Given that it's 10,000 words, we'd expect each word to add an additional ~13.28 bits of entropy. That would mean a three-word passphrase would give users 39.86 bits of entropy. However! If a user happened to get "a-a-a" as their passphrase, a brute force method shows that entropy to be only 14.10 bits (4.7 * 3 words). Thus we can say that it falls below the "brute force line", a phrase I made up.
+
+By default, Tidy will refuse to generate lists that fall below this dangerous line. However, given its assumptions (English, lowercase, etc.), you may override this with the `-f/--force` flag.
+
 ## What are prefix words (aka prefix codes)? 
 
 A word list that doesn't have any prefix words (also known as "[prefix codes](https://en.wikipedia.org/wiki/Prefix_code)") can better guarantee more consistent entropy when combining words from the list randomly and without punctuation between the words. 

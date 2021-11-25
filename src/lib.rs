@@ -275,3 +275,19 @@ fn remove_homophones(list: Vec<String>, homophones: Vec<(String, String)>) -> Ve
 pub fn calc_entropy(list_size: usize) -> f64 {
     (list_size as f64).ln() / (2_f64.ln() as f64)
 }
+
+pub fn is_below_brute_force_line(list: &[String]) -> bool {
+    let list_length = list.len() as f64;
+    let shortest_word_length = get_shortest_word_length(list);
+    (shortest_word_length as f64) < list_length.log(26.0)
+}
+
+pub fn get_shortest_word_length(list: &[String]) -> usize {
+    let mut shortest_word_length: usize = usize::max_value();
+    for word in list {
+        if word.len() < shortest_word_length {
+            shortest_word_length = word.len();
+        }
+    }
+    shortest_word_length
+}
