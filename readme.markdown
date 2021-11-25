@@ -15,7 +15,8 @@ and print that new word list to the terminal or to a new text file.
 Optionally, it can...
 - combine two or more word lists
 - make all characters lowercase (`-l`)
-- remove all words below a set character length (`-m 3`)
+- remove all words shorter than a set character length (`-m 3`)
+- remove all words longer than a set character length (`--maximum_length 10`)
 - delete all integers from words (`-i`)
 - remove all words with integers (`-I`)
 - delete all non-alphanumeric characters from words (`-n`)
@@ -26,6 +27,7 @@ Optionally, it can...
 - only retain words from an approved list (`-a`)
 - remove homophones from a provided list of comma-separated pairs of homophones (`-h`)
 - remove prefix words (see below) (`-P`)
+- guarantee unique autocomplete prefix lengths of a set length (see below) (`-u`)
 - calculate and display entropy-per-word of new list (`-e`)
 
 ## Usage
@@ -109,6 +111,10 @@ A word list that doesn't have any prefix words (also known as "[prefix codes](ht
 As a brief example, if a list have "boy", "hood", and "boyhood" users who specified they wanted two words worth of randomness (entropy) might end up with "boyhood", which an attacker guessing single words would try. Removing prefix words -- in this case "boy" -- prevents this possibility from occurring.
 
 You can read more about this issue [here](https://github.com/ulif/diceware#prefix-code).
+
+## On unique prefix length
+
+Setting this value to, say, 3 means that each word on the resulting list will have a unique 3-character prefix. This is useful if you intend the list to be used by software that uses auto-complete.
 
 ## Language limitations 
 

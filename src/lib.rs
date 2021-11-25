@@ -21,6 +21,7 @@ pub struct TidyRequest {
     pub homophones_list: Option<Vec<(String, String)>>,
     pub minimum_length: Option<usize>,
     pub maximum_length: Option<usize>,
+    pub unique_prefix_length: Option<usize>,
 }
 
 pub fn make_vec_from_filenames(filenames: &[PathBuf]) -> Vec<String> {
@@ -154,6 +155,12 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         Some(maximum_length) => remove_words_above_maximum_length(tidied_list, maximum_length),
         None => tidied_list,
     };
+    tidied_list = match req.unique_prefix_length {
+        Some(unique_prefix_length) => {
+            guarantee_unique_prefix_length(&tidied_list, unique_prefix_length)
+        }
+        None => tidied_list,
+    };
     tidied_list = if req.should_remove_prefix_words {
         remove_prefix_words(sort_and_dedup(&mut tidied_list))
     } else {
@@ -183,6 +190,36 @@ fn delete_through_first_char(s: &str, ch: char) -> &str {
         None => s, // not found => return the whole string
         Some(pos) => &s[pos + 1..],
     }
+}
+
+use std::collections::HashMap;
+fn guarantee_unique_prefix_length(list: &[String], unique_prefix_length: usize) -> Vec<String> {
+    let mut prefix_hashmap: HashMap<String, String> = HashMap::new();
+    for this_word in list {
+        // If this word is too short just skip it.
+        if this_word.len() < unique_prefix_length {
+            continue;
+        }
+        prefix_hashmap
+            .entry(get_prefix(this_word, unique_prefix_length))
+            .and_modify(|existing_word| {
+                if this_word.len() < existing_word.len() {
+                    *existing_word = this_word.to_string()
+                }
+            })
+            // .or_insert(this_word.to_string());
+            .or_insert_with(|| this_word.to_string());
+    }
+    let new_vec: Vec<(&String, &String)> = prefix_hashmap.iter().collect();
+    let mut new_word_list = vec![];
+    for t in new_vec {
+        new_word_list.push(t.1.to_string());
+    }
+    new_word_list
+}
+
+fn get_prefix(word: &str, length: usize) -> String {
+    word[0..length].to_string()
 }
 
 fn remove_blank_lines(list: &[String]) -> Vec<String> {

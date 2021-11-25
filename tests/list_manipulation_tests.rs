@@ -216,6 +216,7 @@ mod list_manipulation_tests {
         assert!(new_list.contains(&"be".to_string()));
         assert!(new_list.contains(&"I".to_string()));
     }
+
     #[test]
     fn can_remove_words_shorter_than_a_specified_minimum_length() {
         let this_tidy_request = TidyRequest {
@@ -243,6 +244,22 @@ mod list_manipulation_tests {
         assert!(!new_list.contains(&"stationary".to_string()));
         assert!(new_list.contains(&"tea".to_string()));
         assert!(new_list.contains(&"station".to_string()));
+    }
+
+    #[test]
+    fn can_gurantee_unique_prefixes_for_autocomplete() {
+        let this_tidy_request = TidyRequest {
+            list: make_lists().0,
+            unique_prefix_length: Some(3),
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
+        assert!(new_list.contains(&"zoo".to_string()));
+        assert!(!new_list.contains(&"zookeeper".to_string()));
+        assert!(new_list.contains(&"station".to_string()));
+        assert!(!new_list.contains(&"stationary".to_string()));
+        assert!(new_list.contains(&"app".to_string()));
+        assert!(!new_list.contains(&"apple".to_string()));
     }
 
     #[test]

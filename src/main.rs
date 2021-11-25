@@ -57,6 +57,10 @@ struct Opt {
     #[structopt(long = "maxium_word_length")]
     maximum_length: Option<usize>,
 
+    /// Set unique prefix length
+    #[structopt(short = "u", long = "unique_prefix_length")]
+    unique_prefix_length: Option<usize>,
+
     /// Path for optional list of words to reject
     #[structopt(short = "r", long = "reject", parse(from_os_str))]
     reject_list: Option<PathBuf>,
@@ -107,6 +111,7 @@ fn main() {
         }),
         minimum_length: opt.minimum_length,
         maximum_length: opt.maximum_length,
+        unique_prefix_length: opt.unique_prefix_length,
     };
 
     let tidied_list = tidy_list(this_tidy_request);
