@@ -40,6 +40,7 @@ FLAGS:
     -s, --delete_through_space      Delete characters through first space
     -t, --delete_through_tab        Delete characters through first tab
     -e, --entropy                   Display information about newly created list when done, including entropy-per-word
+    -f, --force                     Force outputting of lists that fall below the brute force line
         --help                      Prints help information
     -I, --remove_integers           Remove all words with integers in them from list
     -N, --remove_nonalphanumeric    Remove all words with non-alphanumeric characters from list
@@ -49,11 +50,12 @@ FLAGS:
     -v, --verbose                   Prints verbose output, including parameters as received
 
 OPTIONS:
-    -a, --approve <approved-list>         Path for optional list of approved words
-    -h, --homophones <homophones-list>    Path for optional list of homophone pairs, separated by a comma
-    -m, --minimum <minimum-length>        Set minimum word length
-    -o, --output <output>                 Path for outputted list file
-    -r, --reject <reject-list>            Path for optional list of words to reject
+    -a, --approve <approved-list>                 Path for optional list of approved words
+    -h, --homophones <homophones-list>            Path for optional list of homophone pairs, separated by a comma
+        --maxium_word_length <maximum-length>     Set maximum word length
+    -m, --minimum_word_length <minimum-length>    Set minimum word length
+    -o, --output <output>                         Path for outputted list file
+    -r, --reject <reject-list>                    Path for optional list of words to reject
 
 ARGS:
     <Inputted Word Lists>...    Word list input files
