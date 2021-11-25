@@ -154,6 +154,9 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     } else {
         tidied_list
     };
+    // Have to remove any and all blank lines again in case any of
+    // the delete calls made new blank lines
+    tidied_list = remove_blank_lines(&tidied_list);
     tidied_list = sort_and_dedup(&mut tidied_list);
     tidied_list
 }
