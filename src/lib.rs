@@ -267,7 +267,7 @@ fn remove_homophones(list: Vec<String>, homophones: Vec<(String, String)>) -> Ve
     new_list
 }
 
-// I'm pretty sure this is an accurate, if wonky method of calculating entropy
+// I'm pretty sure this is an accurate, if obtuse method of calculating entropy
 // of a word list, given its size
 pub fn calc_entropy(list_size: usize) -> f64 {
     (list_size as f64).ln() / (2_f64.ln() as f64)
