@@ -171,7 +171,8 @@ fn main() {
 // We just want to "display" this information, rather than print it to files,
 // so we use eprintln!
 fn display_list_information(list: &[String]) {
-    eprintln!("Attributes of new list:");
+    eprintln!("Attributes of new list");
+    eprintln!("----------------------");
     let list_length = list.len();
     eprintln!("List length           : {}", list_length);
     let entropy_per_word = calc_entropy(list.len());
