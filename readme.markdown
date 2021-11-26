@@ -38,16 +38,16 @@ USAGE:
     tidy [FLAGS] [OPTIONS] [Inputted Word Lists]...
 
 FLAGS:
-    -i, --delete_integers           Delete all integers from words
-    -n, --delete_nonalphanumeric    Delete all non-alphanumeric characters from list
-    -s, --delete_through_space      Delete characters through first space
-    -t, --delete_through_tab        Delete characters through first tab
+    -i, --delete-integers           Delete all integers from words
+    -n, --delete-nonalphanumeric    Delete all non-alphanumeric characters from list
+    -s, --delete-through-space      Delete characters through first space
+    -t, --delete-through_tab        Delete characters through first tab
     -e, --entropy                   Display information about newly created list when done, including entropy-per-word
     -f, --force                     Force outputting of lists that fall below the brute force line
         --help                      Prints help information
-    -I, --remove_integers           Remove all words with integers in them from list
-    -N, --remove_nonalphanumeric    Remove all words with non-alphanumeric characters from list
-    -P, --remove_prefix             Remove prefix words from list
+    -I, --remove-integers           Remove all words with integers in them from list
+    -N, --remove-nonalphanumeric    Remove all words with non-alphanumeric characters from list
+    -P, --remove-prefix             Remove prefix words from list
     -l, --lowercase                 Lowercase all words
     -V, --version                   Prints version information
     -v, --verbose                   Prints verbose output, including parameters as received
@@ -57,12 +57,15 @@ OPTIONS:
     -h, --homophones <homophones-list>
             Path for optional list of homophone pairs, separated by a comma
 
-        --maxium_word_length <maximum-length>              Set maximum word length
-    -d, --minimum_edit_distance <minimum-edit-distance>    Set minium edit distance between words
-    -m, --minimum_word_length <minimum-length>             Set minimum word length
+        --maxium-word-length <maximum-length>              Set maximum word length
+    -d, --minimum-edit-distance <minimum-edit-distance>    Set minium edit distance between words
+    -m, --minimum-word-length <minimum-length>             Set minimum word length
     -o, --output <output>                                  Path for outputted list file
     -r, --reject <reject-list>                             Path for optional list of words to reject
-    -u, --unique_prefix_length <unique-prefix-length>      Set unique prefix length
+        --take-first <take-first>
+            Only first N words from inputted word list. If two or more word lists are inputted, it will combine
+            arbitrarily and then take first N words
+    -u, --unique-prefix-length <unique-prefix-length>      Set unique prefix length
 
 ARGS:
     <Inputted Word Lists>...    Word list input files
