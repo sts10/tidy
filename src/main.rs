@@ -9,13 +9,13 @@ use tidy::*;
 #[derive(StructOpt, Debug)]
 #[structopt(name = "tidy")]
 struct Opt {
-    /// Prints verbose output, including parameters as received
-    #[structopt(short = "v", long = "verbose")]
-    verbose: bool,
+    /// Do not print any extra information
+    #[structopt(short = "q", long = "quiet")]
+    quiet: bool,
 
-    /// Display information about newly created list when done, including entropy-per-word
-    #[structopt(short = "e", long = "entropy")]
-    display_entropy: bool,
+    /// Dry run. Don't write new list to file or terminal.
+    #[structopt(long = "dry-run")]
+    dry_run: bool,
 
     /// Lowercase all words
     #[structopt(short = "l", long = "lowercase")]
@@ -106,9 +106,9 @@ struct Opt {
 
 fn main() {
     let opt = Opt::from_args();
-    if opt.verbose {
-        println!("Received options: {:?}", opt);
-    }
+    // if opt.verbose {
+    //     println!("Received options: {:?}", opt);
+    // }
 
     let this_tidy_request = TidyRequest {
         list: make_vec_from_filenames(&opt.inputted_word_list),
@@ -145,40 +145,82 @@ fn main() {
         }
     }
 
-    match opt.output {
-        Some(output) => {
-            let mut f = File::create(output).expect("Unable to create file");
-            for word in &tidied_list {
-                writeln!(f, "{}", word).expect("Unable to write data to file");
+    if !opt.dry_run {
+        match opt.output {
+            Some(output) => {
+                let mut f = File::create(output).expect("Unable to create file");
+                for word in &tidied_list {
+                    writeln!(f, "{}", word).expect("Unable to write data to file");
+                }
             }
-        }
-        // If no output file destination, print resulting like, word by word
-        // to println (which goest tostdout, allowing for use of > on command like)
-        None => {
-            for word in &tidied_list {
-                println!("{}", word)
+            // If no output file destination, print resulting like, word by word
+            // to println (which goes to stdout, allowing for use of > on command like)
+            None => {
+                for word in &tidied_list {
+                    println!("{}", word)
+                }
             }
         }
     }
-    if opt.verbose {
-        eprintln!("Done");
-    }
-    if opt.display_entropy && !is_below_brute_force_line(&tidied_list) {
-        display_list_information(tidied_list.len(), opt.remove_prefix_words);
+    if !opt.quiet {
+        eprintln!("Done making list");
+        display_list_information(&tidied_list);
     }
 }
 
 // We just want to "display" this information, rather than print it to files,
 // so we use eprintln!
-fn display_list_information(list_len: usize, removed_prefix_words: bool) {
-    eprintln!("New list is {} lines long.", list_len);
-    if removed_prefix_words {
-        eprintln!("Assuming you choose words randomly, each word adds approximately {:.4} bits of entropy.",
-            calc_entropy(list_len)
-        );
-    } else {
-        eprintln!("Assuming you choose words randomly and you use a separator between the words, each word adds approximately {:.4} bits of entropy.",
-            calc_entropy(list_len)
-        );
+fn display_list_information(list: &[String]) {
+    eprintln!("Attributes of new list:");
+    let list_length = list.len();
+    eprintln!("List length           : {}", list_length);
+    let entropy_per_word = calc_entropy(list.len());
+    eprintln!("Entropy of per word   : {:.4}", entropy_per_word);
+    let shortest_word = list.iter().min_by(|a, b| a.len().cmp(&b.len())).unwrap();
+    eprintln!(
+        "Shortest word         : {} ({})",
+        shortest_word.chars().count(),
+        shortest_word
+    );
+    let longest_word = list.iter().max_by(|a, b| a.len().cmp(&b.len())).unwrap();
+    eprintln!(
+        "Longest word          : {} ({})",
+        longest_word.chars().count(),
+        longest_word
+    );
+    let free_of_prefix_words = !has_prefix_words(list);
+    eprintln!("Free of prefix words  : {}", free_of_prefix_words);
+    let under_brute_line: bool = is_below_brute_force_line(list);
+    eprintln!("Above brute force line: {}", !under_brute_line);
+    let shortest_edit_distance = find_shortest_edit_distance(list);
+    eprintln!("Shortest edit distance: {}", shortest_edit_distance);
+}
+
+use crate::edit_distance::find_edit_distance;
+fn find_shortest_edit_distance(list: &[String]) -> usize {
+    let mut shortest_edit_distance = u32::max_value();
+    // I think I can cheat aand only go through half of the
+    // list here
+    for word1 in list[0..(list.len() / 2)].iter() {
+        for word2 in list {
+            if word1 != word2 {
+                let this_edit_distance = find_edit_distance(word1, word2);
+                if this_edit_distance < shortest_edit_distance {
+                    shortest_edit_distance = this_edit_distance;
+                }
+            }
+        }
     }
+    shortest_edit_distance.try_into().unwrap()
+}
+
+fn has_prefix_words(list: &[String]) -> bool {
+    for word1 in list {
+        for word2 in list {
+            if word1 != word2 && word1.starts_with(word2) {
+                return true;
+            }
+        }
+    }
+    false
 }
