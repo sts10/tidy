@@ -40,6 +40,7 @@ FLAGS:
     -f, --force                     Force outputting of lists that fall below the brute force line
         --help                      Prints help information
     -I, --remove-integers           Remove all words with integers in them from list
+    -L, --remove-nonalphabetic      Remove all words with non-alphabetic characters from list (only letters)
     -N, --remove-nonalphanumeric    Remove all words with non-alphanumeric characters from list
     -P, --remove-prefix             Remove prefix words from list
     -l, --lowercase                 Lowercase all words
