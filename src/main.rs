@@ -54,9 +54,9 @@ struct Opt {
     #[structopt(short = "s", long = "delete-through-space")]
     delete_through_first_space: bool,
 
-    /// Only first N words from inputted word list. If two or more
-    /// word lists are inputted, it will combine arbitrarily and then
-    /// take first N words
+    /// Only take first N words from inputted word list.
+    /// If two or more word lists are inputted, it will
+    /// combine arbitrarily and then take first N words.
     #[structopt(long = "take-first")]
     take_first: Option<usize>,
 

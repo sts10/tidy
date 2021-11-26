@@ -4,15 +4,15 @@ A command-line tool for combining and cleaning large word list files.
 
 ## What this tool can do
 
-Given a text file with a word list, this tool will create a new word list that...
-- deletes whitespace
-- removes empty lines
-- removes duplicate lines
-- sorts alphabetically
+Given a text file with a word list, this tool will create a new word list in which...
+- duplicate lines are removed
+- empty lines have been removed
+- whitespace from beginning and end of words is deleted
+- words are sorted alphabetically
 
-and print that new word list to the terminal or to a new text file.
+and print that new word list to the terminal or to a new text file. Information about the new list, such as entropy per word, will also be printed to the terminal by default (using Rust's `eprintln!` macro).
 
-Optionally, it can...
+Optionally, the tool can...
 - combine two or more word lists
 - make all characters lowercase (`-l`)
 - set a minimum and maximum for word lengths
@@ -23,50 +23,51 @@ Optionally, it can...
 - enforce a minimum [edit distance](https://en.wikipedia.org/wiki/Edit_distance) between words (`-d`)
 - remove prefix words (see below) (`-P`)
 - guarantee unique prefix lengths (see below) (`-u`)
-- calculate and display entropy-per-word of word list (`-e`)
 
 ## Usage
 
 ```txt
 USAGE:
-    tidy [FLAGS] [OPTIONS] [Inputted Word Lists]...
+tidy [FLAGS] [OPTIONS] [Inputted Word Lists]...
 
 FLAGS:
-    -i, --delete-integers           Delete all integers from words
-    -n, --delete-nonalphanumeric    Delete all non-alphanumeric characters from list
-    -s, --delete-through-space      Delete characters through first space
-    -t, --delete-through_tab        Delete characters through first tab
-    -e, --entropy                   Display information about newly created list when done, including entropy-per-word
-    -f, --force                     Force outputting of lists that fall below the brute force line
-        --help                      Prints help information
-    -I, --remove-integers           Remove all words with integers in them from list
-    -L, --remove-nonalphabetic      Remove all words with non-alphabetic characters from list (only letters)
-    -N, --remove-nonalphanumeric    Remove all words with non-alphanumeric characters from list
-    -P, --remove-prefix             Remove prefix words from list
-    -l, --lowercase                 Lowercase all words
-    -V, --version                   Prints version information
-    -v, --verbose                   Prints verbose output, including parameters as received
+-i, --delete-integers           Delete all integers from words
+-n, --delete-nonalphanumeric    Delete all non-alphanumeric characters from list
+-s, --delete-through-space      Delete characters through first space
+-t, --delete-through-tab        Delete characters through first tab
+    --dry-run                   Dry run. Don't write new list to file or terminal
+-f, --force                     Force outputting of lists that fall below the brute force line
+    --help                      Prints help information
+-q, --quiet                     Do not print any extra information
+-I, --remove-integers           Remove all words with integers in them from list
+-L, --remove-nonalphabetic      Remove all words with non-alphabetic characters from list (leaving only words
+                                composed entirely of letters [A-Z] or [a-z])
+-N, --remove-nonalphanumeric    Remove all words with non-alphanumeric characters from list
+-P, --remove-prefix             Remove prefix words from list
+-l, --lowercase                 Lowercase all words
+-V, --version                   Prints version information
 
 OPTIONS:
-    -a, --approve <approved-list>                          Path for optional list of approved words
-    -h, --homophones <homophones-list>
-            Path for optional list of homophone pairs. One pair per line, separated by a comma
+-a, --approve <approved-list>                          Path for optional list of approved words
+-h, --homophones <homophones-list>
+        Path for optional list of homophone pairs. One pair per line, separated by a comma
 
-        --maxium-word-length <maximum-length>              Set maximum word length
-    -d, --minimum-edit-distance <minimum-edit-distance>
-            Set minimum edit distance between words, which can reduce the cost of typos when entering words
+    --maxium-word-length <maximum-length>              Set maximum word length
+-d, --minimum-edit-distance <minimum-edit-distance>
+        Set minimum edit distance between words, which can reduce the cost of typos when entering words
 
-    -m, --minimum-word-length <minimum-length>             Set minimum word length
-    -o, --output <output>                                  Path for outputted list file
-    -r, --reject <reject-list>                             Path for optional list of words to reject
-        --take-first <take-first>
-            Only first N words from inputted word list. If two or more word lists are inputted, it will combine
-            arbitrarily and then take first N words
-    -u, --unique-prefix-length <unique-prefix-length>
-            Set unique prefix length, which can aid auto-complete functionality
+-m, --minimum-word-length <minimum-length>             Set minimum word length
+-o, --output <output>                                  Path for outputted list file
+-r, --reject <reject-list>                             Path for optional list of words to reject
+    --take-first <take-first>
+        Only take first N words from inputted word list. If two or more word lists are inputted, it will combine
+        arbitrarily and then take first N words
+-u, --unique-prefix-length <unique-prefix-length>
+        Set unique prefix length, which can aid auto-complete functionality
+
 
 ARGS:
-    <Inputted Word Lists>...    Word list input files
+<Inputted Word Lists>...    Word list input files
 ```
 
 ## Usage examples
@@ -89,7 +90,7 @@ ARGS:
 
 - `tidy -l -o new_list.txt -h homophone_pairs.txt inputted_word_list.txt` Similar to above, but expects `homophones_pairs.txt` to be a list of homophones pairs separated by a comma ("right,write" then next line: "epic,epoch"). If both words in the pair are on the inputted_word_list, Tidy will remove the second one. If only one of the words in the pair are on the list, Tidy won't remove it. Must be only two words per line.
 
-- `tidy -le -m 3 -o new-list.txt inputted_word_list.txt` Similar to above, but the `-m 3` means new list won't have any words under 3 characters in length. Also, `-e` flag will cause program to display [entropy](https://en.wikipedia.org/wiki/Entropy_(information_theory)) information when it's done making the new list.
+- `tidy -l -m 3 -o new-list.txt inputted_word_list.txt` Similar to above, but the `-m 3` means new list won't have any words under 3 characters in length.
 
 - `tidy -t -o just_the_words.txt diceware_list.txt` If you've got [a diceware list with numbers and a tab before each word](https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt), the `-t` flag will delete everything up to and including the first tab in each line ("11133	abruptly" becomes "abruptly").
 
