@@ -220,13 +220,13 @@ fn guarantee_unique_prefix_length(list: &[String], unique_prefix_length: usize) 
     let mut prefix_hashmap: HashMap<String, String> = HashMap::new();
     for this_word in list {
         // If this word is too short just skip it.
-        if this_word.len() < unique_prefix_length {
+        if this_word.chars().count() < unique_prefix_length {
             continue;
         }
         prefix_hashmap
             .entry(get_prefix(this_word, unique_prefix_length))
             .and_modify(|existing_word| {
-                if this_word.len() < existing_word.len() {
+                if this_word.chars().count() < existing_word.chars().count() {
                     *existing_word = this_word.to_string()
                 }
             })
@@ -242,7 +242,7 @@ fn guarantee_unique_prefix_length(list: &[String], unique_prefix_length: usize) 
 }
 
 fn get_prefix(word: &str, length: usize) -> String {
-    word[0..length].to_string()
+    word.chars().take(length).collect::<String>()
 }
 
 fn remove_blank_lines(list: &[String]) -> Vec<String> {
@@ -343,13 +343,13 @@ fn remove_words_not_on_approved_list(list: Vec<String>, approved_list: Vec<Strin
 
 fn remove_words_below_minimum_length(list: Vec<String>, minimum_length: usize) -> Vec<String> {
     let mut new_list = list.to_vec();
-    new_list.retain(|w| w.len() >= minimum_length);
+    new_list.retain(|w| w.chars().count() >= minimum_length);
     new_list
 }
 
 fn remove_words_above_maximum_length(list: Vec<String>, maximum_length: usize) -> Vec<String> {
     let mut new_list = list.to_vec();
-    new_list.retain(|w| w.len() <= maximum_length);
+    new_list.retain(|w| w.chars().count() <= maximum_length);
     new_list
 }
 
@@ -384,8 +384,8 @@ pub fn is_below_brute_force_line(list: &[String]) -> bool {
 pub fn get_shortest_word_length(list: &[String]) -> usize {
     let mut shortest_word_length: usize = usize::max_value();
     for word in list {
-        if word.len() < shortest_word_length {
-            shortest_word_length = word.len();
+        if word.chars().count() < shortest_word_length {
+            shortest_word_length = word.chars().count();
         }
     }
     shortest_word_length
