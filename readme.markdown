@@ -15,21 +15,15 @@ and print that new word list to the terminal or to a new text file.
 Optionally, it can...
 - combine two or more word lists
 - make all characters lowercase (`-l`)
-- remove all words shorter than a set character length (`-m 3`)
-- remove all words longer than a set character length (`--maximum_length 10`)
-- delete all integers from words (`-i`)
-- remove all words with integers (`-I`)
-- delete all non-alphanumeric characters from words (`-n`)
-- remove all words with non-alphanumeric characters (`-N`)
-- delete all characters through first space from lines (`-s`)
-- delete all characters through first tab from lines (`-t`)
-- remove an inputted list of words to reject (`-r`)
-- only retain words from an approved list (`-a`)
+- set a minimum and maximum for word lengths
+- handle words with integers and non-alphanumeric characters
+- delete all characters through first space (`-s`) or tab (`-t`)
+- take lists of words to reject or retain 
 - remove homophones from a provided list of comma-separated pairs of homophones (`-h`)
 - enforce a minimum [edit distance](https://en.wikipedia.org/wiki/Edit_distance) between words (`-d`)
 - remove prefix words (see below) (`-P`)
 - guarantee unique prefix lengths (see below) (`-u`)
-- calculate and display entropy-per-word of new list (`-e`)
+- calculate and display entropy-per-word of word list (`-e`)
 
 ## Usage
 
@@ -55,17 +49,20 @@ FLAGS:
 OPTIONS:
     -a, --approve <approved-list>                          Path for optional list of approved words
     -h, --homophones <homophones-list>
-            Path for optional list of homophone pairs, separated by a comma
+            Path for optional list of homophone pairs. One pair per line, separated by a comma
 
         --maxium-word-length <maximum-length>              Set maximum word length
-    -d, --minimum-edit-distance <minimum-edit-distance>    Set minium edit distance between words
+    -d, --minimum-edit-distance <minimum-edit-distance>
+            Set minimum edit distance between words, which can reduce the cost of typos when entering words
+
     -m, --minimum-word-length <minimum-length>             Set minimum word length
     -o, --output <output>                                  Path for outputted list file
     -r, --reject <reject-list>                             Path for optional list of words to reject
         --take-first <take-first>
             Only first N words from inputted word list. If two or more word lists are inputted, it will combine
             arbitrarily and then take first N words
-    -u, --unique-prefix-length <unique-prefix-length>      Set unique prefix length
+    -u, --unique-prefix-length <unique-prefix-length>
+            Set unique prefix length, which can aid auto-complete functionality
 
 ARGS:
     <Inputted Word Lists>...    Word list input files

@@ -63,11 +63,13 @@ struct Opt {
     #[structopt(long = "maxium-word-length")]
     maximum_length: Option<usize>,
 
-    /// Set minium edit distance between words
+    /// Set minimum edit distance between words, which
+    /// can reduce the cost of typos when entering words
     #[structopt(short = "d", long = "minimum-edit-distance")]
     minimum_edit_distance: Option<usize>,
 
-    /// Set unique prefix length
+    /// Set unique prefix length, which can aid auto-complete
+    /// functionality
     #[structopt(short = "u", long = "unique-prefix-length")]
     unique_prefix_length: Option<usize>,
 
@@ -79,7 +81,8 @@ struct Opt {
     #[structopt(short = "a", long = "approve", parse(from_os_str))]
     approved_list: Option<PathBuf>,
 
-    /// Path for optional list of homophone pairs, separated by a comma
+    /// Path for optional list of homophone pairs. One pair
+    /// per line, separated by a comma
     #[structopt(short = "h", long = "homophones", parse(from_os_str))]
     homophones_list: Option<PathBuf>,
 
