@@ -33,7 +33,8 @@ struct Opt {
     #[structopt(short = "n", long = "delete-nonalphanumeric")]
     delete_nonalphanumeric: bool,
 
-    /// Remove all words with non-alphabetic characters from list (only letters)
+    /// Remove all words with non-alphabetic characters from list
+    /// (leaving only words composed entirely of letters [A-Z] or [a-z])
     #[structopt(short = "L", long = "remove-nonalphabetic")]
     remove_nonalphabetic: bool,
 
@@ -46,7 +47,7 @@ struct Opt {
     delete_integers: bool,
 
     /// Delete characters through first tab
-    #[structopt(short = "t", long = "delete-through_tab")]
+    #[structopt(short = "t", long = "delete-through-tab")]
     delete_through_first_tab: bool,
 
     /// Delete characters through first space
