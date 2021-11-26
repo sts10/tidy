@@ -174,27 +174,27 @@ fn display_list_information(list: &[String]) {
     eprintln!("Attributes of new list");
     eprintln!("----------------------");
     let list_length = list.len();
-    eprintln!("List length           : {}", list_length);
+    eprintln!("List length            : {}", list_length);
     let entropy_per_word = calc_entropy(list.len());
-    eprintln!("Entropy of per word   : {:.4}", entropy_per_word);
+    eprintln!("Entropy per word       : {:.4}", entropy_per_word);
     let shortest_word = list.iter().min_by(|a, b| a.len().cmp(&b.len())).unwrap();
     eprintln!(
-        "Shortest word         : {} ({})",
+        "Length of shortest word: {} ({})",
         shortest_word.chars().count(),
         shortest_word
     );
     let longest_word = list.iter().max_by(|a, b| a.len().cmp(&b.len())).unwrap();
     eprintln!(
-        "Longest word          : {} ({})",
+        "Length of longest word : {} ({})",
         longest_word.chars().count(),
         longest_word
     );
     let free_of_prefix_words = !has_prefix_words(list);
-    eprintln!("Free of prefix words  : {}", free_of_prefix_words);
+    eprintln!("Free of prefix words   : {}", free_of_prefix_words);
     let under_brute_line: bool = is_below_brute_force_line(list);
-    eprintln!("Above brute force line: {}", !under_brute_line);
+    eprintln!("Above brute force line : {}", !under_brute_line);
     let shortest_edit_distance = find_shortest_edit_distance(list);
-    eprintln!("Shortest edit distance: {}", shortest_edit_distance);
+    eprintln!("Shortest edit distance : {}", shortest_edit_distance);
 }
 
 use crate::edit_distance::find_edit_distance;
