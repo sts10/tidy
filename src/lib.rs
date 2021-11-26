@@ -12,6 +12,7 @@ pub struct TidyRequest {
     pub list: Vec<String>,
     pub to_lowercase: bool,
     pub should_remove_prefix_words: bool,
+    pub should_remove_nonalphabetic: bool,
     pub should_remove_nonalphanumeric: bool,
     pub should_delete_nonalphanumeric: bool,
     pub should_remove_integers: bool,
@@ -147,6 +148,11 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     } else {
         tidied_list
     };
+    tidied_list = if req.should_remove_nonalphabetic {
+        remove_nonalphabetic(&tidied_list)
+    } else {
+        tidied_list
+    };
     tidied_list = if req.should_remove_integers {
         remove_integers(&tidied_list)
     } else {
@@ -257,6 +263,16 @@ fn remove_nonalphanumeric(list: &[String]) -> Vec<String> {
     // works correctly
     new_list.retain(|word| !word.chars().any(|c| !c.is_alphanumeric()));
     new_list
+}
+
+fn remove_nonalphabetic(list: &[String]) -> Vec<String> {
+    let mut new_list = list.to_vec();
+    new_list.retain(|word| !word.chars().any(|chr| !is_alphabetic(chr as u8)));
+    new_list
+}
+
+fn is_alphabetic(chr: u8) -> bool {
+    (chr >= 0x41 && chr <= 0x5A) || (chr >= 0x61 && chr <= 0x7A)
 }
 
 fn remove_integers(list: &[String]) -> Vec<String> {

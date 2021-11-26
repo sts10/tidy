@@ -33,6 +33,10 @@ struct Opt {
     #[structopt(short = "n", long = "delete-nonalphanumeric")]
     delete_nonalphanumeric: bool,
 
+    /// Remove all words with non-alphabetic characters from list (only letters)
+    #[structopt(short = "L", long = "remove-nonalphabetic")]
+    remove_nonalphabetic: bool,
+
     /// Remove all words with integers in them from list
     #[structopt(short = "I", long = "remove-integers")]
     remove_integers: bool,
@@ -112,6 +116,7 @@ fn main() {
         should_remove_prefix_words: opt.remove_prefix_words,
         should_remove_integers: opt.remove_integers,
         should_delete_integers: opt.delete_integers,
+        should_remove_nonalphabetic: opt.remove_nonalphabetic,
         should_remove_nonalphanumeric: opt.remove_nonalphanumeric,
         should_delete_nonalphanumeric: opt.delete_nonalphanumeric,
         should_delete_through_first_tab: opt.delete_through_first_tab,

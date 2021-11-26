@@ -218,6 +218,24 @@ mod list_manipulation_tests {
     }
 
     #[test]
+    fn can_remove_words_with_nonalphabetic_characters() {
+        let this_tidy_request = TidyRequest {
+            list: make_lists().1,
+            should_remove_nonalphabetic: true,
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
+        assert!(!new_list.contains(&"19-6-8 clad".to_string()));
+        assert!(!new_list.contains(&"world999".to_string()));
+        assert!(!new_list.contains(&"world".to_string()));
+        assert!(!new_list.contains(&"post-modern".to_string()));
+        assert!(!new_list.contains(&"postmodern".to_string()));
+        assert!(new_list.contains(&"take".to_string()));
+        assert!(new_list.contains(&"wizard".to_string()));
+        assert!(new_list.contains(&"vAcation".to_string()));
+    }
+
+    #[test]
     fn can_remove_words_with_integers() {
         let this_tidy_request = TidyRequest {
             list: make_lists().1,
