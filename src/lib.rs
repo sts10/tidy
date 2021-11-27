@@ -232,11 +232,12 @@ fn guarantee_unique_prefix_length(list: &[String], unique_prefix_length: usize) 
         prefix_hashmap
             .entry(get_prefix(this_word, unique_prefix_length))
             .and_modify(|existing_word| {
+                // Prefer shorter words, as a stand-in for simplicity (though that
+                // is debatable...)
                 if this_word.chars().count() < existing_word.chars().count() {
                     *existing_word = this_word.to_string()
                 }
             })
-            // .or_insert(this_word.to_string());
             .or_insert_with(|| this_word.to_string());
     }
     let new_vec: Vec<(&String, &String)> = prefix_hashmap.iter().collect();
