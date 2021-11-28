@@ -95,6 +95,11 @@ struct Opt {
     #[structopt(short = "f", long = "force")]
     force_ignore_brute_line: bool,
 
+    /// Print dice roll next to word in output. Set number of sides
+    /// of dice.
+    #[structopt(short = "D", long = "dice")]
+    dice_sides: Option<u8>,
+
     /// Path for outputted list file
     #[structopt(short = "o", long = "output", parse(from_os_str))]
     output: Option<PathBuf>,
@@ -155,11 +160,18 @@ fn main() {
             }
             // If no output file destination, print resulting like, word by word
             // to println (which goes to stdout, allowing for use of > on command like)
-            None => {
-                for word in &tidied_list {
-                    println!("{}", word)
+            None => match opt.dice_sides {
+                None => {
+                    for word in &tidied_list {
+                        println!("{}", word);
+                    }
                 }
-            }
+                Some(dice_sides) => {
+                    for (i, word) in tidied_list.iter().enumerate() {
+                        println!("{}\t{}", print_as_dice(i, dice_sides), word);
+                    }
+                }
+            },
         }
     }
     if !opt.quiet {

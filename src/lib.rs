@@ -386,6 +386,17 @@ fn remove_homophones(list: Vec<String>, homophones: Vec<(String, String)>) -> Ve
     new_list
 }
 
+use radix_fmt::*;
+pub fn print_as_dice(n: usize, base: u8) -> String {
+    let as_base = radix(n, base).to_string();
+    // Need to add one to each digit to make it
+    // easier to compare to rolled dice
+    as_base
+        .chars()
+        .map(|s| (s.to_string().parse::<usize>().unwrap() + 1).to_string())
+        .collect::<String>()
+}
+
 // I'm pretty sure this is an accurate, if obtuse method of calculating entropy
 // of a word list, given its size
 pub fn calc_entropy(list_size: usize) -> f64 {

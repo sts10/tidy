@@ -7,3 +7,4 @@ edition = "2021"
 [dependencies]
 structopt = "0.3"
 memchr = "2.4"
+radix_fmt = "1.0.0"
