@@ -95,9 +95,9 @@ struct Opt {
     #[structopt(short = "h", long = "homophones", parse(from_os_str))]
     homophones_list: Option<PathBuf>,
 
-    /// Force outputting of lists that fall below the brute force line
-    #[structopt(short = "f", long = "force")]
-    force_ignore_brute_line: bool,
+    /// Fail if output list falls below "brute force line"
+    #[structopt(short = "b", long = "brute")]
+    warn_if_below_brute_force: bool,
 
     /// Print dice roll next to word in output. Set number of sides
     /// of dice. Use 6 for normal dice.
@@ -150,12 +150,10 @@ fn main() {
 
     let tidied_list = tidy_list(this_tidy_request);
 
-    if is_below_brute_force_line(&tidied_list) {
+    if opt.warn_if_below_brute_force && is_below_brute_force_line(&tidied_list) {
         eprintln!("WARNING: The shortest word(s) on this new list is {} and the list is {} words-long. Assuming the list is made up of lowercase English characers, that places it BELOW the brute force line!\nConsider increasing minium word length (-m flag).", get_shortest_word_length(&tidied_list), tidied_list.len());
-        if !opt.force_ignore_brute_line {
-            eprintln!("You may force an override of this warning by using the --force/-f flag");
-            return;
-        }
+        eprintln!("You may force an override of this warning by not using the -b/--brute flag");
+        return;
     }
 
     if !opt.dry_run {
