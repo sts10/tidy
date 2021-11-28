@@ -182,7 +182,7 @@ fn main() {
         }
     }
     if opt.attributes && !opt.quiet {
-        eprintln!("Done making list");
+        eprintln!("----------------\nDone making list");
         display_list_information(&tidied_list);
     }
 }
