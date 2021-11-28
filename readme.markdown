@@ -10,7 +10,7 @@ Given a text file with a word list, this tool will create a new word list in whi
 - whitespace from beginning and end of words is deleted
 - words are sorted alphabetically
 
-and print that new word list to the terminal or to a new text file. Information about the new list, such as entropy per word, will also be printed to the terminal by default (using Rust's `eprintln!` macro).
+and print that new word list to the terminal or to a new text file. 
 
 Optionally, the tool can...
 - combine two or more word lists
@@ -19,11 +19,12 @@ Optionally, the tool can...
 - handle words with integers and non-alphanumeric characters
 - delete all characters through first space (`-s`) or tab (`-t`)
 - take lists of words to reject or retain 
-- remove homophones from a provided list of comma-separated pairs of homophones (`-h`)
+- remove homophones from a provided list of comma-separated pairs of homophones
 - enforce a minimum [edit distance](https://en.wikipedia.org/wiki/Edit_distance) between words (`-d`)
 - remove prefix words (see below) (`-P`)
 - guarantee unique prefix lengths (see below) (`-u`)
-- print corresponding dice rolls before words, separated by a tab. Dice can have 2 to 9 sides.
+- print corresponding dice rolls before words, separated by a tab. Dice can have 2 to 9 sides. (`-D`)
+- print information about the new list, such as entropy per word, to the terminal (`-A`)
 
 ## Usage
 
@@ -38,7 +39,6 @@ FLAGS:
     -s, --delete-through-space      Delete characters through first space
     -t, --delete-through-tab        Delete characters through first tab
         --dry-run                   Dry run. Don't write new list to file or terminal
-    -f, --force                     Force outputting of lists that fall below the brute force line
         --help                      Prints help information
     -q, --quiet                     Do not print any extra information
     -I, --remove-integers           Remove all words with integers in them from list
@@ -48,12 +48,13 @@ FLAGS:
     -P, --remove-prefix             Remove prefix words from list
     -l, --lowercase                 Lowercase all words
     -V, --version                   Prints version information
+    -b, --brute                     Fail if output list falls below "brute force line"
 
 OPTIONS:
     -a, --approve <approved-list>                          Path for optional list of approved words
     -D, --dice <dice-sides>
-            Print dice roll next to word in output. Set number of sides of dice. Use 6 for normal dice
-
+            Print dice roll next to word in output. Set number of sides of dice. Must be between 2 and 9. Use 6 for
+            normal dice
     -h, --homophones <homophones-list>
             Path for optional list of homophone pairs. One pair per line, separated by a comma
 
@@ -99,7 +100,7 @@ ARGS:
 
 - `tidy -t -o just_the_words.txt diceware_list.txt` If you've got [a diceware list with numbers and a tab before each word](https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt), the `-t` flag will delete everything up to and including the first tab in each line ("11133	abruptly" becomes "abruptly").
 
-- `tidy --dice 6 -o diceware_list.txt just_words.txt` Add corresponding dice roll numbers to a list with `--dice`. Can accept dice sides between 2 and 9. Indexed starting at 1.
+- `tidy --dice 6 -o diceware_list.txt just_words.txt` Add corresponding dice roll numbers to a list with `--dice`. Can accept dice sides between 2 and 9. Indexed starting at 1; each dice roll and word are separated by a tab.
 
 ## On verbs used
 
@@ -116,7 +117,7 @@ If the shortest word on a word list is shorter than log26(word_list_length), the
 
 As an example, let's say we had a 10,000-word list that contained the one-character word "a" on it. Given that it's 10,000 words, we'd expect each word to add an additional ~13.28 bits of entropy. That would mean a three-word passphrase would give users 39.86 bits of entropy. However! If a user happened to get "a-a-a" as their passphrase, a brute force method shows that entropy to be only 14.10 bits (4.7 * 3 words). Thus we can say that it falls below the "brute force line", a phrase I made up.
 
-By default, Tidy will refuse to generate lists that fall below this dangerous line. However, given its assumptions (English, lowercase, etc.), you may override this with the `-f/--force` flag.
+If you want Tidy to refuse to generate lists that fall _below_ this line, pass in the `-B`/`--brute` flag. If you just want to know if a given generated list falls above or below this line, use the `-A`/`--attributes` flag.
 
 ## What are prefix words (aka prefix codes)? 
 
