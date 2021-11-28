@@ -17,6 +17,10 @@ struct Opt {
     #[structopt(long = "dry-run")]
     dry_run: bool,
 
+    /// Print attributes about new list to terminal
+    #[structopt(short = "A", long = "attributes")]
+    attributes: bool,
+
     /// Lowercase all words
     #[structopt(short = "l", long = "lowercase")]
     to_lowercase: bool,
@@ -96,7 +100,7 @@ struct Opt {
     force_ignore_brute_line: bool,
 
     /// Print dice roll next to word in output. Set number of sides
-    /// of dice.
+    /// of dice. Use 6 for normal dice.
     #[structopt(short = "D", long = "dice")]
     dice_sides: Option<u8>,
 
@@ -111,10 +115,14 @@ struct Opt {
 
 fn main() {
     let opt = Opt::from_args();
-    // if opt.verbose {
-    //     println!("Received options: {:?}", opt);
-    // }
 
+    // Validate dice_sides
+    if let Some(dice_sides) = opt.dice_sides {
+        if dice_sides < 2 || dice_sides > 9 {
+            eprintln!("Specified number of dice sides must be between 2 and 9.");
+            return;
+        }
+    }
     let this_tidy_request = TidyRequest {
         list: make_vec_from_filenames(&opt.inputted_word_list),
         take_first: opt.take_first,
@@ -154,27 +162,26 @@ fn main() {
         match opt.output {
             Some(output) => {
                 let mut f = File::create(output).expect("Unable to create file");
-                for word in &tidied_list {
-                    writeln!(f, "{}", word).expect("Unable to write data to file");
+                for (i, word) in tidied_list.iter().enumerate() {
+                    if let Some(dice_sides) = opt.dice_sides {
+                        write!(f, "{}\t", print_as_dice(i, dice_sides)).unwrap();
+                    }
+                    write!(f, "{}\n", word).expect("Unable to write data to file");
                 }
             }
             // If no output file destination, print resulting like, word by word
             // to println (which goes to stdout, allowing for use of > on command like)
-            None => match opt.dice_sides {
-                None => {
-                    for word in &tidied_list {
-                        println!("{}", word);
+            None => {
+                for (i, word) in tidied_list.iter().enumerate() {
+                    if let Some(dice_sides) = opt.dice_sides {
+                        print!("{}\t", print_as_dice(i, dice_sides));
                     }
+                    print!("{}\n", word);
                 }
-                Some(dice_sides) => {
-                    for (i, word) in tidied_list.iter().enumerate() {
-                        println!("{}\t{}", print_as_dice(i, dice_sides), word);
-                    }
-                }
-            },
+            }
         }
     }
-    if !opt.quiet {
+    if opt.attributes && !opt.quiet {
         eprintln!("Done making list");
         display_list_information(&tidied_list);
     }
