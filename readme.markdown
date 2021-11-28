@@ -23,6 +23,7 @@ Optionally, the tool can...
 - enforce a minimum [edit distance](https://en.wikipedia.org/wiki/Edit_distance) between words (`-d`)
 - remove prefix words (see below) (`-P`)
 - guarantee unique prefix lengths (see below) (`-u`)
+- print corresponding dice rolls before words, separated by a tab. Dice can have 2 to 9 sides.
 
 ## Usage
 
@@ -97,6 +98,8 @@ ARGS:
 - `tidy -l -m 3 -o new-list.txt inputted_word_list.txt` Similar to above, but the `-m 3` means new list won't have any words under 3 characters in length.
 
 - `tidy -t -o just_the_words.txt diceware_list.txt` If you've got [a diceware list with numbers and a tab before each word](https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt), the `-t` flag will delete everything up to and including the first tab in each line ("11133	abruptly" becomes "abruptly").
+
+- `tidy --dice 6 -o diceware_list.txt just_words.txt` Add corresponding dice roll numbers to a list with `--dice`. Can accept dice sides between 2 and 9. Indexed starting at 1.
 
 ## On verbs used
 
