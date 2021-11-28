@@ -28,46 +28,50 @@ Optionally, the tool can...
 
 ```txt
 USAGE:
-tidy [FLAGS] [OPTIONS] [Inputted Word Lists]...
+    tidy [FLAGS] [OPTIONS] [Inputted Word Lists]...
 
 FLAGS:
--i, --delete-integers           Delete all integers from words
--n, --delete-nonalphanumeric    Delete all non-alphanumeric characters from list
--s, --delete-through-space      Delete characters through first space
--t, --delete-through-tab        Delete characters through first tab
-    --dry-run                   Dry run. Don't write new list to file or terminal
--f, --force                     Force outputting of lists that fall below the brute force line
-    --help                      Prints help information
--q, --quiet                     Do not print any extra information
--I, --remove-integers           Remove all words with integers in them from list
--L, --remove-nonalphabetic      Remove all words with non-alphabetic characters from list (leaving only words
-                                composed entirely of letters [A-Z] or [a-z])
--N, --remove-nonalphanumeric    Remove all words with non-alphanumeric characters from list
--P, --remove-prefix             Remove prefix words from list
--l, --lowercase                 Lowercase all words
--V, --version                   Prints version information
+    -A, --attributes                Print attributes about new list to terminal
+    -i, --delete-integers           Delete all integers from words
+    -n, --delete-nonalphanumeric    Delete all non-alphanumeric characters from list
+    -s, --delete-through-space      Delete characters through first space
+    -t, --delete-through-tab        Delete characters through first tab
+        --dry-run                   Dry run. Don't write new list to file or terminal
+    -f, --force                     Force outputting of lists that fall below the brute force line
+        --help                      Prints help information
+    -q, --quiet                     Do not print any extra information
+    -I, --remove-integers           Remove all words with integers in them from list
+    -L, --remove-nonalphabetic      Remove all words with non-alphabetic characters from list (leaving only words
+                                    composed entirely of letters [A-Z] or [a-z])
+    -N, --remove-nonalphanumeric    Remove all words with non-alphanumeric characters from list
+    -P, --remove-prefix             Remove prefix words from list
+    -l, --lowercase                 Lowercase all words
+    -V, --version                   Prints version information
 
 OPTIONS:
--a, --approve <approved-list>                          Path for optional list of approved words
--h, --homophones <homophones-list>
-        Path for optional list of homophone pairs. One pair per line, separated by a comma
+    -a, --approve <approved-list>                          Path for optional list of approved words
+    -D, --dice <dice-sides>
+            Print dice roll next to word in output. Set number of sides of dice. Use 6 for normal dice
 
-    --maxium-word-length <maximum-length>              Set maximum word length
--d, --minimum-edit-distance <minimum-edit-distance>
-        Set minimum edit distance between words, which can reduce the cost of typos when entering words
+    -h, --homophones <homophones-list>
+            Path for optional list of homophone pairs. One pair per line, separated by a comma
 
--m, --minimum-word-length <minimum-length>             Set minimum word length
--o, --output <output>                                  Path for outputted list file
--r, --reject <reject-list>                             Path for optional list of words to reject
-    --take-first <take-first>
-        Only take first N words from inputted word list. If two or more word lists are inputted, it will combine
-        arbitrarily and then take first N words
--u, --unique-prefix-length <unique-prefix-length>
-        Set unique prefix length, which can aid auto-complete functionality
+        --maxium-word-length <maximum-length>              Set maximum word length
+    -d, --minimum-edit-distance <minimum-edit-distance>
+            Set minimum edit distance between words, which can reduce the cost of typos when entering words
+
+    -m, --minimum-word-length <minimum-length>             Set minimum word length
+    -o, --output <output>                                  Path for outputted list file
+    -r, --reject <reject-list>                             Path for optional list of words to reject
+        --take-first <take-first>
+            Only take first N words from inputted word list. If two or more word lists are inputted, it will combine
+            arbitrarily and then take first N words
+    -u, --unique-prefix-length <unique-prefix-length>
+            Set unique prefix length, which can aid auto-complete functionality
 
 
 ARGS:
-<Inputted Word Lists>...    Word list input files
+    <Inputted Word Lists>...    Word list input files
 ```
 
 ## Usage examples
