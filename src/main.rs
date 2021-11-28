@@ -100,7 +100,7 @@ struct Opt {
     warn_if_below_brute_force: bool,
 
     /// Print dice roll next to word in output. Set number of sides
-    /// of dice. Use 6 for normal dice.
+    /// of dice. Must be between 2 and 9. Use 6 for normal dice.
     #[structopt(short = "D", long = "dice")]
     dice_sides: Option<u8>,
 
@@ -156,15 +156,17 @@ fn main() {
         return;
     }
 
+    println!("Printing");
     if !opt.dry_run {
         match opt.output {
             Some(output) => {
                 let mut f = File::create(output).expect("Unable to create file");
                 for (i, word) in tidied_list.iter().enumerate() {
                     if let Some(dice_sides) = opt.dice_sides {
-                        write!(f, "{}\t", print_as_dice(i, dice_sides)).unwrap();
+                        write!(f, "{}\t", print_as_dice(i, dice_sides, tidied_list.len()),)
+                            .unwrap();
                     }
-                    write!(f, "{}\n", word).expect("Unable to write data to file");
+                    writeln!(f, "{}", word).expect("Unable to write data to file");
                 }
             }
             // If no output file destination, print resulting like, word by word
@@ -172,9 +174,9 @@ fn main() {
             None => {
                 for (i, word) in tidied_list.iter().enumerate() {
                     if let Some(dice_sides) = opt.dice_sides {
-                        print!("{}\t", print_as_dice(i, dice_sides));
+                        print!("{:}\t", print_as_dice(i, dice_sides, tidied_list.len()));
                     }
-                    print!("{}\n", word);
+                    println!("{}", word);
                 }
             }
         }

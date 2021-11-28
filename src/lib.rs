@@ -387,14 +387,28 @@ fn remove_homophones(list: Vec<String>, homophones: Vec<(String, String)>) -> Ve
 }
 
 use radix_fmt::*;
-pub fn print_as_dice(n: usize, base: u8) -> String {
-    let as_base = radix(n, base).to_string();
-    // Need to add one to each digit to make it
-    // easier to compare to rolled dice
-    as_base
-        .chars()
-        .map(|s| (s.to_string().parse::<usize>().unwrap() + 1).to_string())
-        .collect::<String>()
+pub fn print_as_dice(n: usize, base: u8, list_length: usize) -> String {
+    // Set width for zero-padding. Not 100% sure if this - 1 is correct.
+    let pad_width = radix(list_length, base).to_string().len() - 1;
+    let as_base = radix(n, base);
+
+    // Pad dice roll numbers with zeros
+    let padded = format!(
+        "{:0width$}",
+        as_base.to_string().parse::<usize>().unwrap(),
+        width = pad_width
+    );
+    // If base is a common dice size under 10, we'll add one to
+    // each digit, to make it easier to compare to rolled dice
+    // if base >= 4 && base <= 8 {
+    if (4..=8).contains(&base) {
+        padded
+            .chars()
+            .map(|s| (s.to_string().parse::<usize>().unwrap() + 1).to_string())
+            .collect::<String>()
+    } else {
+        padded
+    }
 }
 
 // I'm pretty sure this is an accurate, if obtuse method of calculating entropy
