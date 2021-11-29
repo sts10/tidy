@@ -348,7 +348,8 @@ mod list_manipulation_tests {
         let new_list = tidy_list(this_tidy_request);
         assert!(new_list.contains(&"tea".to_string()));
         assert!(!new_list.contains(&"tee".to_string()));
-        assert!(new_list.contains(&"mistake".to_string()));
         assert!(new_list.contains(&"be".to_string()));
+        assert!(!new_list.contains(&"bee".to_string()));
+        assert!(new_list.contains(&"mistake".to_string()));
     }
 }
