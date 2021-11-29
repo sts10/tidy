@@ -273,7 +273,11 @@ fn find_longest_shared_prefix(list: &[String]) -> usize {
     for word1 in list {
         for word2 in list {
             if word1 != word2 {
-                let this_shared_prefix_length = find_first_different_character(word1, word2);
+                // Here we convert from zero-indexed first different to
+                // the (1-indexed) length of the long shared prefix, so we don't
+                // need a `- 1`.
+                let this_shared_prefix_length =
+                    find_first_different_character_zero_indexed(word1, word2);
                 if this_shared_prefix_length > longest_shared_prefix {
                     longest_shared_prefix = this_shared_prefix_length;
                 }
@@ -283,11 +287,20 @@ fn find_longest_shared_prefix(list: &[String]) -> usize {
     longest_shared_prefix
 }
 
-fn find_first_different_character(word1: &str, word2: &str) -> usize {
+fn find_first_different_character_zero_indexed(word1: &str, word2: &str) -> usize {
     for (i, c1) in word1.chars().enumerate() {
-        let c2 = word2.chars().nth(i).unwrap();
-        if c1 != c2 {
-            return i;
+        match word2.chars().nth(i) {
+            Some(c2) => {
+                if c1 != c2 {
+                    return i;
+                } else {
+                    continue;
+                }
+            }
+            // word1 is longer than word2
+            None => {
+                return word2.chars().count();
+            }
         }
     }
     // Fall back to shorter word length
