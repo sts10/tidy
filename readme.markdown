@@ -134,7 +134,7 @@ If you want Tidy to refuse to generate lists that fall _below_ this line, pass i
 
 ### An even more strict "line"
 
-If we go by [a 1951 Claude Shannon paper](https://www.princeton.edu/~wbialek/rome/refs/shannon_51.pdf), each letter in English actually only gives 2.62 bits of entropy. Users can see if their generated word list falls about or below this line by using the `-A`/`--attributes` flag.
+If we go by [a 1951 Claude Shannon paper](https://www.princeton.edu/~wbialek/rome/refs/shannon_51.pdf), each letter in English actually only gives 2.62 bits of entropy. Users can see if their generated word list falls above this line by using the `-A`/`--attributes` flag.
 
 ## Language limitations 
 
