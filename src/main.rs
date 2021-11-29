@@ -78,10 +78,10 @@ struct Opt {
     #[structopt(short = "d", long = "minimum-edit-distance")]
     minimum_edit_distance: Option<usize>,
 
-    /// Set unique prefix length, which can aid auto-complete
+    /// Set a maximum shared prefix length, which can aid auto-complete
     /// functionality
-    #[structopt(short = "u", long = "unique-prefix-length")]
-    unique_prefix_length: Option<usize>,
+    #[structopt(short = "x", long = "shared-prefix-length")]
+    maximum_shared_prefix_length: Option<usize>,
 
     /// Path for optional list of words to reject
     #[structopt(short = "r", long = "reject", parse(from_os_str))]
@@ -141,7 +141,7 @@ fn main() {
         }),
         minimum_length: opt.minimum_length,
         maximum_length: opt.maximum_length,
-        unique_prefix_length: opt.unique_prefix_length,
+        maximum_shared_prefix_length: opt.maximum_shared_prefix_length,
         minimum_edit_distance: opt.minimum_edit_distance,
     };
 
@@ -228,8 +228,15 @@ fn display_list_information(list: &[String], level: u8) {
     );
 
     if level >= 2 {
-        let shortest_edit_distance = find_shortest_edit_distance(list);
-        eprintln!("Shortest edit distance    : {}", shortest_edit_distance);
+        eprintln!(
+            "Shortest edit distance    : {}",
+            find_shortest_edit_distance(list)
+        );
+
+        eprintln!(
+            "Longest shared prefix     : {}",
+            find_longest_shared_prefix(list)
+        );
     }
 }
 
@@ -255,6 +262,36 @@ fn find_shortest_edit_distance(list: &[String]) -> usize {
         }
     }
     shortest_edit_distance.try_into().unwrap()
+}
+
+fn find_longest_shared_prefix(list: &[String]) -> usize {
+    let mut longest_shared_prefix = 0;
+    for word1 in list {
+        for word2 in list {
+            if word1 != word2 {
+                let this_shared_prefix_length = find_first_different_character(word1, word2);
+                if this_shared_prefix_length > longest_shared_prefix {
+                    longest_shared_prefix = this_shared_prefix_length;
+                }
+            }
+        }
+    }
+    longest_shared_prefix
+}
+
+fn find_first_different_character(word1: &str, word2: &str) -> usize {
+    for (i, c1) in word1.chars().enumerate() {
+        let c2 = word2.chars().nth(i).unwrap();
+        if c1 != c2 {
+            return i;
+        }
+    }
+    // Fall back to shorter word length
+    if word1.chars().count() < word2.chars().count() {
+        word1.chars().count()
+    } else {
+        word2.chars().count()
+    }
 }
 
 fn has_prefix_words(list: &[String]) -> bool {

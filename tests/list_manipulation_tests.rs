@@ -279,10 +279,10 @@ mod list_manipulation_tests {
     }
 
     #[test]
-    fn can_gurantee_unique_prefixes_for_autocomplete() {
+    fn can_gurantee_a_maximum_length_of_shared_prefix_for_autocomplete() {
         let this_tidy_request = TidyRequest {
             list: make_lists().0,
-            unique_prefix_length: Some(3),
+            maximum_shared_prefix_length: Some(3),
             ..Default::default()
         };
         let new_list = tidy_list(this_tidy_request);

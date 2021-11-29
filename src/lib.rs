@@ -24,7 +24,7 @@ pub struct TidyRequest {
     pub homophones_list: Option<Vec<(String, String)>>,
     pub minimum_length: Option<usize>,
     pub maximum_length: Option<usize>,
-    pub unique_prefix_length: Option<usize>,
+    pub maximum_shared_prefix_length: Option<usize>,
     pub minimum_edit_distance: Option<usize>,
     pub take_first: Option<usize>,
 }
@@ -191,9 +191,9 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     } else {
         tidied_list
     };
-    tidied_list = match req.unique_prefix_length {
-        Some(unique_prefix_length) => {
-            guarantee_unique_prefix_length(&tidied_list, unique_prefix_length)
+    tidied_list = match req.maximum_shared_prefix_length {
+        Some(maximum_shared_prefix_length) => {
+            guarantee_maximum_prefix_length(&tidied_list, maximum_shared_prefix_length)
         }
         None => tidied_list,
     };
@@ -222,15 +222,18 @@ fn delete_through_first_char(s: &str, ch: char) -> &str {
 }
 
 use std::collections::HashMap;
-fn guarantee_unique_prefix_length(list: &[String], unique_prefix_length: usize) -> Vec<String> {
+fn guarantee_maximum_prefix_length(
+    list: &[String],
+    maximum_shared_prefix_length: usize,
+) -> Vec<String> {
     let mut prefix_hashmap: HashMap<String, String> = HashMap::new();
     for this_word in list {
         // If this word is too short just skip it.
-        if this_word.chars().count() < unique_prefix_length {
+        if this_word.chars().count() < maximum_shared_prefix_length {
             continue;
         }
         prefix_hashmap
-            .entry(get_prefix(this_word, unique_prefix_length))
+            .entry(get_prefix(this_word, maximum_shared_prefix_length))
             .and_modify(|existing_word| {
                 // Prefer shorter words, as a stand-in for simplicity (though that
                 // is debatable...)
