@@ -78,8 +78,11 @@ struct Opt {
     #[structopt(short = "d", long = "minimum-edit-distance")]
     minimum_edit_distance: Option<usize>,
 
-    /// Set a maximum shared prefix length, which can aid auto-complete
-    /// functionality
+    /// Set number of leading characters to get to a unique prefix,
+    /// which can aid auto-complete functionality.
+    /// Setting this value to say, 4, means that knowing the first
+    /// 4 characters of any word on the generated list is enough
+    /// to know which word it is.
     #[structopt(short = "x", long = "shared-prefix-length")]
     maximum_shared_prefix_length: Option<usize>,
 
@@ -233,10 +236,11 @@ fn display_list_information(list: &[String], level: u8) {
             find_shortest_edit_distance(list)
         );
 
-        eprintln!(
-            "Longest shared prefix     : {}",
-            find_longest_shared_prefix(list)
-        );
+        let longest_shared_prefix = find_longest_shared_prefix(list);
+        eprintln!("Longest shared prefix     : {}", longest_shared_prefix);
+        // Numbers of characters required to definitely get to a unique
+        // prefix
+        eprintln!("Unique character prefix   : {}", longest_shared_prefix + 1);
     }
 }
 

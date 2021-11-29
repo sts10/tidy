@@ -22,7 +22,7 @@ Optionally, the tool can...
 - remove homophones from a provided list of comma-separated pairs of homophones
 - enforce a minimum [edit distance](https://en.wikipedia.org/wiki/Edit_distance) between words (`-d`)
 - remove prefix words (see below) (`-P`)
-- guarantee unique prefix lengths (see below) (`-u`)
+- guarantee a maximum shared prefix length (see below) (`-x`)
 - print corresponding dice rolls before words, separated by a tab. Dice can have 2 to 9 sides. (`-D`)
 - print information about the new list, such as entropy per word, to the terminal (`-A`)
 
@@ -51,26 +51,26 @@ FLAGS:
     -V, --version                   Prints version information
 
 OPTIONS:
-    -a, --approve <approved-list>                          Path for optional list of approved words
+    -a, --approve <approved-list>                                Path for optional list of approved words
     -D, --dice <dice-sides>
             Print dice roll next to word in output. Set number of sides of dice. Must be between 2 and 9. Use 6 for
             normal dice
     -h, --homophones <homophones-list>
             Path for optional list of homophone pairs. One pair per line, separated by a comma
 
-        --maxium-word-length <maximum-length>              Set maximum word length
+        --maxium-word-length <maximum-length>                    Set maximum word length
+    -x, --shared-prefix-length <maximum-shared-prefix-length>
+            Set a maximum shared prefix length, which can aid auto-complete functionality
+
     -d, --minimum-edit-distance <minimum-edit-distance>
             Set minimum edit distance between words, which can reduce the cost of typos when entering words
 
-    -m, --minimum-word-length <minimum-length>             Set minimum word length
-    -o, --output <output>                                  Path for outputted list file
-    -r, --reject <reject-list>                             Path for optional list of words to reject
+    -m, --minimum-word-length <minimum-length>                   Set minimum word length
+    -o, --output <output>                                        Path for outputted list file
+    -r, --reject <reject-list>                                   Path for optional list of words to reject
         --take-first <take-first>
             Only take first N words from inputted word list. If two or more word lists are inputted, it will combine
             arbitrarily and then take first N words
-    -u, --unique-prefix-length <unique-prefix-length>
-            Set unique prefix length, which can aid auto-complete functionality
-
 
 ARGS:
     <Inputted Word Lists>...    Word list input files
@@ -111,7 +111,6 @@ In both Tidy's code and documentation, "remove" means that a word will be remove
 1. [Install Rust](https://www.rust-lang.org/tools/install) if you haven't already
 2. Run: `cargo install --git https://github.com/sts10/tidy --branch main`
 
-
 ## What are prefix words (aka prefix codes)? 
 
 A word list that doesn't have any prefix words (also known as "[prefix codes](https://en.wikipedia.org/wiki/Prefix_code)") can better guarantee more consistent entropy when combining words from the list randomly and without punctuation between the words. 
@@ -120,9 +119,13 @@ As a brief example, if a list have "boy", "hood", and "boyhood" users who specif
 
 You can read more about this issue [here](https://github.com/ulif/diceware#prefix-code).
 
-## On unique prefix length
+## On maximum shared prefix length
 
-Setting this value to, say, 3 means that each word on the resulting list will have a unique 3-character prefix. This is useful if you intend the list to be used by software that uses auto-complete. It is distinct from the operation of eliminating prefix words, though can be used in conjunction with that feature.
+Setting this value to say, 4, means that knowing the first 4 characters of any word on the generated list is enough to know which word it is.
+
+This is useful if you intend the list to be used by software that uses auto-complete. For example, a user will only have to type the first 4 characters of any word before a program could successfully auto-complete the word.
+
+This setting is distinct from the operation of eliminating prefix words, though can be used in conjunction with that feature.
 
 ## What is this "brute force line"? 
 

@@ -222,6 +222,9 @@ fn delete_through_first_char(s: &str, ch: char) -> &str {
 }
 
 use std::collections::HashMap;
+// I could definitely understand an argument that this logic
+// is off by one in a wonky way that I can't quite
+// figure out.
 fn guarantee_maximum_prefix_length(
     list: &[String],
     maximum_shared_prefix_length: usize,
