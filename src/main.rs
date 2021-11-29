@@ -207,7 +207,7 @@ fn display_list_information(list: &[String], level: u8) {
     eprintln!("Entropy per word          : {:.4}", entropy_per_word);
     let assumed_entropy_per_letter = assumed_entropy_per_letter(list);
     eprintln!(
-        "Assumed entropy per letter: {:.2}",
+        "Assumed entropy per letter: {:.4}",
         assumed_entropy_per_letter
     );
     // If user gets a passphrase consisting entirely of shortest words,

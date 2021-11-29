@@ -128,6 +128,16 @@ This is useful if you intend the list to be used by software that uses auto-comp
 
 This setting is distinct from the operation of eliminating prefix words, though can be used in conjunction with that feature.
 
+## What is "assumed entropy per letter?"
+
+If we take the entropy per word (`log2(list_length)`) from a list and divide it by the length of the shortest word on the list, we get a value we might call "assumed entropy per letter". 
+
+For example, if we're looking at the 7,776-word EFF long list, we'd assume an entropy of 12.925 bits per word. The list has 82 three-letter words on it, so we'd divide 12.925 by 3 and get about 4.31 bits per letter.
+
+This value may be useful when we ask what the shortest word on a good word list should be. 
+
+<!-- Consider the story of a user who gets a passphrase compromised of only the shortest words on the list. Does this passphrase genuinely have the entropy of `log2(list_length)` per word? -->
+
 ## What is this "brute force line"? 
 
 If the shortest word on a word list is shorter than log26(word_list_length), there's a possibility that users generate a passphrase that has a lower entropy through brute-forcing. 
