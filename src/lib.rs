@@ -417,10 +417,11 @@ pub fn calc_entropy(list_size: usize) -> f64 {
     (list_size as f64).ln() / (2_f64.ln() as f64)
 }
 
-pub fn is_below_brute_force_line(list: &[String]) -> bool {
-    let list_length = list.len() as f64;
-    let shortest_word_length = get_shortest_word_length(list);
-    (shortest_word_length as f64) < list_length.log(26.0)
+pub fn assumed_entropy_per_letter(list: &[String]) -> f64 {
+    let shortest_word_length = get_shortest_word_length(list) as f64;
+    let assumed_entropy_per_word = calc_entropy(list.len());
+
+    assumed_entropy_per_word / shortest_word_length
 }
 
 pub fn get_shortest_word_length(list: &[String]) -> usize {

@@ -111,13 +111,6 @@ In both Tidy's code and documentation, "remove" means that a word will be remove
 1. [Install Rust](https://www.rust-lang.org/tools/install) if you haven't already
 2. Run: `cargo install --git https://github.com/sts10/tidy --branch main`
 
-## What is this "brute force line" warning? 
-
-If the shortest word on a word list is shorter than log26(word_list_length), there's a possibility that users generate a passphrase that has a lower entropy through brute-forcing. 
-
-As an example, let's say we had a 10,000-word list that contained the one-character word "a" on it. Given that it's 10,000 words, we'd expect each word to add an additional ~13.28 bits of entropy. That would mean a three-word passphrase would give users 39.86 bits of entropy. However! If a user happened to get "a-a-a" as their passphrase, a brute force method shows that entropy to be only 14.10 bits (4.7 * 3 words). Thus we can say that it falls below the "brute force line", a phrase I made up.
-
-If you want Tidy to refuse to generate lists that fall _below_ this line, pass in the `-B`/`--brute` flag. If you just want to know if a given generated list falls above or below this line, use the `-A`/`--attributes` flag.
 
 ## What are prefix words (aka prefix codes)? 
 
@@ -130,6 +123,18 @@ You can read more about this issue [here](https://github.com/ulif/diceware#prefi
 ## On unique prefix length
 
 Setting this value to, say, 3 means that each word on the resulting list will have a unique 3-character prefix. This is useful if you intend the list to be used by software that uses auto-complete. It is distinct from the operation of eliminating prefix words, though can be used in conjunction with that feature.
+
+## What is this "brute force line"? 
+
+If the shortest word on a word list is shorter than log26(word_list_length), there's a possibility that users generate a passphrase that has a lower entropy through brute-forcing. 
+
+As an example, let's say we had a 10,000-word list that contained the one-character word "a" on it. Given that it's 10,000 words, we'd expect each word to add an additional ~13.28 bits of entropy. That would mean a three-word passphrase would give users 39.86 bits of entropy. However! If a user happened to get "a-a-a" as their passphrase, a brute force method shows that entropy to be only 14.10 bits (4.7 * 3 words). Thus we can say that it falls below the "brute force line", a phrase I made up.
+
+If you want Tidy to refuse to generate lists that fall _below_ this line, pass in the `-B`/`--brute` flag. If you just want to know if a given generated list falls above or below this line, use the `-A`/`--attributes` flag.
+
+### An even more strict "line"
+
+If we go by [a 1951 Claude Shannon paper](https://www.princeton.edu/~wbialek/rome/refs/shannon_51.pdf), each letter in English actually only gives 2.62 bits of entropy. Users can see if their generated word list falls about or below this line by using the `-A`/`--attributes` flag.
 
 ## Language limitations 
 

@@ -150,14 +150,15 @@ fn main() {
 
     let tidied_list = tidy_list(this_tidy_request);
 
-    if opt.warn_if_below_brute_force && is_below_brute_force_line(&tidied_list) {
+    // Warn user if new list implicitly assumes that the entropy per letter is above 4.7 bits
+    if opt.warn_if_below_brute_force && (assumed_entropy_per_letter(&tidied_list) > 4.7) {
         eprintln!("WARNING: The shortest word(s) on this new list is {} and the list is {} words-long. Assuming the list is made up of lowercase English characers, that places it BELOW the brute force line!\nConsider increasing minium word length (-m flag).", get_shortest_word_length(&tidied_list), tidied_list.len());
         eprintln!("You may force an override of this warning by not using the -b/--brute flag");
         return;
     }
 
-    println!("Printing");
     if !opt.dry_run {
+        eprintln!("Printing new list...");
         match opt.output {
             Some(output) => {
                 let mut f = File::create(output).expect("Unable to create file");
@@ -182,7 +183,7 @@ fn main() {
         }
     }
     if opt.attributes && !opt.quiet {
-        eprintln!("----------------\nDone making list");
+        eprintln!("----------------\nDone making list\n");
         display_list_information(&tidied_list);
     }
 }
@@ -193,27 +194,51 @@ fn display_list_information(list: &[String]) {
     eprintln!("Attributes of new list");
     eprintln!("----------------------");
     let list_length = list.len();
-    eprintln!("List length            : {}", list_length);
-    let entropy_per_word = calc_entropy(list.len());
-    eprintln!("Entropy per word       : {:.4}", entropy_per_word);
+    eprintln!("List length               : {}", list_length);
     let shortest_word = list.iter().min_by(|a, b| a.len().cmp(&b.len())).unwrap();
     eprintln!(
-        "Length of shortest word: {} ({})",
+        "Length of shortest word   : {} ({})",
         shortest_word.chars().count(),
         shortest_word
     );
     let longest_word = list.iter().max_by(|a, b| a.len().cmp(&b.len())).unwrap();
     eprintln!(
-        "Length of longest word : {} ({})",
+        "Length of longest word    : {} ({})",
         longest_word.chars().count(),
         longest_word
     );
     let free_of_prefix_words = !has_prefix_words(list);
-    eprintln!("Free of prefix words   : {}", free_of_prefix_words);
-    let under_brute_line: bool = is_below_brute_force_line(list);
-    eprintln!("Above brute force line : {}", !under_brute_line);
+    eprintln!("Free of prefix words      : {}", free_of_prefix_words);
+
+    let entropy_per_word = calc_entropy(list.len());
+    eprintln!("Entropy per word          : {:.4}", entropy_per_word);
+    let assumed_entropy_per_letter = assumed_entropy_per_letter(list);
+    eprintln!(
+        "Assumed entropy per letter: {:.2}",
+        assumed_entropy_per_letter
+    );
+    // If user gets a passphrase consisting entirely of shortest words,
+    // it's theoretically possible that we could OVERESTIMATE entropy
+    // per word. We can deterimine if we've done this by comparing out
+    // entropy estimate against a simple brute force attack, under which
+    // we assume each letter adds 4.7 bits of entropy.
+    eprintln!(
+        "Above brute force line    : {}",
+        assumed_entropy_per_letter <= 4.7
+    );
+
+    // In 1951, Claude Shannon estimated that English words only have
+    // about 2.62 bits of entropy per letter, rather than 4.7 bits per letter.
+    // https://www.princeton.edu/~wbialek/rome/refs/shannon_51.pdf
+    // Thus, this is a more difficult line for a given list to pass above than
+    // the "brute force" line described above.
+    eprintln!(
+        "Above Shannon line        : {}",
+        assumed_entropy_per_letter <= 2.62
+    );
+
     let shortest_edit_distance = find_shortest_edit_distance(list);
-    eprintln!("Shortest edit distance : {}", shortest_edit_distance);
+    eprintln!("Shortest edit distance    : {}", shortest_edit_distance);
 }
 
 use crate::edit_distance::find_edit_distance;
