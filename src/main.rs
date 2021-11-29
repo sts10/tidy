@@ -244,7 +244,7 @@ fn display_list_information(list: &[String]) {
 use crate::edit_distance::find_edit_distance;
 fn find_shortest_edit_distance(list: &[String]) -> usize {
     let mut shortest_edit_distance = u32::max_value();
-    // I think I can cheat aand only go through half of the
+    // I think I can cheat and only go through half of the
     // list here
     for word1 in list[0..(list.len() / 2)].iter() {
         for word2 in list {
@@ -252,6 +252,12 @@ fn find_shortest_edit_distance(list: &[String]) -> usize {
                 let this_edit_distance = find_edit_distance(word1, word2);
                 if this_edit_distance < shortest_edit_distance {
                     shortest_edit_distance = this_edit_distance;
+                }
+                // If we're found an edit distance of 1, we know that'll be the
+                // shortest possible (since Tidy removes duplicates by default, so
+                // a shortest_edit_distance of 0 is NOT possbile)
+                if shortest_edit_distance == 1 {
+                    return 1;
                 }
             }
         }
