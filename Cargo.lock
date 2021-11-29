@@ -179,7 +179,7 @@ dependencies = [
 
 [[package]]
 name = "tidy"
-version = "0.1.88"
+version = "0.1.89"
 dependencies = [
  "memchr",
  "radix_fmt",
