@@ -120,7 +120,7 @@ fn main() {
 
     // Validate dice_sides
     if let Some(dice_sides) = opt.dice_sides {
-        if dice_sides < 2 || dice_sides > 9 {
+        if !(2 < dice_sides && dice_sides < 9) {
             eprintln!("Specified number of dice sides must be between 2 and 9.");
             return;
         }
