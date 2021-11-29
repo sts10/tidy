@@ -2,6 +2,7 @@ use std::fs::File;
 use std::io::BufRead;
 use std::io::BufReader;
 use std::path::PathBuf;
+pub mod display_information;
 pub mod edit_distance;
 use crate::edit_distance::find_edit_distance;
 
@@ -421,21 +422,4 @@ pub fn print_as_dice(n: usize, base: u8, list_length: usize) -> String {
 // of a word list, given its size
 pub fn calc_entropy(list_size: usize) -> f64 {
     (list_size as f64).ln() / (2_f64.ln() as f64)
-}
-
-pub fn assumed_entropy_per_letter(list: &[String]) -> f64 {
-    let shortest_word_length = get_shortest_word_length(list) as f64;
-    let assumed_entropy_per_word = calc_entropy(list.len());
-
-    assumed_entropy_per_word / shortest_word_length
-}
-
-pub fn get_shortest_word_length(list: &[String]) -> usize {
-    let mut shortest_word_length: usize = usize::max_value();
-    for word in list {
-        if word.chars().count() < shortest_word_length {
-            shortest_word_length = word.chars().count();
-        }
-    }
-    shortest_word_length
 }
