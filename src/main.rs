@@ -17,9 +17,10 @@ struct Opt {
     #[structopt(long = "dry-run")]
     dry_run: bool,
 
-    /// Print attributes about new list to terminal
-    #[structopt(short = "A", long = "attributes")]
-    attributes: bool,
+    /// Print attributes about new list to terminal. Can be used more than once
+    /// to print more attributes.
+    #[structopt(short = "A", long = "attributes", parse(from_occurrences))]
+    attributes: u8,
 
     /// Lowercase all words
     #[structopt(short = "l", long = "lowercase")]
@@ -111,6 +112,7 @@ struct Opt {
 
 fn main() {
     let opt = Opt::from_args();
+    eprintln!("Opts: {:?}", opt);
 
     // Validate dice_sides
     if let Some(dice_sides) = opt.dice_sides {
@@ -171,15 +173,15 @@ fn main() {
             }
         }
     }
-    if opt.attributes && !opt.quiet {
+    if opt.attributes > 0 && !opt.quiet {
         eprintln!("----------------\nDone making list\n");
-        display_list_information(&tidied_list);
+        display_list_information(&tidied_list, opt.attributes);
     }
 }
 
 // We just want to "display" this information, rather than print it to files,
 // so we use eprintln!
-fn display_list_information(list: &[String]) {
+fn display_list_information(list: &[String], level: u8) {
     eprintln!("Attributes of new list");
     eprintln!("----------------------");
     let list_length = list.len();
@@ -226,8 +228,10 @@ fn display_list_information(list: &[String]) {
         assumed_entropy_per_letter <= 2.62
     );
 
-    let shortest_edit_distance = find_shortest_edit_distance(list);
-    eprintln!("Shortest edit distance    : {}", shortest_edit_distance);
+    if level >= 2 {
+        let shortest_edit_distance = find_shortest_edit_distance(list);
+        eprintln!("Shortest edit distance    : {}", shortest_edit_distance);
+    }
 }
 
 use crate::edit_distance::find_edit_distance;

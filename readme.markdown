@@ -33,7 +33,8 @@ USAGE:
     tidy [FLAGS] [OPTIONS] [Inputted Word Lists]...
 
 FLAGS:
-    -A, --attributes                Print attributes about new list to terminal
+    -A, --attributes                Print attributes about new list to terminal. Can be used more than once to print
+                                    more attributes
     -i, --delete-integers           Delete all integers from words
     -n, --delete-nonalphanumeric    Delete all non-alphanumeric characters from list
     -s, --delete-through-space      Delete characters through first space
