@@ -161,7 +161,7 @@ See [this repo](https://github.com/sts10/splitter) for more information.
 
 - This diceware password generating program called ["diceware"](https://github.com/ulif/diceware) seems to have collected [a few word lists](https://github.com/ulif/diceware/tree/master/diceware/wordlists) in its Github repo, along with [a separate page that explains each of the lists](https://github.com/ulif/diceware/blob/master/docs/wordlists.rst).
 
-- [Niceware list](https://github.com/diracdeltas/niceware/blob/master/lib/wordlist.js) (~65,000 words)
+- [Niceware list](https://github.com/diracdeltas/niceware/blob/master/lib/wordlist.js) (~65,000 words) (there's also [a Rust port of niceware](https://github.com/healeycodes/niceware)).
 
 - [Lists used by a program called webpassgen](https://github.com/atoponce/webpassgen/tree/master/lists)
 
