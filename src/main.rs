@@ -112,7 +112,6 @@ struct Opt {
 
 fn main() {
     let opt = Opt::from_args();
-    eprintln!("Opts: {:?}", opt);
 
     // Validate dice_sides
     if let Some(dice_sides) = opt.dice_sides {
