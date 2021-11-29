@@ -60,8 +60,9 @@ OPTIONS:
 
         --maxium-word-length <maximum-length>                    Set maximum word length
     -x, --shared-prefix-length <maximum-shared-prefix-length>
-            Set a maximum shared prefix length, which can aid auto-complete functionality
-
+            Set number of leading characters to get to a unique prefix, which can aid auto-complete functionality.
+            Setting this value to say, 4, means that knowing the first 4 characters of any word on the generated list is
+            enough to know which word it is
     -d, --minimum-edit-distance <minimum-edit-distance>
             Set minimum edit distance between words, which can reduce the cost of typos when entering words
 
@@ -96,7 +97,7 @@ ARGS:
 
 - `tidy -l -o new_list.txt -h homophone_pairs.txt inputted_word_list.txt` Similar to above, but expects `homophones_pairs.txt` to be a list of homophones pairs separated by a comma ("right,write" then next line: "epic,epoch"). If both words in the pair are on the inputted_word_list, Tidy will remove the second one. If only one of the words in the pair are on the list, Tidy won't remove it. Must be only two words per line.
 
-- `tidy -l -m 3 -o new-list.txt inputted_word_list.txt` Similar to above, but the `-m 3` means new list won't have any words under 3 characters in length.
+- `tidy -lA -m 3 -o new-list.txt inputted_word_list.txt` Similar to above, but the `-m 3` means new list won't have any words under 3 characters in length. Have Tidy also print some attributes about the new list to the terminal screen.
 
 - `tidy -t -o just_the_words.txt diceware_list.txt` If you've got [a diceware list with numbers and a tab before each word](https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt), the `-t` flag will delete everything up to and including the first tab in each line ("11133	abruptly" becomes "abruptly").
 
@@ -121,9 +122,9 @@ You can read more about this issue [here](https://github.com/ulif/diceware#prefi
 
 ## On maximum shared prefix length
 
-Setting this value to say, 4, means that knowing the first 4 characters of any word on the generated list is enough to know which word it is.
+Setting this value to say, 4, means that knowing the first 4 characters of any word on the generated list is sufficient to know which word it is. As an example, we'd know that if a word starts with "radi", we know it must be the word "radius" (if "radical" had been on the list, it Tidy would have removed it).
 
-This is useful if you intend the list to be used by software that uses auto-complete. For example, a user will only have to type the first 4 characters of any word before a program could successfully auto-complete the word.
+This is useful if you intend the list to be used by software that uses auto-complete. For example, a user will only have to type the first 4 characters of any word before a program could successfully auto-complete the entire word.
 
 This setting is distinct from the operation of eliminating prefix words, though can be used in conjunction with that feature.
 
