@@ -96,8 +96,8 @@ struct Opt {
     #[structopt(short = "a", long = "approve", parse(from_os_str))]
     approved_list: Option<PathBuf>,
 
-    /// Path for optional list of homophone pairs. One pair
-    /// per line, separated by a comma
+    /// Path for file with a list of homophone pairs. There must be one pair
+    /// of homophones per line, separated by a comma.
     #[structopt(short = "h", long = "homophones", parse(from_os_str))]
     homophones_list: Option<PathBuf>,
 
@@ -110,7 +110,8 @@ struct Opt {
     #[structopt(short = "o", long = "output", parse(from_os_str))]
     output: Option<PathBuf>,
 
-    /// Word list input files
+    /// Word list input files. Can be more than one, in which case
+    /// they'll be combined and de-duplicated.
     #[structopt(name = "Inputted Word Lists", parse(from_os_str))]
     inputted_word_list: Vec<PathBuf>,
 }
@@ -160,9 +161,9 @@ fn main() {
                 for (i, word) in tidied_list.iter().enumerate() {
                     if let Some(dice_sides) = opt.dice_sides {
                         write!(f, "{}\t", print_as_dice(i, dice_sides, tidied_list.len()),)
-                            .unwrap();
+                            .expect("Unable to write dice roll to file");
                     }
-                    writeln!(f, "{}", word).expect("Unable to write data to file");
+                    writeln!(f, "{}", word).expect("Unable to write word to file");
                 }
             }
             // If no output file destination, print resulting like, word by word
