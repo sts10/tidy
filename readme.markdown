@@ -56,8 +56,8 @@ OPTIONS:
             Print dice roll next to word in output. Set number of sides of dice. Must be between 2 and 9. Use 6 for
             normal dice
     -h, --homophones <homophones-list>
-            Path for optional list of homophone pairs. One pair per line, separated by a comma
-
+            Path for file with a list of homophone pairs. There must be one pair of homophones per line, separated by a
+            comma
         --maxium-word-length <maximum-length>                    Set maximum word length
     -x, --shared-prefix-length <maximum-shared-prefix-length>
             Set number of leading characters to get to a unique prefix, which can aid auto-complete functionality.
@@ -74,7 +74,8 @@ OPTIONS:
             arbitrarily and then take first N words
 
 ARGS:
-    <Inputted Word Lists>...    Word list input files
+    <Inputted Word Lists>...    Word list input files. Can be more than one, in which case they'll be combined and
+                                de-duplicated
 ```
 
 ## Usage examples
