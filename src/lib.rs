@@ -211,8 +211,12 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         }
         None => tidied_list,
     };
-    // User can cut words from nearly finished list
-    // does so randomly.
+
+    // Sort and dedup here
+    tidied_list = sort_and_dedup(&mut tidied_list);
+
+    // User can cut words from nearly finished list.
+    // Does so randomly.
     tidied_list = match req.cut_to {
         Some(amount_to_cut) => {
             let mut rng = thread_rng();
@@ -222,7 +226,7 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         }
         None => tidied_list,
     };
-    // Finally, sort and dedup list
+    // Finally, sort and dedup list (for final time)
     tidied_list = sort_and_dedup(&mut tidied_list);
     tidied_list
 }
