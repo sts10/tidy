@@ -1,3 +1,5 @@
+use rand::seq::SliceRandom;
+use rand::thread_rng;
 use std::fs::File;
 use std::io::BufRead;
 use std::io::BufReader;
@@ -29,6 +31,7 @@ pub struct TidyRequest {
     pub maximum_length: Option<usize>,
     pub maximum_shared_prefix_length: Option<usize>,
     pub minimum_edit_distance: Option<usize>,
+    pub cut_to: Option<usize>,
 }
 
 pub fn make_vec_from_filenames(filenames: &[PathBuf]) -> Vec<String> {
@@ -139,8 +142,6 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         }
         None => tidied_list,
     };
-    use rand::seq::SliceRandom;
-    use rand::thread_rng;
     tidied_list = match req.take_rand {
         Some(amount_to_take) => {
             let mut rng = thread_rng();
@@ -207,6 +208,17 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     tidied_list = match req.maximum_shared_prefix_length {
         Some(maximum_shared_prefix_length) => {
             guarantee_maximum_prefix_length(&tidied_list, maximum_shared_prefix_length)
+        }
+        None => tidied_list,
+    };
+    // User can cut words from nearly finished list
+    // does so randomly.
+    tidied_list = match req.cut_to {
+        Some(amount_to_cut) => {
+            let mut rng = thread_rng();
+            tidied_list.shuffle(&mut rng);
+            tidied_list.truncate(amount_to_cut);
+            tidied_list
         }
         None => tidied_list,
     };

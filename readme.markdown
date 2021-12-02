@@ -52,6 +52,9 @@ FLAGS:
 
 OPTIONS:
     -a, --approve <approved-list>                                Path for optional list of approved words
+    -c, --cut-to <cut-to>
+            Just before printing generated list, cut word list down to a set number N. Cuts are done randomly
+
     -D, --dice <dice-sides>
             Print dice roll next to word in output. Set number of sides of dice. Must be between 2 and 9. Use 6 for
             normal dice
@@ -72,6 +75,9 @@ OPTIONS:
         --take-first <take-first>
             Only take first N words from inputted word list. If two or more word lists are inputted, it will combine
             arbitrarily and then take first N words
+        --take-rand <take-rand>
+            Only take a random N number of words from inputted word list. If two or more word lists are inputted, it
+            will combine arbitrarily and then take a random N words
 
 ARGS:
     <Inputted Word Lists>...    Word list input files. Can be more than one, in which case they'll be combined and

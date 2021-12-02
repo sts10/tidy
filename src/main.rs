@@ -67,11 +67,16 @@ struct Opt {
     #[structopt(long = "take-first")]
     take_first: Option<usize>,
 
-    /// Only take a random N number ofwords from inputted word list.
+    /// Only take a random N number of words from inputted word list.
     /// If two or more word lists are inputted, it will
     /// combine arbitrarily and then take a random N words.
     #[structopt(long = "take-rand")]
     take_rand: Option<usize>,
+
+    /// Just before printing generated list, cut word list down
+    /// to a set number N. Cuts are done randomly.
+    #[structopt(short = "c", long = "cut-to")]
+    cut_to: Option<usize>,
 
     /// Set minimum word length
     #[structopt(short = "m", long = "minimum-word-length")]
@@ -156,6 +161,7 @@ fn main() {
         maximum_length: opt.maximum_length,
         maximum_shared_prefix_length: opt.maximum_shared_prefix_length,
         minimum_edit_distance: opt.minimum_edit_distance,
+        cut_to: opt.cut_to,
     };
 
     let tidied_list = tidy_list(this_tidy_request);
