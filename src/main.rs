@@ -67,6 +67,12 @@ struct Opt {
     #[structopt(long = "take-first")]
     take_first: Option<usize>,
 
+    /// Only take a random N number ofwords from inputted word list.
+    /// If two or more word lists are inputted, it will
+    /// combine arbitrarily and then take a random N words.
+    #[structopt(long = "take-rand")]
+    take_rand: Option<usize>,
+
     /// Set minimum word length
     #[structopt(short = "m", long = "minimum-word-length")]
     minimum_length: Option<usize>,
@@ -129,6 +135,7 @@ fn main() {
     let this_tidy_request = TidyRequest {
         list: make_vec_from_filenames(&opt.inputted_word_list),
         take_first: opt.take_first,
+        take_rand: opt.take_rand,
         to_lowercase: opt.to_lowercase,
         should_remove_prefix_words: opt.remove_prefix_words,
         should_remove_integers: opt.remove_integers,

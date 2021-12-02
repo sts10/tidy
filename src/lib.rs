@@ -11,6 +11,8 @@ use memchr::memchr;
 #[derive(Default, Debug, Clone)]
 pub struct TidyRequest {
     pub list: Vec<String>,
+    pub take_first: Option<usize>,
+    pub take_rand: Option<usize>,
     pub to_lowercase: bool,
     pub should_remove_prefix_words: bool,
     pub should_remove_nonalphabetic: bool,
@@ -27,7 +29,6 @@ pub struct TidyRequest {
     pub maximum_length: Option<usize>,
     pub maximum_shared_prefix_length: Option<usize>,
     pub minimum_edit_distance: Option<usize>,
-    pub take_first: Option<usize>,
 }
 
 pub fn make_vec_from_filenames(filenames: &[PathBuf]) -> Vec<String> {
@@ -133,6 +134,17 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     // Maybe should move this up in the order though...
     tidied_list = match req.take_first {
         Some(amount_to_take) => {
+            tidied_list.truncate(amount_to_take);
+            tidied_list
+        }
+        None => tidied_list,
+    };
+    use rand::seq::SliceRandom;
+    use rand::thread_rng;
+    tidied_list = match req.take_rand {
+        Some(amount_to_take) => {
+            let mut rng = thread_rng();
+            tidied_list.shuffle(&mut rng);
             tidied_list.truncate(amount_to_take);
             tidied_list
         }
