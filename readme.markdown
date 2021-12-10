@@ -121,6 +121,10 @@ In both Tidy's code and documentation, "remove" means that a word will be remove
 1. [Install Rust](https://www.rust-lang.org/tools/install) if you haven't already
 2. Run: `cargo install --git https://github.com/sts10/tidy --branch main`
 
+## A blog post
+
+You can read more about the 0.2 version of this project [here](https://sts10.github.io/2021/12/09/tidy-0-2-0.html).
+
 ## What are prefix words (aka prefix codes)? 
 
 A word list that doesn't have any prefix words (also known as "[prefix codes](https://en.wikipedia.org/wiki/Prefix_code)") can better guarantee more consistent entropy when combining words from the list randomly and without punctuation between the words. 
