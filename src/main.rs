@@ -198,10 +198,13 @@ fn main() {
             Some(output) => {
                 let mut f = File::create(output).expect("Unable to create file");
                 for (i, word) in tidied_list.iter().enumerate() {
+                    // If user set a number of dice_sides, we'll add the appropriate
+                    // dice roll information, then a tab, then the word.
                     if let Some(dice_sides) = opt.dice_sides {
                         write!(f, "{}\t", print_as_dice(i, dice_sides, tidied_list.len()),)
                             .expect("Unable to write dice roll to file");
                     }
+                    // Else, just print the word
                     writeln!(f, "{}", word).expect("Unable to write word to file");
                 }
             }

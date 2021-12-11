@@ -524,7 +524,7 @@ fn remove_homophones(list: Vec<String>, homophones: Vec<(String, String)>) -> Ve
     new_list
 }
 
-use radix_fmt::*; // Wonder if I really need this dependency...
+use radix_fmt::*; // https://stackoverflow.com/a/50278316
 /// Print dice rolls before each corresponding word. A tab is
 /// printed between the dice roll and the word.
 ///
@@ -546,22 +546,27 @@ use radix_fmt::*; // Wonder if I really need this dependency...
 /// // etc.
 /// ```
 ///
-/// The `base` paramter represents the number of sides of the
+/// The `base` parameter represents the number of sides of the
 /// dice, which can be set from 2 to 9. If this base is between 4 and 8,
 /// this function assumes the user will be using actual dice, which are index at 1.
 /// Thus, `if 4 <= base && base <= 8`, we add `1` to each digit of the dice
 /// roll before printing it.
+///
+/// I wish I could replicate this radix function easily without the dependency,
+/// but that doesn't seem [very easy](https://stackoverflow.com/a/50278316).
 pub fn print_as_dice(n: usize, base: u8, list_length: usize) -> String {
     // Set width for zero-padding
-    let pad_width = radix(list_length, base).to_string().len() - 1;
-    let as_base = radix(n, base);
 
-    // Pad dice roll numbers with zeros
-    let padded = format!(
-        "{:0width$}",
-        as_base.to_string().parse::<usize>().unwrap(),
-        width = pad_width
-    );
+    // First, get the literal width of the largest number we'll be printing.
+    // This is, by definition the length of the list.
+    // We want the length of the number in the base we want to print all
+    // the numbers, so use radix function.
+    let pad_width = radix(list_length, base).to_string().len() - 1;
+    let n_as_base = radix(n, base);
+
+    // Pad dice roll numbers with appropriate number of zeros
+    let padded = format!("{:0width$}", n_as_base, width = pad_width);
+
     // If base is a common dice size (between 4 and 8),
     // we'll add one to each digit, to make it easier
     // to compare to actual rolled dice
