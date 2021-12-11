@@ -88,7 +88,7 @@ pub fn read_homophones_list_from_filenames(filenames: &[PathBuf]) -> Vec<(String
     homophones_list
 }
 
-fn split_and_vectorize<'a>(string_to_split: &'a str, splitter: &str) -> Vec<&'a str> {
+pub fn split_and_vectorize<'a>(string_to_split: &'a str, splitter: &str) -> Vec<&'a str> {
     string_to_split.split(splitter).collect()
 }
 
@@ -421,9 +421,9 @@ fn remove_homophones(list: Vec<String>, homophones: Vec<(String, String)>) -> Ve
     new_list
 }
 
-use radix_fmt::*;
+use radix_fmt::*; // Wonder if I really need this dependency...
 pub fn print_as_dice(n: usize, base: u8, list_length: usize) -> String {
-    // Set width for zero-padding. Not 100% sure if this - 1 is correct.
+    // Set width for zero-padding
     let pad_width = radix(list_length, base).to_string().len() - 1;
     let as_base = radix(n, base);
 
@@ -433,10 +433,10 @@ pub fn print_as_dice(n: usize, base: u8, list_length: usize) -> String {
         as_base.to_string().parse::<usize>().unwrap(),
         width = pad_width
     );
-    // If base is a common dice size under 10, we'll add one to
-    // each digit, to make it easier to compare to rolled dice
-    // if base >= 4 && base <= 8 {
-    if (4..=8).contains(&base) {
+    // If base is a common dice size (between 4 and 8),
+    // we'll add one to each digit, to make it easier
+    // to compare to actual rolled dice
+    if 4 <= base && base <= 8 {
         padded
             .chars()
             .map(|s| (s.to_string().parse::<usize>().unwrap() + 1).to_string())

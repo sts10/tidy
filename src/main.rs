@@ -7,6 +7,27 @@ use tidy::*;
 pub mod display_information;
 use crate::display_information::display_list_information;
 
+// Allow users to use Python's exponent notation (base**exponent)
+// to set cut-to length. Handy when making lists fit to dice.
+fn eval_cut_length(input: &str) -> usize {
+    match input.parse::<usize>() {
+        // if we were able to parse it as a usize,
+        // just return that
+        Ok(num) => num,
+        Err(_e) => {
+            // if parse gives an error, assume user has
+            // given exponent notation and parse accordingly
+            let base: usize = split_and_vectorize(input, "**")[0]
+                .parse::<usize>()
+                .expect("Unable to parse base of cut-to");
+            let exponent: u32 = split_and_vectorize(input, "**")[1]
+                .parse::<u32>()
+                .expect("Unable to parse base of cut-to");
+            base.pow(exponent)
+        }
+    }
+}
+
 /// tidy: Combine and clean word lists
 #[derive(StructOpt, Debug)]
 #[structopt(name = "tidy")]
@@ -73,9 +94,10 @@ struct Opt {
     #[structopt(long = "take-rand")]
     take_rand: Option<usize>,
 
-    /// Just before printing generated list, cut word list down
-    /// to a set number N. Cuts are done randomly.
-    #[structopt(short = "c", long = "cut-to")]
+    /// Just before printing generated list, cut list down
+    /// to a set number of words. Can accept expressions in the
+    /// form of base**exponent. Cuts are done randomly.
+    #[structopt(short = "c", long = "cut-to", parse(from_str = eval_cut_length))]
     cut_to: Option<usize>,
 
     /// Set minimum word length
@@ -83,7 +105,7 @@ struct Opt {
     minimum_length: Option<usize>,
 
     /// Set maximum word length
-    #[structopt(long = "maxium-word-length")]
+    #[structopt(long = "maximum-word-length")]
     maximum_length: Option<usize>,
 
     /// Set minimum edit distance between words, which
@@ -132,7 +154,7 @@ fn main() {
 
     // Validate dice_sides
     if let Some(dice_sides) = opt.dice_sides {
-        if !(2 < dice_sides && dice_sides < 9) {
+        if !(2 <= dice_sides && dice_sides <= 9) {
             eprintln!("Specified number of dice sides must be between 2 and 9.");
             return;
         }
@@ -192,7 +214,11 @@ fn main() {
         }
     }
     if opt.attributes > 0 && !opt.quiet {
-        eprintln!("----------------\nDone making list\n");
+        if !opt.dry_run {
+            eprintln!("----------------\nDone making list\n");
+        } else {
+            eprintln!("Dry run complete");
+        }
         display_list_information(&tidied_list, opt.attributes);
     }
 }

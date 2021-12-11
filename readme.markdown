@@ -53,15 +53,15 @@ FLAGS:
 OPTIONS:
     -a, --approve <approved-list>                                Path for optional list of approved words
     -c, --cut-to <cut-to>
-            Just before printing generated list, cut word list down to a set number N. Cuts are done randomly
-
+            Just before printing generated list, cut list down to a set number of words. Can accept expressions in the
+            form of base**exponent. Cuts are done randomly
     -D, --dice <dice-sides>
             Print dice roll next to word in output. Set number of sides of dice. Must be between 2 and 9. Use 6 for
             normal dice
     -h, --homophones <homophones-list>
             Path for file with a list of homophone pairs. There must be one pair of homophones per line, separated by a
             comma
-        --maxium-word-length <maximum-length>                    Set maximum word length
+        --maximum-word-length <maximum-length>                   Set maximum word length
     -x, --shared-prefix-length <maximum-shared-prefix-length>
             Set number of leading characters to get to a unique prefix, which can aid auto-complete functionality.
             Setting this value to say, 4, means that knowing the first 4 characters of any word on the generated list is
