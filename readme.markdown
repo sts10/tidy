@@ -121,6 +121,14 @@ In both Tidy's code and documentation, "remove" means that a word will be remove
 1. [Install Rust](https://www.rust-lang.org/tools/install) if you haven't already
 2. Run: `cargo install --git https://github.com/sts10/tidy --branch main`
 
+## Run all tests
+
+`cargo test`
+
+## Generating docs
+
+`cargo doc --document-private-items --no-deps`
+
 ## A blog post
 
 You can read more about the 0.2 version of this project [here](https://sts10.github.io/2021/12/09/tidy-0-2-0.html).

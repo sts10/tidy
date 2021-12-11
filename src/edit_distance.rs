@@ -1,23 +1,17 @@
 //! Compute the edit distance between two strings
-// from https://github.com/TheAlgorithms/Rust/blob/master/src/dynamic_programming/edit_distance.rs
 
 use std::cmp::min;
 
-/// edit_distance(str_a, str_b) returns the edit distance between the two
-/// strings This edit distance is defined as being 1 point per insertion,
+/// `find_edit_distance(str_a, str_b)` returns the edit distance between the two
+/// strings. This edit distance is defined as being 1 point per insertion,
 /// substitution, or deletion which must be made to make the strings equal.
-/// The space efficient version of the above algorithm.
+///
+/// I adapted this function from one I found in the
+/// [TheAlgorithms/Rust repo on Github](https://github.com/TheAlgorithms/Rust/blob/master/src/dynamic_programming/edit_distance.rs).
 ///
 /// Instead of storing the `m * n` matrix expicitly, only one row (of length `n`) is stored.
 /// It keeps overwriting itself based on its previous values with the help of two scalars,
 /// gradually reaching the last row. Then, the score is `matrix[n]`.
-///
-/// # Complexity
-///
-/// - time complexity: O(nm),
-/// - space complexity: O(n),
-///
-/// where n and m are lengths of `str_a` and `str_b`
 pub fn find_edit_distance(str_a: &str, str_b: &str) -> u32 {
     let (str_a, str_b) = (str_a.as_bytes(), str_b.as_bytes());
     let (m, n) = (str_a.len(), str_b.len());
