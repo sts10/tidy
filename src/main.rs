@@ -14,7 +14,7 @@ fn eval_cut_length(input: &str) -> usize {
         [] => panic!("Please specify a number."),
         [num_string] => num_string
             .parse::<usize>()
-            .expect("Unable to parse cut-to!"),
+            .expect("Unable to parse cut-to! Enter a number or a base**exponent"),
         [base_string, exponent_string] => {
             let base: usize = base_string
                 .parse::<usize>()
@@ -24,7 +24,7 @@ fn eval_cut_length(input: &str) -> usize {
                 .expect("Unable to parse exponent of cut-to!");
             base.pow(exponent)
         }
-        _ => panic!("You can only specify one exponent!"),
+        _ => panic!("You can only specify one exponent! Use format: base**exponent"),
     }
 }
 
