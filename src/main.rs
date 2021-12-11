@@ -10,21 +10,21 @@ use crate::display_information::display_list_information;
 // Allow users to use Python's exponent notation (base**exponent)
 // to set cut-to length. Handy when making lists fit to dice.
 fn eval_cut_length(input: &str) -> usize {
-    match input.parse::<usize>() {
-        // if we were able to parse it as a usize,
-        // just return that
-        Ok(num) => num,
-        Err(_e) => {
-            // if parse gives an error, assume user has
-            // given exponent notation and parse accordingly
-            let base: usize = split_and_vectorize(input, "**")[0]
+    match input.split("**").collect::<Vec<&str>>()[..] {
+        [] => panic!("Please specify a number."),
+        [num_string] => num_string
+            .parse::<usize>()
+            .expect("Unable to parse cut-to!"),
+        [base_string, exponent_string] => {
+            let base: usize = base_string
                 .parse::<usize>()
-                .expect("Unable to parse base of cut-to");
-            let exponent: u32 = split_and_vectorize(input, "**")[1]
+                .expect("Unable to parse base of cut-to!");
+            let exponent: u32 = exponent_string
                 .parse::<u32>()
-                .expect("Unable to parse exponent of cut-to");
+                .expect("Unable to parse exponent of cut-to!");
             base.pow(exponent)
         }
+        _ => panic!("You can only specify one exponent!"),
     }
 }
 
@@ -221,4 +221,12 @@ fn main() {
         }
         display_list_information(&tidied_list, opt.attributes);
     }
+}
+
+#[test]
+fn can_parse_cut_to() {
+    assert_eq!(eval_cut_length("7776"), 7776);
+    assert_eq!(eval_cut_length("6**5"), 7776);
+    assert_eq!(eval_cut_length("10000"), 10000);
+    assert_eq!(eval_cut_length("10**2"), 100);
 }
