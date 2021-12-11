@@ -223,10 +223,26 @@ fn main() {
     }
 }
 
-#[test]
-fn can_parse_cut_to() {
-    assert_eq!(eval_cut_length("7776"), 7776);
-    assert_eq!(eval_cut_length("6**5"), 7776);
-    assert_eq!(eval_cut_length("10000"), 10000);
-    assert_eq!(eval_cut_length("10**2"), 100);
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn can_parse_cut_to() {
+        assert_eq!(eval_cut_length("7776"), 7776);
+        assert_eq!(eval_cut_length("6**5"), 7776);
+        assert_eq!(eval_cut_length("10000"), 10000);
+        assert_eq!(eval_cut_length("10**2"), 100);
+    }
+
+    #[test]
+    #[should_panic]
+    fn panics_when_noninteger_is_inputted_to_cut_to() {
+        eval_cut_length("four");
+    }
+
+    #[test]
+    #[should_panic]
+    fn panics_when_too_many_exponents_inputted_to_cut_to() {
+        eval_cut_length("2**4**3");
+    }
 }
