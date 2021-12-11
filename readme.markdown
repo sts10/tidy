@@ -129,6 +129,8 @@ In both Tidy's code and documentation, "remove" means that a word will be remove
 
 `cargo doc --document-private-items --no-deps`
 
+Add `--open` flag to open docs after generation. They're printed to `./target/doc/tidy/index.html`.
+
 ## A blog post
 
 You can read more about the 0.2 version of this project [here](https://sts10.github.io/2021/12/09/tidy-0-2-0.html).

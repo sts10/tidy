@@ -7,10 +7,14 @@ use tidy::*;
 pub mod display_information;
 use crate::display_information::display_list_information;
 
-// Allow users to use Python's exponent notation (base**exponent)
-// to set cut-to length. Handy when making lists fit to dice.
+/// Parse user's input to the `cut_to` option, either directly as a `usize`,
+/// or, if they entered Python exponent notation (base**exponent). Either
+/// way, return a `usize` or `expect`/`panic!`.
+///  
+/// This is useful when making lists fit to a particualr type
+/// and number of dice (6**5).
 fn eval_cut_length(input: &str) -> usize {
-    match input.split("**").collect::<Vec<&str>>()[..] {
+    match input.split("**").collect::<Vec<&str>>().as_slice() {
         [] => panic!("Please specify a number."),
         [num_string] => num_string
             .parse::<usize>()

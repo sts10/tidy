@@ -1,4 +1,7 @@
+//! Display attributes and information about the generated word list
+
 use crate::calc_entropy_per_word;
+
 /// This is a large and long function that prints all of the attributes of
 /// the generated (new) list.
 ///
@@ -91,6 +94,9 @@ fn find_shortest_edit_distance(list: &[String]) -> usize {
     shortest_edit_distance.try_into().unwrap()
 }
 
+/// Nested loops in this function get the `longest_shared_prefix`
+/// between any two words on the given list. Returns length of this
+/// longest shared prefix, a notable cryptographic metric.
 pub fn find_longest_shared_prefix(list: &[String]) -> usize {
     let mut longest_shared_prefix = 0;
     for word1 in list {
@@ -110,6 +116,25 @@ pub fn find_longest_shared_prefix(list: &[String]) -> usize {
     longest_shared_prefix
 }
 
+/// Given 2 words, finds the index of the first character that is
+/// **different** within them.
+/// ```
+/// use tidy::display_information::find_first_different_character_zero_indexed;
+///
+/// assert_eq!(
+///     find_first_different_character_zero_indexed("hello", "help"), 3
+///     // First **different** character is `l` vs. `p`.
+/// );
+///
+/// // Handles words of different length by falling back to the length of the shorter
+/// // of the two words:
+/// assert_eq!(
+///     find_first_different_character_zero_indexed("zip", "zippy"), 3
+/// );
+/// assert_eq!(
+///     find_first_different_character_zero_indexed("zippy", "zip"), 3
+/// );
+/// ```
 pub fn find_first_different_character_zero_indexed(word1: &str, word2: &str) -> usize {
     for (i, c1) in word1.chars().enumerate() {
         match word2.chars().nth(i) {

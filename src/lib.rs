@@ -576,6 +576,10 @@ pub fn print_as_dice(n: usize, base: u8, list_length: usize) -> String {
 }
 
 /// Calculate the entropy per word of a word list, given its size.
+/// Entropy is meausred in bits, hence use of constant `2`.
+///
+/// Returns `f64` because this value to return (bits of entropy per
+/// word) will most likely not be a whole bumber (which is fine!)
 pub fn calc_entropy_per_word(list_size: usize) -> f64 {
     (list_size as f64).ln() / (2_f64.ln() as f64)
 }
