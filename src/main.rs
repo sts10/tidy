@@ -22,7 +22,7 @@ fn eval_cut_length(input: &str) -> usize {
                 .expect("Unable to parse base of cut-to");
             let exponent: u32 = split_and_vectorize(input, "**")[1]
                 .parse::<u32>()
-                .expect("Unable to parse base of cut-to");
+                .expect("Unable to parse exponent of cut-to");
             base.pow(exponent)
         }
     }
