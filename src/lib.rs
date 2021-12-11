@@ -34,6 +34,10 @@ pub struct TidyRequest {
     pub cut_to: Option<usize>,
 }
 
+/// Takes a slice of `PathBuf`s representing the word list(s)
+/// that the user has inputted to the program. Then iterates
+/// through each file and addes each line to Vec<String>. (Blank
+/// lines and duplicate links will be handled elsewhere.)
 pub fn make_vec_from_filenames(filenames: &[PathBuf]) -> Vec<String> {
     let mut word_list: Vec<String> = [].to_vec();
     for filename in filenames {
@@ -59,6 +63,15 @@ pub fn make_vec_from_filenames(filenames: &[PathBuf]) -> Vec<String> {
     word_list
 }
 
+/// Like `make_vec_from_filenames`, this function takes a slice of `PathBuf`s of
+/// files. But in this case these files represent lists of homophones that the
+/// user wants to make sure aren't both on the resulting list.
+///
+/// These homophone files are expected to be formatted such that each line of the file
+/// is `homophone1,homophone2`.
+///
+/// This function produces a Vector of tuples of strings, representing the
+/// homophone pairs.
 pub fn read_homophones_list_from_filenames(filenames: &[PathBuf]) -> Vec<(String, String)> {
     let mut homophones_list: Vec<(String, String)> = vec![];
     for filename in filenames {
@@ -88,10 +101,21 @@ pub fn read_homophones_list_from_filenames(filenames: &[PathBuf]) -> Vec<(String
     homophones_list
 }
 
+/// Simple helper functions that splits a `str` by a given substring `str`,
+/// Then returns a Vector of `str`s.
+/// ```
+/// use tidy::split_and_vectorize;
+/// assert_eq!(split_and_vectorize("a:b:c",":"), vec!["a","b","c"]);
+/// ```
+/// I find this a handy general helper function.
 pub fn split_and_vectorize<'a>(string_to_split: &'a str, splitter: &str) -> Vec<&'a str> {
     string_to_split.split(splitter).collect()
 }
 
+/// This is the large, key function of the program. It takes
+/// a `TidyRequest` object -- which includes the word list --
+/// and performs whatever functions the user has requesteed to
+/// perform on the list.
 pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     // guess this function is what I should clean-up next...
     // Remove blank lines first
@@ -231,18 +255,37 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     tidied_list
 }
 
-fn delete_integers(mut w: String) -> String {
-    w.retain(|c| !c.is_numeric());
-    w
+/// Given a String (a word), delete all integers from the word.
+fn delete_integers(mut word: String) -> String {
+    word.retain(|c| !c.is_numeric());
+    word
 }
 
-fn delete_nonalphanumeric(mut w: String) -> String {
-    w.retain(|c| c.is_alphanumeric());
-    w
+/// Given a String (a word), delete all characters that are not
+/// alphanumeric
+/// ```
+/// use tidy::delete_nonalphanumeric;
+/// assert_eq!(delete_nonalphanumeric("Hello!".to_string()), "Hello");
+/// assert_eq!(delete_nonalphanumeric("world824...".to_string()), "world824");
+/// ```
+pub fn delete_nonalphanumeric(mut word: String) -> String {
+    word.retain(|c| c.is_alphanumeric());
+    word
 }
 
-// Use memchr library to find ch, then split string at that position
-// Other approaches to this function: https://github.com/sts10/splitter/blob/main/src/lib.rs
+/// Delete all character through and including the first appearance
+/// of character `ch` in inputted `&str` `s`. Program uses this to
+/// remove character through first tab or first space, a common task
+/// when dealing with diceware passphrase word lists that have dice roll
+/// numbers before each word. The
+/// [EFF long list](https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt)
+/// is one such example.
+///
+/// Uses [memchr library](https://docs.rs/memchr/latest/memchr/)
+/// to find this character a bit quicker than standard function.
+///
+/// I outlined other approaches to this function in
+/// [a separate repo](https://github.com/sts10/splitter/blob/main/src/lib.rs).
 fn delete_through_first_char(s: &str, ch: char) -> &str {
     match memchr(ch as u8, s.as_bytes()) {
         None => s, // not found => return the whole string
@@ -251,9 +294,21 @@ fn delete_through_first_char(s: &str, ch: char) -> &str {
 }
 
 use std::collections::HashMap;
-// I could definitely understand an argument that this logic
-// is off by one in a wonky way that I can't quite
-// figure out.
+/// This function removes words from the given word list
+/// such that the resulting, outputted list has a guaranteed
+/// maximum prefix length.  
+///
+/// As an example, if `maximum_shared_prefix_length == 4`, this
+/// means that on the resulting list, knowing the first 4 characters
+/// of any word on the generated list is sufficient to know which
+/// word it is. In this case, we'd know that if a word starts with
+/// "radi", we know it must be the word "radius" (if "radical" had been
+/// on the list, this function would have removed it).
+///
+/// This is useful if you intend the list to be used by software that
+/// uses auto-complete. In the case described above, a user will only have to type the
+/// first 4 characters of any word before a program could successfully
+/// auto-complete the entire word.
 fn guarantee_maximum_prefix_length(
     list: &[String],
     maximum_shared_prefix_length: usize,
@@ -283,54 +338,80 @@ fn guarantee_maximum_prefix_length(
     new_word_list
 }
 
-fn get_prefix(word: &str, length: usize) -> String {
+/// Given a word and a `usize` of `length`, this function returns
+/// the first `length` characters of that word.
+/// ```
+/// use tidy::get_prefix;
+/// assert_eq!(get_prefix("hello world", 4), "hell")
+/// ```
+pub fn get_prefix(word: &str, length: usize) -> String {
     word.chars().take(length).collect::<String>()
 }
 
+/// Iterates through a list of lines. Only `retain` lines
+/// that are not empty (`!line.is_empty()`)
 fn remove_blank_lines(list: &[String]) -> Vec<String> {
     let mut new_list = list.to_vec();
-    new_list.retain(|x| !x.is_empty());
+    new_list.retain(|line| !line.is_empty());
     new_list
 }
 
+/// Search inputted list for any words that have any
+/// non-alphanumeric characters in it. Retain only words
+/// that have only alphanumeric characters in it.
 fn remove_nonalphanumeric(list: &[String]) -> Vec<String> {
     let mut new_list = list.to_vec();
-    // This logic trips me out a bit, but I think it
-    // works correctly
     new_list.retain(|word| !word.chars().any(|c| !c.is_alphanumeric()));
     new_list
 }
 
+/// Search inputted list for any words that have any
+/// non-alphabetic characters in them. Retain only words
+/// that have only alphabetic characters in it.
 fn remove_nonalphabetic(list: &[String]) -> Vec<String> {
     let mut new_list = list.to_vec();
     new_list.retain(|word| !word.chars().any(|chr| !is_alphabetic(chr as u8)));
     new_list
 }
 
+/// Helper function to determine if a given `u8` is a letter.
 fn is_alphabetic(chr: u8) -> bool {
     (chr >= 0x41 && chr <= 0x5A) || (chr >= 0x61 && chr <= 0x7A)
 }
 
+/// Search inputted list for any words that have any
+/// integers in them (as determined by `is_numeric()`).
+/// Retain only words that don't have any integers in them.
 fn remove_integers(list: &[String]) -> Vec<String> {
     let mut new_list = list.to_vec();
-    // This logic trips me out a bit, but I think it
-    // works correctly
     new_list.retain(|word| !word.chars().any(|c| c.is_numeric()));
     new_list
 }
 
+/// Iterates through list of `String`s, removing leading
+/// and trailing whitespace from each `String`.
 fn trim_whitespace(list: &[String]) -> Vec<String> {
     list.iter()
         .map(|w| w.trim_start().trim_end().to_string())
         .collect()
 }
 
+/// Alphabetizes and de-duplicates a Vector of `String`s.
+///
+/// For Rust's [`dedup()`](https://doc.rust-lang.org/std/vec/struct.Vec.html#method.dedup)
+/// function to remove all duplicates, the Vector needs to be
+/// [`sort()`](https://doc.rust-lang.org/std/vec/struct.Vec.html#method.sort)ed first.
 fn sort_and_dedup(list: &mut Vec<String>) -> Vec<String> {
     list.sort();
     list.dedup();
     list.to_vec()
 }
 
+/// Remove prefix words from the given Vector of `String`s.
+///
+/// A brief example: If both "news" and "newspaper" are on the inputted list
+/// we may, for cryptographic reasons, want to remove the prefix word,
+/// which is "news" in this case.
 fn remove_prefix_words(list: Vec<String>) -> Vec<String> {
     let mut list_without_prefix_words = list.to_vec();
     list_without_prefix_words.retain(|potential_prefix_word| {
@@ -353,6 +434,10 @@ fn remove_prefix_words(list: Vec<String>) -> Vec<String> {
     list_without_prefix_words
 }
 
+/// Only retain words that are the given `minimum_edit_distance` away from all
+/// other words on the list.
+///
+/// Calulates edit distance using a function in the edit_distance module.
 fn enfore_minimum_edit_distance(list: Vec<String>, minimum_edit_distance: usize) -> Vec<String> {
     let minimum_edit_distance: u32 = minimum_edit_distance.try_into().unwrap();
     let mut new_list = list.to_vec();
@@ -381,30 +466,48 @@ fn enfore_minimum_edit_distance(list: Vec<String>, minimum_edit_distance: usize)
     new_list
 }
 
+/// Remove all words on the list that are on the given `reject_list`.
+/// This `reject_list`, a Vector of `String`s, is read from a file.
 fn remove_reject_words(list: Vec<String>, reject_list: Vec<String>) -> Vec<String> {
     let mut new_list = list.to_vec();
     new_list.retain(|x| !reject_list.contains(x));
     new_list
 }
 
+/// Remove all words on the list that are NOT on the given `approved_list`
+/// This `approved_list`, a Vector of `String`s, is read from a file.
 fn remove_words_not_on_approved_list(list: Vec<String>, approved_list: Vec<String>) -> Vec<String> {
     let mut new_list = list.to_vec();
     new_list.retain(|x| approved_list.contains(x));
     new_list
 }
 
+/// Remove words that are below the inputted `minimum_length`.
+///
+/// Any words equal to the inputted `minimum_length` will be preserved.
+/// For example, if `minimum_length` is set to `4`, 4-character
+/// words like "star" will be preserved.
 fn remove_words_below_minimum_length(list: Vec<String>, minimum_length: usize) -> Vec<String> {
     let mut new_list = list.to_vec();
     new_list.retain(|w| w.chars().count() >= minimum_length);
     new_list
 }
 
+/// Remove words that are above the inputted `maximum_length`.
+///
+/// Any words equal to the inputted `maximum_length` will be preserved.
+/// For example, if `maximum_length` is set to `9`, 9-character
+/// words like "alignment" will be preserved.
 fn remove_words_above_maximum_length(list: Vec<String>, maximum_length: usize) -> Vec<String> {
     let mut new_list = list.to_vec();
     new_list.retain(|w| w.chars().count() <= maximum_length);
     new_list
 }
 
+/// Takes the inputted word list and a Vector of tuples of Strings,
+/// each representing a pair of homophones, e.g. `("there", "their")`.
+/// The function outputs a new list in which, if both homophones
+/// are detected, the second homophone is removed.
 fn remove_homophones(list: Vec<String>, homophones: Vec<(String, String)>) -> Vec<String> {
     let mut words_to_remove = vec![];
     for pair_of_homophones in homophones {
@@ -422,6 +525,32 @@ fn remove_homophones(list: Vec<String>, homophones: Vec<(String, String)>) -> Ve
 }
 
 use radix_fmt::*; // Wonder if I really need this dependency...
+/// Print dice rolls before each corresponding word. A tab is
+/// printed between the dice roll and the word.
+///
+/// Here's an example of w
+/// ```text
+/// 11111	aback
+/// 11112	abandons
+/// 11113	abated
+/// 11114	abbey
+/// 11115	abbot
+/// 11116	abbreviated
+/// 11121	abdomen
+/// 11122	abducted
+/// 11123	aberrant
+/// 11124	abide
+/// 11125	ability
+/// 11126	abject
+/// 11131	abnormally
+/// // etc.
+/// ```
+///
+/// The `base` paramter represents the number of sides of the
+/// dice, which can be set from 2 to 9. If this base is between 4 and 8,
+/// this function assumes the user will be using actual dice, which are index at 1.
+/// Thus, `if 4 <= base && base <= 8`, we add `1` to each digit of the dice
+/// roll before printing it.
 pub fn print_as_dice(n: usize, base: u8, list_length: usize) -> String {
     // Set width for zero-padding
     let pad_width = radix(list_length, base).to_string().len() - 1;
@@ -446,8 +575,7 @@ pub fn print_as_dice(n: usize, base: u8, list_length: usize) -> String {
     }
 }
 
-// I'm pretty sure this is an accurate, if obtuse method of calculating entropy
-// of a word list, given its size
-pub fn calc_entropy(list_size: usize) -> f64 {
+/// Calculate the entropy per word of a word list, given its size.
+pub fn calc_entropy_per_word(list_size: usize) -> f64 {
     (list_size as f64).ln() / (2_f64.ln() as f64)
 }

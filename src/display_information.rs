@@ -1,7 +1,9 @@
-// use tidy::assumed_entropy_per_letter;
-use crate::calc_entropy;
-// We just want to "display" this information, rather than print it to files,
-// so we use eprintln!
+use crate::calc_entropy_per_word;
+/// This is a large and long function that prints all of the attributes of
+/// the generated (new) list.
+///
+/// We just want to "display" this information, rather than print it to files
+/// or stdout, so we use `eprintln!`
 pub fn display_list_information(list: &[String], level: u8) {
     eprintln!("Attributes of new list");
     eprintln!("----------------------");
@@ -22,7 +24,7 @@ pub fn display_list_information(list: &[String], level: u8) {
     let free_of_prefix_words = !has_prefix_words(list);
     eprintln!("Free of prefix words      : {}", free_of_prefix_words);
 
-    let entropy_per_word = calc_entropy(list.len());
+    let entropy_per_word = calc_entropy_per_word(list.len());
     eprintln!("Entropy per word          : {:.4}", entropy_per_word);
     let assumed_entropy_per_letter = assumed_entropy_per_letter(list);
     eprintln!(
@@ -64,6 +66,8 @@ pub fn display_list_information(list: &[String], level: u8) {
 }
 
 use crate::edit_distance::find_edit_distance;
+/// This function finds the shortest edit distance between
+/// any two words on the list.
 fn find_shortest_edit_distance(list: &[String]) -> usize {
     let mut shortest_edit_distance = u32::max_value();
     // I think I can cheat and only go through half of the
@@ -130,6 +134,8 @@ pub fn find_first_different_character_zero_indexed(word1: &str, word2: &str) -> 
     }
 }
 
+/// Checks if a list has any words that are prefixs of other
+/// words on the list.
 fn has_prefix_words(list: &[String]) -> bool {
     for word1 in list {
         for word2 in list {
@@ -141,13 +147,24 @@ fn has_prefix_words(list: &[String]) -> bool {
     false
 }
 
+/// Assuming that users get a passphrase consisting solely of
+/// the shortest word on the list, we want to check against
+/// a brute-force attack in exactly that situation. To do so,
+/// we calculate a value I'm calling "assumed entropy per letter".
+///
+/// If this value is above `log2(26)` or about `4.7` bits, there's a chance
+/// that we'd _over_-estimate the entropy of passphrases created
+/// using the word list.
 pub fn assumed_entropy_per_letter(list: &[String]) -> f64 {
     let shortest_word_length = get_shortest_word_length(list) as f64;
-    let assumed_entropy_per_word = calc_entropy(list.len());
+    let assumed_entropy_per_word = calc_entropy_per_word(list.len());
 
     assumed_entropy_per_word / shortest_word_length
 }
 
+/// A simple helper function that gets the shortest word on
+/// a list. Uses `.chars().count()` rather than `len()` to
+/// handle non-English letters.
 pub fn get_shortest_word_length(list: &[String]) -> usize {
     let mut shortest_word_length: usize = usize::max_value();
     for word in list {
