@@ -584,7 +584,7 @@ pub fn print_as_dice(n: usize, base: u8, list_length: usize) -> String {
         // Values of 0 and 1 should have been caught earlier,
         // so we'll panic! if we have them here
         0 | 1 => panic!("Too few dice sides entered"),
-        // If base is 2 or 3, keep them zero-indexed.
+        // If base is 2 or 3, just print as-is, zero-indexed.
         2 | 3 => padded_n,
         // If base is a common dice size (between 4 and 8), we'll add
         // one to each digit, to make it easier to compare to actual rolled dice
@@ -592,8 +592,8 @@ pub fn print_as_dice(n: usize, base: u8, list_length: usize) -> String {
             .chars()
             .map(|ch| (ch.to_string().parse::<usize>().unwrap() + 1).to_string())
             .collect::<String>(),
-        // If base is over base 9, we'll add hyphens between digits to
-        // make it easier to read.
+        // If base is over base 9, we'll print each digit as zero-iondex, but
+        // we'll add a hyphen _between_ digits to make it easier to read.
         9..=36 => padded_n
             .chars()
             .map(|ch| ch.to_string() + "-")
