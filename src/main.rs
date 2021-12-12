@@ -139,7 +139,7 @@ struct Opt {
     homophones_list: Option<PathBuf>,
 
     /// Print dice roll next to word in output. Set number of sides
-    /// of dice. Must be between 2 and 9. Use 6 for normal dice.
+    /// of dice. Must be between 2 and 36. Use 6 for normal dice.
     #[structopt(short = "D", long = "dice")]
     dice_sides: Option<u8>,
 
@@ -158,8 +158,8 @@ fn main() {
 
     // Validate dice_sides
     if let Some(dice_sides) = opt.dice_sides {
-        if !(2 <= dice_sides && dice_sides <= 9) {
-            eprintln!("Specified number of dice sides must be between 2 and 9.");
+        if !(2 <= dice_sides && dice_sides <= 36) {
+            eprintln!("Specified number of dice sides must be between 2 and 36.");
             return;
         }
     }

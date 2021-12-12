@@ -525,10 +525,14 @@ fn remove_homophones(list: Vec<String>, homophones: Vec<(String, String)>) -> Ve
 }
 
 use radix_fmt::*; // https://stackoverflow.com/a/50278316
-/// Print dice rolls before each corresponding word. A tab is
-/// printed between the dice roll and the word.
+/// Print dice rolls before each corresponding word. Note
+/// that the `n` parameter should be zero-indexed. A tab (`\t`)
+/// is printed between the dice roll and the word.
 ///
-/// Here's an example of w
+/// The `base` parameter represents the number of sides of the
+/// dice, which can be set from 2 to 9.
+///
+/// Here's an example of an outputted word list with base 6:
 /// ```text
 /// 11111	aback
 /// 11112	abandons
@@ -546,8 +550,7 @@ use radix_fmt::*; // https://stackoverflow.com/a/50278316
 /// // etc.
 /// ```
 ///
-/// The `base` parameter represents the number of sides of the
-/// dice, which can be set from 2 to 9. If this base is between 4 and 8,
+/// If this base is between 4 and 8,
 /// this function assumes the user will be using actual dice, which are index at 1.
 /// Thus, `if 4 <= base && base <= 8`, we add `1` to each digit of the dice
 /// roll before printing it.
@@ -561,16 +564,21 @@ pub fn print_as_dice(n: usize, base: u8, list_length: usize) -> String {
     // This is, by definition the length of the list.
     // We want the length of the number in the base we want to print all
     // the numbers, so use radix function.
-    let pad_width = radix(list_length, base).to_string().len() - 1;
     let n_as_base = radix(n, base);
+    let n_width = n_as_base.to_string().len();
+    let pad_width = radix(list_length - 1, base).to_string().len();
 
     // Pad dice roll numbers with zeros
-    let padded = format!(
-        "{:0width$}",
-        n_as_base.to_string().parse::<usize>().unwrap(), // all this is needed
-        width = pad_width
-    );
-
+    // let padded = format!(
+    //     "{:0width$}",
+    //     n_as_base.to_string().parse::<usize>().unwrap(), // all this is needed
+    //     width = pad_width
+    // );
+    let mut padded = "".to_string();
+    for _i in n_width..pad_width {
+        padded.push('0');
+    }
+    padded += &n_as_base.to_string();
     // If base is a common dice size (between 4 and 8),
     // we'll add one to each digit, to make it easier
     // to compare to actual rolled dice
@@ -579,6 +587,8 @@ pub fn print_as_dice(n: usize, base: u8, list_length: usize) -> String {
             .chars()
             .map(|s| (s.to_string().parse::<usize>().unwrap() + 1).to_string())
             .collect::<String>()
+    // Could do an else if here to added hypens between the numbers if o
+    // over base 9
     } else {
         padded
     }

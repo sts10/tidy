@@ -352,4 +352,17 @@ mod list_manipulation_tests {
         assert!(!new_list.contains(&"bee".to_string()));
         assert!(new_list.contains(&"mistake".to_string()));
     }
+
+    #[test]
+    fn can_print_dice_rolls_of_base_6() {
+        assert_eq!(print_as_dice(0, 6, 7776), "11111".to_string());
+        assert_eq!(print_as_dice(7775, 6, 7776), "66666".to_string());
+        assert_eq!(print_as_dice(2548, 6, 7776), "26555".to_string());
+        assert_eq!(print_as_dice(2548, 6, 7000), "26555".to_string());
+    }
+    #[test]
+    fn can_print_dice_rolls_of_base_2() {
+        assert_eq!(print_as_dice(1, 2, 7776), "0000000000001".to_string());
+        assert_eq!(print_as_dice(127, 2, 128), "1111111".to_string());
+    }
 }
