@@ -11,8 +11,8 @@ use crate::display_information::display_list_information;
 /// or, if they entered Python exponent notation (base**exponent). Either
 /// way, return a `usize` or `expect`/`panic!`.
 ///  
-/// This is useful when making lists fit to a particualr type
-/// and number of dice (6**5).
+/// This is useful when making lists fit to a specific amount of dice and
+/// dice sides. (As an example, five rolls of a six-sided dice would be: 6**5).
 fn eval_cut_length(input: &str) -> usize {
     match input.split("**").collect::<Vec<&str>>().as_slice() {
         [] => panic!("Please specify a number."),
