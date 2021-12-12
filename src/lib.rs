@@ -565,16 +565,12 @@ pub fn print_as_dice(n: usize, base: u8, list_length: usize) -> String {
     // We want the length of the number in the base we want to print all
     // the numbers, so use radix function.
     let n_as_base = radix(n, base);
+
+    // Pad dice roll numbers with zeros
     let n_width = n_as_base.to_string().len();
     let pad_width = radix(list_length - 1, base).to_string().len();
 
-    // Pad dice roll numbers with zeros
-    // let padded_n = format!(
-    //     "{:0width$}",
-    //     n_as_base.to_string().parse::<usize>().unwrap(), // all this is needed
-    //     width = pad_width
-    // );
-    let mut padded_n = "".to_string();
+    let mut padded_n = String::new();
     for _i in n_width..pad_width {
         padded_n.push('0');
     }
@@ -582,9 +578,8 @@ pub fn print_as_dice(n: usize, base: u8, list_length: usize) -> String {
     // in `padded_n`, it's time to add our number
     padded_n += &n_as_base.to_string();
 
-    // If base is a common dice size (between 4 and 8),
-    // we'll add one to each digit, to make it easier
-    // to compare to actual rolled dice
+    // If base is a common dice size (between 4 and 8), we'll add
+    // one to each digit, to make it easier to compare to actual rolled dice
     if 4 <= base && base <= 8 {
         padded_n
             .chars()
