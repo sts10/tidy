@@ -569,28 +569,39 @@ pub fn print_as_dice(n: usize, base: u8, list_length: usize) -> String {
     let pad_width = radix(list_length - 1, base).to_string().len();
 
     // Pad dice roll numbers with zeros
-    // let padded = format!(
+    // let padded_n = format!(
     //     "{:0width$}",
     //     n_as_base.to_string().parse::<usize>().unwrap(), // all this is needed
     //     width = pad_width
     // );
-    let mut padded = "".to_string();
+    let mut padded_n = "".to_string();
     for _i in n_width..pad_width {
-        padded.push('0');
+        padded_n.push('0');
     }
-    padded += &n_as_base.to_string();
+    // Now that we have the appropriate number of zeros
+    // in `padded_n`, it's time to add our number
+    padded_n += &n_as_base.to_string();
+
     // If base is a common dice size (between 4 and 8),
     // we'll add one to each digit, to make it easier
     // to compare to actual rolled dice
     if 4 <= base && base <= 8 {
-        padded
+        padded_n
             .chars()
-            .map(|s| (s.to_string().parse::<usize>().unwrap() + 1).to_string())
+            .map(|ch| (ch.to_string().parse::<usize>().unwrap() + 1).to_string())
             .collect::<String>()
-    // Could do an else if here to added hypens between the numbers if o
-    // over base 9
+
+    // If base is over base 9, we'll add hyphens between digits to
+    // make it easier to read.
+    } else if base > 9 {
+        padded_n
+            .chars()
+            .map(|ch| ch.to_string() + "-")
+            .collect::<String>()[0..padded_n.chars().count() * 2 - 1]
+            .trim()
+            .to_string()
     } else {
-        padded
+        padded_n
     }
 }
 
