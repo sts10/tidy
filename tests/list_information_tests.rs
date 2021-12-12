@@ -1,6 +1,6 @@
 mod list_information_tests {
     use tidy::display_information::*;
-    use tidy::*;
+    // use tidy::*;
 
     #[test]
     fn can_calculate_entropy_per_word_of_generated_list() {

@@ -534,19 +534,19 @@ use radix_fmt::*; // https://stackoverflow.com/a/50278316
 ///
 /// Here's an example of an outputted word list with base 6:
 /// ```text
-/// 11111	aback
-/// 11112	abandons
-/// 11113	abated
-/// 11114	abbey
-/// 11115	abbot
-/// 11116	abbreviated
-/// 11121	abdomen
-/// 11122	abducted
-/// 11123	aberrant
-/// 11124	abide
-/// 11125	ability
-/// 11126	abject
-/// 11131	abnormally
+/// 11111    aback
+/// 11112    abandons
+/// 11113    abated
+/// 11114    abbey
+/// 11115    abbot
+/// 11116    abbreviated
+/// 11121    abdomen
+/// 11122    abducted
+/// 11123    aberrant
+/// 11124    abide
+/// 11125    ability
+/// 11126    abject
+/// 11131    abnormally
 /// // etc.
 /// ```
 ///
@@ -602,13 +602,4 @@ pub fn print_as_dice(n: usize, base: u8, list_length: usize) -> String {
             .to_string(),
         _ => panic!("Amount of dice sides received is too high"),
     }
-}
-
-/// Calculate the entropy per word of a word list, given its size.
-/// Entropy is meausred in bits, hence use of constant `2`.
-///
-/// Returns `f64` because this value to return (bits of entropy per
-/// word) will most likely not be a whole bumber (which is fine!)
-pub fn calc_entropy_per_word(list_size: usize) -> f64 {
-    (list_size as f64).ln() / (2_f64.ln() as f64)
 }

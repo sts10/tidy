@@ -1,7 +1,5 @@
 //! Display attributes and information about the generated word list
 
-use crate::calc_entropy_per_word;
-
 /// This is a large and long function that prints all of the attributes of
 /// the generated (new) list.
 ///
@@ -66,6 +64,15 @@ pub fn display_list_information(list: &[String], level: u8) {
         // prefix
         eprintln!("Unique character prefix   : {}", longest_shared_prefix + 1);
     }
+}
+
+/// Calculate the entropy per word of a word list, given its size.
+/// Entropy is meausred in bits, hence use of constant `2`.
+///
+/// Returns `f64` because this value to return (bits of entropy per
+/// word) will most likely not be a whole bumber (which is fine!)
+pub fn calc_entropy_per_word(list_size: usize) -> f64 {
+    (list_size as f64).ln() / (2_f64.ln() as f64)
 }
 
 use crate::edit_distance::find_edit_distance;
