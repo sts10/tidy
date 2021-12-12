@@ -23,7 +23,7 @@ Optionally, the tool can...
 - enforce a minimum [edit distance](https://en.wikipedia.org/wiki/Edit_distance) between words (`-d`)
 - remove prefix words (see below) (`-P`)
 - guarantee a maximum shared prefix length (see below) (`-x`)
-- print corresponding dice rolls before words, separated by a tab. Dice can have 2 to 9 sides. (`-D`)
+- print corresponding dice rolls before words, separated by a tab. Dice can have 2 to 36 sides. (`-D`)
 - print information about the new list, such as entropy per word, to the terminal (`-A`)
 
 ## Usage
@@ -56,11 +56,9 @@ OPTIONS:
             Just before printing generated list, cut list down to a set number of words. Can accept expressions in the
             form of base**exponent. Cuts are done randomly
     -D, --dice <dice-sides>
-            Print dice roll next to word in output. Set number of sides of dice. Must be between 2 and 9. Use 6 for
-            normal dice
+            Print dice roll next to word in output. Set number of sides of dice. Must be between 2 and 36. Use 6 for normal dice
     -h, --homophones <homophones-list>
-            Path for file with a list of homophone pairs. There must be one pair of homophones per line, separated by a
-            comma
+            Path for file with a list of homophone pairs. There must be one pair of homophones per line, separated by a comma
         --maximum-word-length <maximum-length>                   Set maximum word length
     -x, --shared-prefix-length <maximum-shared-prefix-length>
             Set number of leading characters to get to a unique prefix, which can aid auto-complete functionality.
@@ -108,7 +106,7 @@ ARGS:
 
 - `tidy -t -o just_the_words.txt diceware_list.txt` If you've got [a diceware list with numbers and a tab before each word](https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt), the `-t` flag will delete everything up to and including the first tab in each line ("11133	abruptly" becomes "abruptly").
 
-- `tidy --dice 6 -o diceware_list.txt just_words.txt` Add corresponding dice roll numbers to a list with `--dice`. Can accept dice sides between 2 and 9. Indexed starting at 1; each dice roll and word are separated by a tab.
+- `tidy --dice 6 -o diceware_list.txt just_words.txt` Add corresponding dice roll numbers to a list with `--dice`. Can accept dice sides between 2 and 36. Each dice roll and word are separated by a tab.
 
 - `tidy -P -x 4 --cut-to 7776 --dice 6 --output diceware.txt 1password-2021.txt` Make a 7,776-word list from a [1Password (~18k) word list](https://1password.com/txt/agwordlist.txt), removing prefix words and guaranteeing 4 characters can auto-complete any word. Lastly, add corresponding 6-sided dice role for each word.
 
