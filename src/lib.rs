@@ -578,25 +578,29 @@ pub fn print_as_dice(n: usize, base: u8, list_length: usize) -> String {
     // in `padded_n`, it's time to add our number
     padded_n += &n_as_base.to_string();
 
-    // If base is a common dice size (between 4 and 8), we'll add
-    // one to each digit, to make it easier to compare to actual rolled dice
-    if 4 <= base && base <= 8 {
-        padded_n
+    // Print the dice rolls in slightly different ways,
+    // depending on the value of the base.
+    match base {
+        // Values of 0 and 1 should have been caught earlier,
+        // so we'll panic! if we have them here
+        0 | 1 => panic!("Too few dice sides entered"),
+        // If base is 2 or 3, keep them zero-indexed.
+        2 | 3 => padded_n,
+        // If base is a common dice size (between 4 and 8), we'll add
+        // one to each digit, to make it easier to compare to actual rolled dice
+        4..=8 => padded_n
             .chars()
             .map(|ch| (ch.to_string().parse::<usize>().unwrap() + 1).to_string())
-            .collect::<String>()
-
-    // If base is over base 9, we'll add hyphens between digits to
-    // make it easier to read.
-    } else if base > 9 {
-        padded_n
+            .collect::<String>(),
+        // If base is over base 9, we'll add hyphens between digits to
+        // make it easier to read.
+        9..=36 => padded_n
             .chars()
             .map(|ch| ch.to_string() + "-")
             .collect::<String>()[0..padded_n.chars().count() * 2 - 1]
             .trim()
-            .to_string()
-    } else {
-        padded_n
+            .to_string(),
+        _ => panic!("Amount of dice sides received is too high"),
     }
 }
 
