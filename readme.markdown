@@ -190,11 +190,13 @@ See [this repo](https://github.com/sts10/splitter) for more information.
 
 ## Appendix: Where can I find some large word lists?
 
-- The [Electronic Frontier Foundation](https://www.eff.org/) has published [a few word lists for creating diceware passphrases](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases). Since there's a tab between the dice numbers and each word, Tidy can delete the dice numbers easily with something like `tidy -t -o clean_eff.txt eff_large_wordlist.txt` or using the `-i` flag. The EFF also has some [fandom-inspired lists](https://www.eff.org/deeplinks/2018/08/dragon-con-diceware) that Tidy can clean up with the `-s` flag.
+- The [Electronic Frontier Foundation](https://www.eff.org/) has published [a few word lists for creating diceware passphrases](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases). I'm pretty sure password managers KeePassXC and BitWarden use [the EFF long list](https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt). Since there's a tab between the dice numbers and each word, Tidy can delete the dice numbers easily with something like `tidy -t -o clean_eff.txt eff_large_wordlist.txt` or using the `-i` flag. 
+    - The EFF also has some [fandom-inspired lists](https://www.eff.org/deeplinks/2018/08/dragon-con-diceware) that Tidy can clean up with the `-s` flag.
+
+- I'm [pretty sure](https://twitter.com/1Password/status/1462885816569577480) this is [1Password](https://1password.com/)'s [word list](https://1password.com/txt/agwordlist.txt), as of 2021.
+    - [1Password](https://1password.com/) also published a slightly different [word list](https://github.com/agilebits/crackme/blob/master/doc/AgileWords.txt) in 2018. 
 
 - [SecureDrop](https://github.com/freedomofpress/securedrop/) has separate lists of [adjectives](https://github.com/freedomofpress/securedrop/blob/develop/securedrop/dictionaries/adjectives.txt) and [nouns](https://github.com/freedomofpress/securedrop/blob/develop/securedrop/dictionaries/nouns.txt).
-
-- AgileBits, the company that makes password manager [1Password](https://1password.com/), [published a word list](https://github.com/agilebits/crackme/blob/master/doc/AgileWords.txt) in 2018.
 
 - This diceware password generating program called ["diceware"](https://github.com/ulif/diceware) seems to have collected [a few word lists](https://github.com/ulif/diceware/tree/master/diceware/wordlists) in its Github repo, along with [a separate page that explains each of the lists](https://github.com/ulif/diceware/blob/master/docs/wordlists.rst).
 
@@ -207,6 +209,10 @@ See [this repo](https://github.com/sts10/splitter) for more information.
 - [Mnemonicode](https://github.com/schollz/mnemonicode/blob/master/word_list.go) is another word list optimized for pronunciation. I believe [croc](https://github.com/schollz/croc), another file transferring tool, uses it.
 
 - A collection of a few [Public Domain Word Lists](https://github.com/MichaelWehar/Public-Domain-Word-Lists)
+
+- [Original "Reinhold" diceware list](https://theworld.com/%7Ereinhold/diceware.wordlist.asc) created by [Arnold Reinhold](https://theworld.com/~reinhold/). Though I recommend you use the EFF long list instead.
+
+- Arnold Reinhold hosts [diceware lists in a variety of languages](https://theworld.com/~reinhold/diceware.html#Diceware%20in%20Other%20Languages|outline).
 
 - [r/wordlists subreddit](https://www.reddit.com/r/wordlists/), which seems to have links to a few non-English word lists.
 
