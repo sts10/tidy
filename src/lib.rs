@@ -564,8 +564,12 @@ pub fn print_as_dice(n: usize, base: u8, list_length: usize) -> String {
     let pad_width = radix(list_length, base).to_string().len() - 1;
     let n_as_base = radix(n, base);
 
-    // Pad dice roll numbers with appropriate number of zeros
-    let padded = format!("{:0width$}", n_as_base, width = pad_width);
+    // Pad dice roll numbers with zeros
+    let padded = format!(
+        "{:0width$}",
+        n_as_base.to_string().parse::<usize>().unwrap(), // all this is needed
+        width = pad_width
+    );
 
     // If base is a common dice size (between 4 and 8),
     // we'll add one to each digit, to make it easier
