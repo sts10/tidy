@@ -10,6 +10,7 @@ pub fn display_list_information(list: &[String], level: u8) {
     eprintln!("----------------------");
     let list_length = list.len();
     eprintln!("List length               : {}", list_length);
+    eprintln!("Mean word length          : {:.2}", mean_word_length(list));
     let shortest_word = list.iter().min_by(|a, b| a.len().cmp(&b.len())).unwrap();
     eprintln!(
         "Length of shortest word   : {} ({})",
@@ -205,4 +206,10 @@ pub fn get_shortest_word_length(list: &[String]) -> usize {
         }
     }
     shortest_word_length
+}
+
+/// Calculates mean (or average) word length of given word
+/// list
+pub fn mean_word_length(list: &[String]) -> f32 {
+    list.iter().map(|word| word.chars().count()).sum::<usize>() as f32 / list.len() as f32
 }

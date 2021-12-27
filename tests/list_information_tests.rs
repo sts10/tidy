@@ -59,4 +59,12 @@ mod list_information_tests {
             .collect();
         assert_eq!(get_shortest_word_length(&list), 2);
     }
+    #[test]
+    fn can_get_mean_word_length() {
+        let list: Vec<String> = vec!["canopy", "to", "cold", "seasons", "fire", "Christmas"]
+            .iter()
+            .map(|x| x.to_string())
+            .collect();
+        assert_eq!(mean_word_length(&list), 5.3333335);
+    }
 }
