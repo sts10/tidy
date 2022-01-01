@@ -35,30 +35,32 @@ USAGE:
 FLAGS:
     -A, --attributes                Print attributes about new list to terminal. Can be used more than once to print
                                     more attributes
-    -i, --delete-integers           Delete all integers from words
-    -n, --delete-nonalphanumeric    Delete all non-alphanumeric characters from list
-    -s, --delete-through-space      Delete characters through first space
-    -t, --delete-through-tab        Delete characters through first tab
+    -i, --delete-integers           Delete all integers from all words on new new list
+    -n, --delete-nonalphanumeric    Delete all non-alphanumeric characters from all words on new list
+    -s, --delete-through-space      Delete all characters through first space of each line
+    -t, --delete-through-tab        Delete all characters through first tab of each line
         --dry-run                   Dry run. Don't write new list to file or terminal
         --help                      Prints help information
     -q, --quiet                     Do not print any extra information
     -I, --remove-integers           Remove all words with integers in them from list
-    -L, --remove-nonalphabetic      Remove all words with non-alphabetic characters from list (leaving only words
+    -L, --remove-nonalphabetic      Remove all words with non-alphabetic characters from new list (leaving only words
                                     composed entirely of letters [A-Z] or [a-z])
-    -N, --remove-nonalphanumeric    Remove all words with non-alphanumeric characters from list
-    -P, --remove-prefix             Remove prefix words from list
-    -l, --lowercase                 Lowercase all words
+    -N, --remove-nonalphanumeric    Remove all words with non-alphanumeric characters from new list
+    -P, --remove-prefix             Remove prefix words from new list
+    -l, --lowercase                 Lowercase all words on new list
     -V, --version                   Prints version information
 
 OPTIONS:
     -a, --approve <approved-list>                                Path for optional list of approved words
     -c, --cut-to <cut-to>
             Just before printing generated list, cut list down to a set number of words. Can accept expressions in the
-            form of base**exponent. Cuts are done randomly
+            form of base**exponent (helpful for generating diceware lists). Cuts are done randomly
     -D, --dice <dice-sides>
-            Print dice roll next to word in output. Set number of sides of dice. Must be between 2 and 36. Use 6 for normal dice
+            Print dice roll next to word in output. Set number of sides of dice. Must be between 2 and 36. Use 6 for
+            normal dice
     -h, --homophones <homophones-list>
-            Path for file with a list of homophone pairs. There must be one pair of homophones per line, separated by a comma
+            Path for file with a list of homophone pairs. There must be one pair of homophones per line, separated by a
+            comma
         --maximum-word-length <maximum-length>                   Set maximum word length
     -x, --shared-prefix-length <maximum-shared-prefix-length>
             Set number of leading characters to get to a unique prefix, which can aid auto-complete functionality.

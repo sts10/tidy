@@ -49,23 +49,23 @@ struct Opt {
     #[structopt(short = "A", long = "attributes", parse(from_occurrences))]
     attributes: u8,
 
-    /// Lowercase all words
+    /// Lowercase all words on new list
     #[structopt(short = "l", long = "lowercase")]
     to_lowercase: bool,
 
-    /// Remove prefix words from list
+    /// Remove prefix words from new list
     #[structopt(short = "P", long = "remove-prefix")]
     remove_prefix_words: bool,
 
-    /// Remove all words with non-alphanumeric characters from list
+    /// Remove all words with non-alphanumeric characters from new list
     #[structopt(short = "N", long = "remove-nonalphanumeric")]
     remove_nonalphanumeric: bool,
 
-    /// Delete all non-alphanumeric characters from list
+    /// Delete all non-alphanumeric characters from all words on new list
     #[structopt(short = "n", long = "delete-nonalphanumeric")]
     delete_nonalphanumeric: bool,
 
-    /// Remove all words with non-alphabetic characters from list
+    /// Remove all words with non-alphabetic characters from new list
     /// (leaving only words composed entirely of letters [A-Z] or [a-z])
     #[structopt(short = "L", long = "remove-nonalphabetic")]
     remove_nonalphabetic: bool,
@@ -74,15 +74,15 @@ struct Opt {
     #[structopt(short = "I", long = "remove-integers")]
     remove_integers: bool,
 
-    /// Delete all integers from words
+    /// Delete all integers from all words on new new list
     #[structopt(short = "i", long = "delete-integers")]
     delete_integers: bool,
 
-    /// Delete characters through first tab
+    /// Delete all characters through first tab of each line
     #[structopt(short = "t", long = "delete-through-tab")]
     delete_through_first_tab: bool,
 
-    /// Delete characters through first space
+    /// Delete all characters through first space of each line
     #[structopt(short = "s", long = "delete-through-space")]
     delete_through_first_space: bool,
 
@@ -100,7 +100,8 @@ struct Opt {
 
     /// Just before printing generated list, cut list down
     /// to a set number of words. Can accept expressions in the
-    /// form of base**exponent. Cuts are done randomly.
+    /// form of base**exponent (helpful for generating diceware lists).
+    /// Cuts are done randomly.
     #[structopt(short = "c", long = "cut-to", parse(from_str = eval_cut_length))]
     cut_to: Option<usize>,
 
