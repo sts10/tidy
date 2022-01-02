@@ -220,5 +220,3 @@ See [this repo](https://github.com/sts10/splitter) for more information.
 
 ### Shameless plugs
 - I created [a ~16k word list](https://github.com/sts10/common_word_list_maker/blob/main/example_word_list.txt) using [Google Books Ngram data](https://github.com/sts10/common_word_list_maker).
-
-- Make your own word list from a set of web page URLs using [Rutescrape](https://github.com/sts10/rutescrape)
