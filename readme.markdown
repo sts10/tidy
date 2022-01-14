@@ -2,7 +2,20 @@
 
 A command-line tool for combining and cleaning large word list files. 
 
-## What this tool can do
+## What this tool aims to help users do 
+
+> A throw of the dice will never abolish chance 
+> -- Stéphane Mallarmé
+
+Tidy aims to help users create "_better_" word lists -- generally word lists that will be used to create passphrases. 
+
+Tidy performs basic list-cleaning operations like removing duplicates words and blank lines by default. It additionally provides various optional standardizations and filters (like lowercasing all words [`-l`], or removing words in with integers in them [`-I`]), as well as protections against rare-but-possible passphrase pitfalls, such as prefix codes [`-P`] and low minimum word lengths (see below for explanations). 
+
+Lastly, Tidy can make word lists more "typo-resistant" by enforcing a minimum edit distance [`-d`], remove homophones and/or allow users to auto-complete words by enforcing a unique prefix length [`-x`]. 
+
+Tidy can be used to create new word lists (for example, if given more than one list, it will combine and de-dupe them) with desirable qualities, but it can also assist in audits of existing lists by removing duplicates and optionally printing notable information about word list.
+
+## Features
 
 Given a text file with a word list, this tool will create a new word list in which...
 - duplicate lines are removed
@@ -130,17 +143,6 @@ In both Tidy's code and documentation, "remove" means that a word will be remove
 `cargo doc --document-private-items --no-deps`
 
 Add `--open` flag to open docs after generation. They're printed to `./target/doc/tidy/index.html`.
-
-## What this tool aims to help users do 
-
-> A throw of the dice will never abolish chance 
-> -- Stéphane Mallarmé
-
-Tidy aims to help users create "_better_" word lists -- generally word lists that will be used to create passphrases. 
-
-Tidy performs basic list cleaning like removing duplicates words and blank lines by default. It additionally provides various optional standardizations and filters (like lowercasing all words, or removing words in with integers in them), as well as protections against rare-but-possible passphrase pitfalls, such as prefix codes and low minimum word lengths (see below for explanations). 
-
-Tidy can be used to create new word lists (for example, it can easily combine two or more existing lists), but it can also assist in audits of exists lists by removing duplicates and optionally printing notable information about word list.
 
 ### A blog post
 
