@@ -125,7 +125,7 @@ In both Tidy's code and documentation, "remove" means that a word will be remove
 
 `cargo test`
 
-## Generating docs
+## Generate docs
 
 `cargo doc --document-private-items --no-deps`
 
