@@ -9,16 +9,16 @@ A command-line tool for combining and cleaning large word list files.
 
 Tidy aims to help users create "_better_" word lists -- generally word lists that will be used to create passphrases. 
 
-Tidy performs basic list-cleaning operations like removing duplicates words and blank lines by default. It additionally provides various optional standardizations and filters (like lowercasing all words [`-l`], or removing words in with integers in them [`-I`]), as well as protections against rare-but-possible passphrase pitfalls, such as prefix codes [`-P`] and low minimum word lengths (see below for explanations). 
+Tidy performs basic list-cleaning operations like removing duplicates words and blank lines by default. It additionally provides various optional standardizations and filters, like lowercasing all words (`-l`), or removing words in with integers in them (`-I`), as well as protections against rare-but-possible passphrase pitfalls, such as prefix codes (`-P`) and low minimum word lengths (see below for explanations). 
 
-Lastly, Tidy can make word lists more "typo-resistant" by enforcing a minimum edit distance [`-d`], remove homophones and/or allow users to auto-complete words by enforcing a unique prefix length [`-x`]. 
+Tidy also can make word lists more "typo-resistant" by enforcing a minimum edit distance (`-d`), remove homophones and/or allow users to auto-complete words by enforcing a unique prefix length (`-x`). 
 
-Tidy can be used to create new word lists (for example, if given more than one list, it will combine and de-dupe them) with desirable qualities, but it can also assist in audits of existing lists by removing duplicates and optionally printing notable information about word list.
+Tidy can be used to create new word lists (for example, if given more than one list, it will combine and de-dupe them) with desirable qualities, but it can also assist in audits of existing lists by removing duplicates and optionally printing notable information about a given word list (`-AA`).
 
 ## Features
 
 Given a text file with a word list, this tool will create a new word list in which...
-- duplicate lines are removed
+- duplicate lines (words) are removed
 - empty lines have been removed
 - whitespace from beginning and end of words is deleted
 - words are sorted alphabetically
@@ -26,7 +26,7 @@ Given a text file with a word list, this tool will create a new word list in whi
 and print that new word list to the terminal or to a new text file. 
 
 Optionally, the tool can...
-- combine two or more word lists
+- combine two or more inputted word lists
 - make all characters lowercase (`-l`)
 - set a minimum and maximum for word lengths
 - handle words with integers and non-alphanumeric characters
