@@ -138,7 +138,7 @@ Add `--open` flag to open docs after generation. They're printed to `./target/do
 
 Tidy aims to help users create "_better_" word lists -- generally word lists that will be used to create passphrases. 
 
-Tidy performs basic list cleaning like removing duplicates words and blank lines by default. It additionally provides various optional standardizations and filters (like lowercasing all words, or removing words in with integers in them), as well as protections against rare-but-possible passphrase pitfalls, such as prefix codes and "brute-force line" (see below for explanations). 
+Tidy performs basic list cleaning like removing duplicates words and blank lines by default. It additionally provides various optional standardizations and filters (like lowercasing all words, or removing words in with integers in them), as well as protections against rare-but-possible passphrase pitfalls, such as prefix codes and low minimum word lengths (see below for explanations). 
 
 Tidy can be used to create new word lists (for example, it can easily combine two or more existing lists), but it can also assist in audits of exists lists by removing duplicates and optionally printing notable information about word list.
 
