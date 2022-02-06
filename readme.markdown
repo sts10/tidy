@@ -167,9 +167,9 @@ Note that Tidy currently can only accept one list of reject words. If you have t
 
 ## What are prefix words (a.k.a. prefix codes)? 
 
-A word list that doesn't have any prefix words (also known as "[prefix codes](https://en.wikipedia.org/wiki/Prefix_code)") can better guarantee more consistent entropy when combining words from the list randomly and without punctuation between the words. 
+A word list that doesn't has any prefix words (also known as "[prefix codes](https://en.wikipedia.org/wiki/Prefix_code)") can better guarantee more consistent entropy when combining words from the list randomly and without punctuation between the words. 
 
-As a brief example, if a list have "boy", "hood", and "boyhood" users who specified they wanted two words worth of randomness (entropy) might end up with "boyhood", which an attacker guessing single words would try. Removing prefix words -- in this case "boy" -- prevents this possibility from occurring.
+As a brief example, if a list has "boy", "hood", and "boyhood" on it, users who specified they wanted two words worth of randomness (entropy) might end up with "boyhood", which an attacker guessing single words would try. Removing prefix words -- in this case "boy" -- prevents this possibility from occurring. Mandating that words have a punctuation mark, like a hyphen, between them (`boy-hood`) also solves this potential issue.
 
 You can read more about this issue [here](https://github.com/ulif/diceware#prefix-code).
 
