@@ -144,11 +144,28 @@ In both Tidy's code and documentation, "remove" means that a word will be remove
 
 Add `--open` flag to open docs after generation. They're printed to `./target/doc/tidy/index.html`.
 
-### A blog post
+## A blog post
 
 You can read more about the 0.2 version of this project [here](https://sts10.github.io/2021/12/09/tidy-0-2-0.html).
 
-## What are prefix words (aka prefix codes)? 
+## Working with homophones
+
+If you're looking for a large-ish list of English homophones, I'd humbly point you to [this other project of mine](https://github.com/sts10/homophones). 
+
+### Using Tidy to remove homophones
+
+If passphrases from your list will ever be spoken out loud, you may want to consider removing homophones -- words that sound alike -- from your list. 
+
+I'd say that Tidy offers two ways of dealing with homophones.
+
+Given a pair of homophones, like "sun" and "son":
+
+1. To ensure you don't have BOTH homophones in your generated list, you'd run `tidy` with a flag like `-h ../homophones/homophone-lists/homophones-large-as-pairs.txt`. This will let either "sun" or "son" on your list but NOT both.
+2. To ensure you have NEITHER of the words in the homophone pair on your generated word list, you'd use the reject words flags: `-r ../homophones/homophone-lists/cleaned-as-singles.txt`. This will remove both "sun" and "son" from your generated list before its outputted.
+
+Note that Tidy currently can only accept one list of reject words. If you have two or more, you could combine and de-duplicate them with Tidy first!
+
+## What are prefix words (a.k.a. prefix codes)? 
 
 A word list that doesn't have any prefix words (also known as "[prefix codes](https://en.wikipedia.org/wiki/Prefix_code)") can better guarantee more consistent entropy when combining words from the list randomly and without punctuation between the words. 
 
