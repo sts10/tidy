@@ -35,7 +35,7 @@ Optionally, the tool can...
 - remove homophones from a provided list of comma-separated pairs of homophones
 - enforce a minimum [edit distance](https://en.wikipedia.org/wiki/Edit_distance) between words (`-d`)
 - remove prefix words (see below) (`-P`)
-- Remove all words with non-alphabetic characters from new list (leaving only words composed entirely of letters [A-Z] or [a-z]) (`-L`)
+- Remove all words with non-alphabetic characters from new list, leaving only words composed entirely of letters (`-L`)
 <!-- - straighten curly/smart quotes, i.e. replacing them with their "straight" equivalents (`-q`) -->
 - guarantee a maximum shared prefix length (see below) (`-x`)
 - print corresponding dice rolls before words, separated by a tab. Dice can have 2 to 36 sides. (`-D`)
