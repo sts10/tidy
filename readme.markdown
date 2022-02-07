@@ -45,7 +45,7 @@ Optionally, the tool can...
 
 ```txt
 USAGE:
-    tidy [FLAGS] [OPTIONS] [Inputted Word Lists]...
+    tidy [FLAGS] [OPTIONS] [--] [Inputted Word Lists]...
 
 FLAGS:
     -A, --attributes                Print attributes about new list to terminal. Can be used more than once to print
@@ -62,23 +62,25 @@ FLAGS:
                                     composed entirely of letters [A-Z] or [a-z])
     -N, --remove-nonalphanumeric    Remove all words with non-alphanumeric characters from new list
     -P, --remove-prefix             Remove prefix words from new list
-    -q, --straighten                Replace curly (a.k.a “smart”) quotation marks, both “double” and ‘single’, with
-                                    their "straight" versions
+    -q, --straighten                Replace “smart” quotation marks, both “double” and ‘single’, with their "straight"
+                                    versions
     -l, --lowercase                 Lowercase all words on new list
     -V, --version                   Prints version information
 
 OPTIONS:
-    -a, --approve <approved-list>                                Path for optional list of approved words
+    -a, --approve <approved-list>...
+            Path(s) for optional list of approved words. Can accept multiple files
+
     -c, --cut-to <cut-to>
             Just before printing generated list, cut list down to a set number of words. Can accept expressions in the
             form of base**exponent (helpful for generating diceware lists). Cuts are done randomly
     -D, --dice <dice-sides>
             Print dice roll next to word in output. Set number of sides of dice. Must be between 2 and 36. Use 6 for
             normal dice
-    -h, --homophones <homophones-list>
-            Path for file with a list of homophone pairs. There must be one pair of homophones per line, separated by a
-            comma
-        --maximum-word-length <maximum-length>                   Set maximum word length
+    -h, --homophones <homophones-list>...
+            Path(s) to file(s) containing homophone pairs. There must be one pair of homophones per line, separated by a
+            comma (sun,son)
+    -M, --maximum-word-length <maximum-length>                   Set maximum word length
     -x, --shared-prefix-length <maximum-shared-prefix-length>
             Set number of leading characters to get to a unique prefix, which can aid auto-complete functionality.
             Setting this value to say, 4, means that knowing the first 4 characters of any word on the generated list is
@@ -87,8 +89,12 @@ OPTIONS:
             Set minimum edit distance between words, which can reduce the cost of typos when entering words
 
     -m, --minimum-word-length <minimum-length>                   Set minimum word length
-    -o, --output <output>                                        Path for outputted list file
-    -r, --reject <reject-list>                                   Path for optional list of words to reject
+    -o, --output <output>
+            Path for outputted list file. If none given, generated word list will be printed to terminal
+
+    -r, --reject <reject-list>...
+            Path(s) for optional list of words to reject. Can accept multiple files
+
         --take-first <take-first>
             Only take first N words from inputted word list. If two or more word lists are inputted, it will combine
             arbitrarily and then take first N words
@@ -98,7 +104,7 @@ OPTIONS:
 
 ARGS:
     <Inputted Word Lists>...    Word list input files. Can be more than one, in which case they'll be combined and
-                                de-duplicated
+                                de-duplicated. Requires at least one file
 ```
 
 ## Usage examples

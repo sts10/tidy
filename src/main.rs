@@ -53,8 +53,8 @@ struct Opt {
     #[structopt(short = "l", long = "lowercase")]
     to_lowercase: bool,
 
-    /// Replace curly (a.k.a “smart”) quotation marks, both
-    /// “double” and ‘single’, with their "straight" versions
+    /// Replace “smart” quotation marks, both “double” and ‘single’,
+    /// with their "straight" versions
     #[structopt(short = "q", long = "straighten")]
     straighten_quotes: bool,
 
@@ -115,7 +115,7 @@ struct Opt {
     minimum_length: Option<usize>,
 
     /// Set maximum word length
-    #[structopt(long = "maximum-word-length")]
+    #[structopt(short = "M", long = "maximum-word-length")]
     maximum_length: Option<usize>,
 
     /// Set minimum edit distance between words, which
@@ -131,15 +131,17 @@ struct Opt {
     #[structopt(short = "x", long = "shared-prefix-length")]
     maximum_shared_prefix_length: Option<usize>,
 
-    /// Path(s) for optional list of words to reject
+    /// Path(s) for optional list of words to reject. Can accept multiple
+    /// files.
     #[structopt(short = "r", long = "reject", parse(from_os_str))]
     reject_list: Option<Vec<PathBuf>>,
 
-    /// Path(s) for optional list of approved words
+    /// Path(s) for optional list of approved words. Can accept multiple
+    /// files.
     #[structopt(short = "a", long = "approve", parse(from_os_str))]
     approved_list: Option<Vec<PathBuf>>,
 
-    /// Path(s) to file(s) a list of homophone pairs. There must be one pair
+    /// Path(s) to file(s) containing homophone pairs. There must be one pair
     /// of homophones per line, separated by a comma (sun,son).
     #[structopt(short = "h", long = "homophones", parse(from_os_str))]
     homophones_list: Option<Vec<PathBuf>>,
@@ -149,7 +151,8 @@ struct Opt {
     #[structopt(short = "D", long = "dice")]
     dice_sides: Option<u8>,
 
-    /// Path for outputted list file
+    /// Path for outputted list file. If none given, generated word list
+    /// will be printed to terminal.
     #[structopt(short = "o", long = "output", parse(from_os_str))]
     output: Option<PathBuf>,
 
