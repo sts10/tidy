@@ -131,18 +131,18 @@ struct Opt {
     #[structopt(short = "x", long = "shared-prefix-length")]
     maximum_shared_prefix_length: Option<usize>,
 
-    /// Path for optional list of words to reject
+    /// Path(s) for optional list of words to reject
     #[structopt(short = "r", long = "reject", parse(from_os_str))]
-    reject_list: Option<PathBuf>,
+    reject_list: Option<Vec<PathBuf>>,
 
-    /// Path for optional list of approved words
+    /// Path(s) for optional list of approved words
     #[structopt(short = "a", long = "approve", parse(from_os_str))]
-    approved_list: Option<PathBuf>,
+    approved_list: Option<Vec<PathBuf>>,
 
-    /// Path for file with a list of homophone pairs. There must be one pair
-    /// of homophones per line, separated by a comma.
+    /// Path(s) to file(s) a list of homophone pairs. There must be one pair
+    /// of homophones per line, separated by a comma (sun,son).
     #[structopt(short = "h", long = "homophones", parse(from_os_str))]
-    homophones_list: Option<PathBuf>,
+    homophones_list: Option<Vec<PathBuf>>,
 
     /// Print dice roll next to word in output. Set number of sides
     /// of dice. Must be between 2 and 36. Use 6 for normal dice.
@@ -154,13 +154,20 @@ struct Opt {
     output: Option<PathBuf>,
 
     /// Word list input files. Can be more than one, in which case
-    /// they'll be combined and de-duplicated.
+    /// they'll be combined and de-duplicated. Requires at least
+    /// one file.
     #[structopt(name = "Inputted Word Lists", parse(from_os_str))]
     inputted_word_list: Vec<PathBuf>,
 }
 
 fn main() {
     let opt = Opt::from_args();
+
+    // Require at least one inputted list
+    if opt.inputted_word_list.is_empty() {
+        eprintln!("Please input at least one word list file.");
+        return;
+    }
 
     // Validate dice_sides
     if let Some(dice_sides) = opt.dice_sides {
@@ -183,13 +190,19 @@ fn main() {
         should_delete_nonalphanumeric: opt.delete_nonalphanumeric,
         should_delete_through_first_tab: opt.delete_through_first_tab,
         should_delete_through_first_space: opt.delete_through_first_space,
-        reject_list: opt.reject_list.map(|list| make_vec_from_filenames(&[list])),
+        // If given more than one file of reject words, combine them
+        // right here.
+        reject_list: opt
+            .reject_list
+            .map(|list_of_files| make_vec_from_filenames(&list_of_files)),
+        // Likewise with approved word lists
         approved_list: opt
             .approved_list
-            .map(|list| make_vec_from_filenames(&[list])),
-        homophones_list: opt.homophones_list.map(|homophones_list_file| {
-            read_homophones_list_from_filenames(&[homophones_list_file])
-        }),
+            .map(|list_of_files| make_vec_from_filenames(&list_of_files)),
+        // And homophones
+        homophones_list: opt
+            .homophones_list
+            .map(|list_of_files| read_homophones_list_from_filenames(&list_of_files)),
         minimum_length: opt.minimum_length,
         maximum_length: opt.maximum_length,
         maximum_shared_prefix_length: opt.maximum_shared_prefix_length,
