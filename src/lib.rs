@@ -613,8 +613,8 @@ pub fn print_as_dice(n: usize, base: u8, list_length: usize) -> String {
             .chars()
             .map(|ch| (ch.to_string().parse::<usize>().unwrap() + 1).to_string())
             .collect::<String>(),
-        // If base is over base 9, we'll print each digit as zero-iondex, but
-        // we'll add a hyphen _between_ digits to make it easier to read.
+        // If base is over base 9, we'll print each digit as zero-indexed,
+        // but we'll add a hyphen _between_ digits to make it easier to read.
         9..=36 => padded_n
             .chars()
             .map(|ch| ch.to_string() + "-")
