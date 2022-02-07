@@ -35,6 +35,7 @@ Optionally, the tool can...
 - remove homophones from a provided list of comma-separated pairs of homophones
 - enforce a minimum [edit distance](https://en.wikipedia.org/wiki/Edit_distance) between words (`-d`)
 - remove prefix words (see below) (`-P`)
+- straight curly/smart quotes (`-q`)
 - guarantee a maximum shared prefix length (see below) (`-x`)
 - print corresponding dice rolls before words, separated by a tab. Dice can have 2 to 36 sides. (`-D`)
 - print information about the new list, such as entropy per word, to the terminal (`-A`)
@@ -54,12 +55,14 @@ FLAGS:
     -t, --delete-through-tab        Delete all characters through first tab of each line
         --dry-run                   Dry run. Don't write new list to file or terminal
         --help                      Prints help information
-    -q, --quiet                     Do not print any extra information
+        --quiet                     Do not print any extra information
     -I, --remove-integers           Remove all words with integers in them from list
     -L, --remove-nonalphabetic      Remove all words with non-alphabetic characters from new list (leaving only words
                                     composed entirely of letters [A-Z] or [a-z])
     -N, --remove-nonalphanumeric    Remove all words with non-alphanumeric characters from new list
     -P, --remove-prefix             Remove prefix words from new list
+    -q, --straighten                Replace curly (a.k.a “smart”) quotation marks, both “double” and ‘single’, with
+                                    their "straight" versions
     -l, --lowercase                 Lowercase all words on new list
     -V, --version                   Prints version information
 
