@@ -16,6 +16,7 @@ pub struct TidyRequest {
     pub take_first: Option<usize>,
     pub take_rand: Option<usize>,
     pub to_lowercase: bool,
+    pub should_straighten_quotes: bool,
     pub should_remove_prefix_words: bool,
     pub should_remove_nonalphabetic: bool,
     pub should_remove_nonalphanumeric: bool,
@@ -177,6 +178,11 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     };
     tidied_list = if req.to_lowercase {
         tidied_list.iter().map(|w| w.to_ascii_lowercase()).collect()
+    } else {
+        tidied_list
+    };
+    tidied_list = if req.should_straighten_quotes {
+        tidied_list.iter().map(|w| straighten_quotes(w)).collect()
     } else {
         tidied_list
     };
@@ -394,6 +400,21 @@ fn trim_whitespace(list: &[String]) -> Vec<String> {
     list.iter()
         .map(|w| w.trim_start().trim_end().to_string())
         .collect()
+}
+
+/// Replaces curly or smart quotes with straight quotes.
+fn straighten_quotes(input: &str) -> String {
+    let mut result = String::new();
+    for c in input.chars() {
+        match c {
+            '\u{201C}' => result.push('\"'), // LEFT DOUBLE QUOTATION MARK
+            '\u{201D}' => result.push('\"'), // RIGHT DOUBLE QUOTATION MARK
+            '\u{2018}' => result.push('\''), // LEFT SINGLE QUOTATION MARK
+            '\u{2019}' => result.push('\''), // RIGHT SINGLE QUOTATION MARK
+            _ => result.push(c),
+        }
+    }
+    result
 }
 
 /// Alphabetizes and de-duplicates a Vector of `String`s.

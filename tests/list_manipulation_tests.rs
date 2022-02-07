@@ -38,6 +38,8 @@ mod list_manipulation_tests {
                 "tee",
                 "post-modern",
                 "13910 word with spaces in it",
+                "“smart”",
+                "‘quotes’",
                 "  h as spaces ",
             ]
             .iter()
@@ -114,6 +116,17 @@ mod list_manipulation_tests {
         assert!(new_list.contains(&"h as spaces".to_string()));
     }
 
+    #[test]
+    fn can_straighten_quotes() {
+        let this_tidy_request = TidyRequest {
+            list: make_lists().1,
+            should_straighten_quotes: true,
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
+        assert!(new_list.contains(&"\"smart\"".to_string()));
+        assert!(new_list.contains(&"'quotes'".to_string()));
+    }
     #[test]
     fn can_delete_integers_from_words() {
         let this_tidy_request = TidyRequest {

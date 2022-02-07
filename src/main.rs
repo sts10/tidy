@@ -37,7 +37,7 @@ fn eval_cut_length(input: &str) -> usize {
 #[structopt(name = "tidy")]
 struct Opt {
     /// Do not print any extra information
-    #[structopt(short = "q", long = "quiet")]
+    #[structopt(long = "quiet")]
     quiet: bool,
 
     /// Dry run. Don't write new list to file or terminal.
@@ -52,6 +52,11 @@ struct Opt {
     /// Lowercase all words on new list
     #[structopt(short = "l", long = "lowercase")]
     to_lowercase: bool,
+
+    /// Replace curly (a.k.a “smart”) quotation marks, both
+    /// “double” and ‘single’, with their "straight" versions
+    #[structopt(short = "q", long = "straighten")]
+    straighten_quotes: bool,
 
     /// Remove prefix words from new list
     #[structopt(short = "P", long = "remove-prefix")]
@@ -169,6 +174,7 @@ fn main() {
         take_first: opt.take_first,
         take_rand: opt.take_rand,
         to_lowercase: opt.to_lowercase,
+        should_straighten_quotes: opt.straighten_quotes,
         should_remove_prefix_words: opt.remove_prefix_words,
         should_remove_integers: opt.remove_integers,
         should_delete_integers: opt.delete_integers,
