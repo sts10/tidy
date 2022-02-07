@@ -72,6 +72,9 @@ OPTIONS:
             Print dice roll next to word in output. Set number of sides of dice. Must be between 2
             and 36. Use 6 for normal dice
 
+        --debug
+            Debug mode
+
         --dry-run
             Dry run. Don't write new list to file or terminal
 
@@ -83,7 +86,7 @@ OPTIONS:
             Print help information
 
     -i, --delete-integers
-            Delete all integers from all words on new new list
+            Delete all integers from all words on new list
 
     -I, --remove-integers
             Remove all words with integers in them from list

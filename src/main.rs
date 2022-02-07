@@ -44,6 +44,10 @@ struct Args {
     #[clap(long = "dry-run")]
     dry_run: bool,
 
+    /// Debug mode
+    #[clap(long = "debug")]
+    debug: bool,
+
     /// Print attributes about new list to terminal. Can be used more than once
     /// to print more attributes.
     #[clap(short = 'A', long = "attributes", parse(from_occurrences))]
@@ -79,7 +83,7 @@ struct Args {
     #[clap(short = 'I', long = "remove-integers")]
     remove_integers: bool,
 
-    /// Delete all integers from all words on new new list
+    /// Delete all integers from all words on new list
     #[clap(short = 'i', long = "delete-integers")]
     delete_integers: bool,
 
@@ -165,7 +169,9 @@ struct Args {
 
 fn main() {
     let opt = Args::parse();
-    eprintln!("Received args: {:?}", opt);
+    if opt.debug {
+        eprintln!("Received args: {:?}", opt);
+    }
 
     // Validate dice_sides
     if let Some(dice_sides) = opt.dice_sides {
