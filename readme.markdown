@@ -78,6 +78,9 @@ OPTIONS:
         --dry-run
             Dry run. Don't write new list to file or terminal
 
+    -f, --force
+            Force overwrite of output file if it exists
+
     -h, --homophones <HOMOPHONES_LIST>
             Path(s) to file(s) containing homophone pairs. There must be one pair of homophones per
             line, separated by a comma (sun,son)

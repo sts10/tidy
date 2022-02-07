@@ -1,6 +1,7 @@
 use clap::Parser;
 use std::fs::File;
 use std::io::Write;
+use std::path::Path;
 use std::path::PathBuf;
 use tidy::*;
 pub mod display_information;
@@ -160,6 +161,10 @@ struct Args {
     #[clap(short = 'o', long = "output", parse(from_os_str))]
     output: Option<PathBuf>,
 
+    /// Force overwrite of output file if it exists.
+    #[clap(short = 'f', long = "force")]
+    force_overwrite: bool,
+
     /// Word list input files. Can be more than one, in which case
     /// they'll be combined and de-duplicated. Requires at least
     /// one file.
@@ -179,6 +184,18 @@ fn main() {
             eprintln!("Specified number of dice sides must be between 2 and 36.");
             return;
         }
+    }
+    // Check if output file exists
+    match opt.output {
+        Some(ref output_file_name) => {
+            if !opt.force_overwrite && Path::new(output_file_name).exists() {
+                eprintln!(
+                    "Specified output file already exists. Use --force flag to force an overwrite."
+                );
+                return;
+            }
+        }
+        None => {}
     }
     let this_tidy_request = TidyRequest {
         list: make_vec_from_filenames(&opt.inputted_word_list),
@@ -246,7 +263,7 @@ fn main() {
     }
     if opt.attributes > 0 && !opt.quiet {
         if !opt.dry_run {
-            eprintln!("----------------\nDone making list\n");
+            eprintln!("Done making list\n");
         } else {
             eprintln!("Dry run complete");
         }

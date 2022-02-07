@@ -1,11 +1,10 @@
 [package]
 name = "tidy"
-version = "0.2.10"
+version = "0.2.11"
 authors = ["sts10 <sschlinkert@gmail.com>"]
 edition = "2021"
 
 [dependencies]
-# structopt = "0.3"
 clap = { version = "3.0.14", features = ["derive"] }
 memchr = "2.4"
 radix_fmt = "1.0.0"
