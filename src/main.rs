@@ -1,15 +1,15 @@
+use clap::Parser;
 use std::fs::File;
 use std::io::Write;
 use std::path::PathBuf;
-// use structopt::StructOpt;
-use clap::Parser;
 use tidy::*;
 pub mod display_information;
 use crate::display_information::display_list_information;
 
 /// Parse user's input to the `cut_to` option, either directly as a `usize`,
-/// or, if they entered Python exponent notation (base**exponent). Either
-/// way, return a `usize` or `expect`/`panic!`.
+/// or, if they entered Python exponent notation (base**exponent), which
+/// we'll need to evaluate as an exponent. Either way, return a `usize`
+/// or `expect`/`panic!`.
 ///  
 /// This is useful when making lists fit to a specific amount of dice and
 /// dice sides. (As an example, five rolls of a six-sided dice would be: 6**5).
@@ -159,18 +159,13 @@ struct Args {
     /// Word list input files. Can be more than one, in which case
     /// they'll be combined and de-duplicated. Requires at least
     /// one file.
-    #[clap(name = "Inputted Word Lists", parse(from_os_str))]
+    #[clap(name = "Inputted Word Lists", parse(from_os_str), required = true)]
     inputted_word_list: Vec<PathBuf>,
 }
 
 fn main() {
     let opt = Args::parse();
-
-    // Require at least one inputted list
-    if opt.inputted_word_list.is_empty() {
-        eprintln!("Please input at least one word list file.");
-        return;
-    }
+    eprintln!("Received args: {:?}", opt);
 
     // Validate dice_sides
     if let Some(dice_sides) = opt.dice_sides {

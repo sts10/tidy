@@ -4,8 +4,7 @@ A command-line tool for combining and cleaning large word list files.
 
 ## What this tool aims to help users do 
 
-> A throw of the dice will never abolish chance 
-> -- Stéphane Mallarmé
+> A throw of the dice will never abolish chance. — Stéphane Mallarmé
 
 Tidy aims to help users create "_better_" word lists -- generally word lists that will be used to create passphrases. 
 
@@ -45,66 +44,107 @@ Optionally, the tool can...
 
 ```txt
 USAGE:
-    tidy [FLAGS] [OPTIONS] [--] [Inputted Word Lists]...
-
-FLAGS:
-    -A, --attributes                Print attributes about new list to terminal. Can be used more than once to print
-                                    more attributes
-    -i, --delete-integers           Delete all integers from all words on new new list
-    -n, --delete-nonalphanumeric    Delete all non-alphanumeric characters from all words on new list
-    -s, --delete-through-space      Delete all characters through first space of each line
-    -t, --delete-through-tab        Delete all characters through first tab of each line
-        --dry-run                   Dry run. Don't write new list to file or terminal
-        --help                      Prints help information
-        --quiet                     Do not print any extra information
-    -I, --remove-integers           Remove all words with integers in them from list
-    -L, --remove-nonalphabetic      Remove all words with non-alphabetic characters from new list (leaving only words
-                                    composed entirely of letters [A-Z] or [a-z])
-    -N, --remove-nonalphanumeric    Remove all words with non-alphanumeric characters from new list
-    -P, --remove-prefix             Remove prefix words from new list
-    -q, --straighten                Replace “smart” quotation marks, both “double” and ‘single’, with their "straight"
-                                    versions
-    -l, --lowercase                 Lowercase all words on new list
-    -V, --version                   Prints version information
-
-OPTIONS:
-    -a, --approve <approved-list>...
-            Path(s) for optional list of approved words. Can accept multiple files
-
-    -c, --cut-to <cut-to>
-            Just before printing generated list, cut list down to a set number of words. Can accept expressions in the
-            form of base**exponent (helpful for generating diceware lists). Cuts are done randomly
-    -D, --dice <dice-sides>
-            Print dice roll next to word in output. Set number of sides of dice. Must be between 2 and 36. Use 6 for
-            normal dice
-    -h, --homophones <homophones-list>...
-            Path(s) to file(s) containing homophone pairs. There must be one pair of homophones per line, separated by a
-            comma (sun,son)
-    -M, --maximum-word-length <maximum-length>                   Set maximum word length
-    -x, --shared-prefix-length <maximum-shared-prefix-length>
-            Set number of leading characters to get to a unique prefix, which can aid auto-complete functionality.
-            Setting this value to say, 4, means that knowing the first 4 characters of any word on the generated list is
-            enough to know which word it is
-    -d, --minimum-edit-distance <minimum-edit-distance>
-            Set minimum edit distance between words, which can reduce the cost of typos when entering words
-
-    -m, --minimum-word-length <minimum-length>                   Set minimum word length
-    -o, --output <output>
-            Path for outputted list file. If none given, generated word list will be printed to terminal
-
-    -r, --reject <reject-list>...
-            Path(s) for optional list of words to reject. Can accept multiple files
-
-        --take-first <take-first>
-            Only take first N words from inputted word list. If two or more word lists are inputted, it will combine
-            arbitrarily and then take first N words
-        --take-rand <take-rand>
-            Only take a random N number of words from inputted word list. If two or more word lists are inputted, it
-            will combine arbitrarily and then take a random N words
+    tidy [OPTIONS] <Inputted Word Lists>...
 
 ARGS:
-    <Inputted Word Lists>...    Word list input files. Can be more than one, in which case they'll be combined and
-                                de-duplicated. Requires at least one file
+    <Inputted Word Lists>...    Word list input files. Can be more than one, in which case
+                                they'll be combined and de-duplicated. Requires at least one
+                                file
+
+OPTIONS:
+    -a, --approve <APPROVED_LIST>
+            Path(s) for optional list of approved words. Can accept multiple files
+
+    -A, --attributes
+            Print attributes about new list to terminal. Can be used more than once to print more
+            attributes
+
+    -c, --cut-to <CUT_TO>
+            Just before printing generated list, cut list down to a set number of words. Can accept
+            expressions in the form of base**exponent (helpful for generating diceware lists). Cuts
+            are done randomly
+
+    -d, --minimum-edit-distance <MINIMUM_EDIT_DISTANCE>
+            Set minimum edit distance between words, which can reduce the cost of typos when
+            entering words
+
+    -D, --dice <DICE_SIDES>
+            Print dice roll next to word in output. Set number of sides of dice. Must be between 2
+            and 36. Use 6 for normal dice
+
+        --dry-run
+            Dry run. Don't write new list to file or terminal
+
+    -h, --homophones <HOMOPHONES_LIST>
+            Path(s) to file(s) containing homophone pairs. There must be one pair of homophones per
+            line, separated by a comma (sun,son)
+
+        --help
+            Print help information
+
+    -i, --delete-integers
+            Delete all integers from all words on new new list
+
+    -I, --remove-integers
+            Remove all words with integers in them from list
+
+    -l, --lowercase
+            Lowercase all words on new list
+
+    -L, --remove-nonalphabetic
+            Remove all words with non-alphabetic characters from new list (leaving only words
+            composed entirely of letters [A-Z] or [a-z])
+
+    -m, --minimum-word-length <MINIMUM_LENGTH>
+            Set minimum word length
+
+    -M, --maximum-word-length <MAXIMUM_LENGTH>
+            Set maximum word length
+
+    -n, --delete-nonalphanumeric
+            Delete all non-alphanumeric characters from all words on new list
+
+    -N, --remove-nonalphanumeric
+            Remove all words with non-alphanumeric characters from new list
+
+    -o, --output <OUTPUT>
+            Path for outputted list file. If none given, generated word list will be printed to
+            terminal
+
+    -P, --remove-prefix
+            Remove prefix words from new list
+
+    -q, --straighten
+            Replace “smart” quotation marks, both “double” and ‘single’, with their "straight"
+            versions
+
+        --quiet
+            Do not print any extra information
+
+    -r, --reject <REJECT_LIST>
+            Path(s) for optional list of words to reject. Can accept multiple files
+
+    -s, --delete-through-space
+            Delete all characters through first space of each line
+
+    -t, --delete-through-tab
+            Delete all characters through first tab of each line
+
+        --take-first <TAKE_FIRST>
+            Only take first N words from inputted word list. If two or more word lists are inputted,
+            it will combine arbitrarily and then take first N words
+
+        --take-rand <TAKE_RAND>
+            Only take a random N number of words from inputted word list. If two or more word lists
+            are inputted, it will combine arbitrarily and then take a random N words
+
+    -V, --version
+            Print version information
+
+    -x, --shared-prefix-length <MAXIMUM_SHARED_PREFIX_LENGTH>
+            Set number of leading characters to get to a unique prefix, which can aid auto-complete
+            functionality. Setting this value to say, 4, means that knowing the first 4 characters
+            of any word on the generated list is enough to know which word it is
 ```
 
 ## Usage examples
