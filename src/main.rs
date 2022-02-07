@@ -186,16 +186,13 @@ fn main() {
         }
     }
     // Check if output file exists
-    match opt.output {
-        Some(ref output_file_name) => {
-            if !opt.force_overwrite && Path::new(output_file_name).exists() {
-                eprintln!(
-                    "Specified output file already exists. Use --force flag to force an overwrite."
-                );
-                return;
-            }
+    if let Some(ref output_file_name) = opt.output {
+        if !opt.force_overwrite && Path::new(output_file_name).exists() {
+            eprintln!(
+                "Specified output file already exists. Use --force flag to force an overwrite."
+            );
+            return;
         }
-        None => {}
     }
     let this_tidy_request = TidyRequest {
         list: make_vec_from_filenames(&opt.inputted_word_list),
