@@ -1,8 +1,8 @@
-extern crate structopt;
 use std::fs::File;
 use std::io::Write;
 use std::path::PathBuf;
-use structopt::StructOpt;
+// use structopt::StructOpt;
+use clap::Parser;
 use tidy::*;
 pub mod display_information;
 use crate::display_information::display_list_information;
@@ -32,95 +32,95 @@ fn eval_cut_length(input: &str) -> usize {
     }
 }
 
-/// tidy: Combine and clean word lists
-#[derive(StructOpt, Debug)]
-#[structopt(name = "tidy")]
-struct Opt {
+/// Combine and clean word lists
+#[derive(Parser, Debug)]
+#[clap(version, about, name = "tidy")]
+struct Args {
     /// Do not print any extra information
-    #[structopt(long = "quiet")]
+    #[clap(long = "quiet")]
     quiet: bool,
 
     /// Dry run. Don't write new list to file or terminal.
-    #[structopt(long = "dry-run")]
+    #[clap(long = "dry-run")]
     dry_run: bool,
 
     /// Print attributes about new list to terminal. Can be used more than once
     /// to print more attributes.
-    #[structopt(short = "A", long = "attributes", parse(from_occurrences))]
+    #[clap(short = 'A', long = "attributes", parse(from_occurrences))]
     attributes: u8,
 
     /// Lowercase all words on new list
-    #[structopt(short = "l", long = "lowercase")]
+    #[clap(short = 'l', long = "lowercase")]
     to_lowercase: bool,
 
     /// Replace “smart” quotation marks, both “double” and ‘single’,
     /// with their "straight" versions
-    #[structopt(short = "q", long = "straighten")]
+    #[clap(short = 'q', long = "straighten")]
     straighten_quotes: bool,
 
     /// Remove prefix words from new list
-    #[structopt(short = "P", long = "remove-prefix")]
+    #[clap(short = 'P', long = "remove-prefix")]
     remove_prefix_words: bool,
 
     /// Remove all words with non-alphanumeric characters from new list
-    #[structopt(short = "N", long = "remove-nonalphanumeric")]
+    #[clap(short = 'N', long = "remove-nonalphanumeric")]
     remove_nonalphanumeric: bool,
 
     /// Delete all non-alphanumeric characters from all words on new list
-    #[structopt(short = "n", long = "delete-nonalphanumeric")]
+    #[clap(short = 'n', long = "delete-nonalphanumeric")]
     delete_nonalphanumeric: bool,
 
     /// Remove all words with non-alphabetic characters from new list
     /// (leaving only words composed entirely of letters [A-Z] or [a-z])
-    #[structopt(short = "L", long = "remove-nonalphabetic")]
+    #[clap(short = 'L', long = "remove-nonalphabetic")]
     remove_nonalphabetic: bool,
 
     /// Remove all words with integers in them from list
-    #[structopt(short = "I", long = "remove-integers")]
+    #[clap(short = 'I', long = "remove-integers")]
     remove_integers: bool,
 
     /// Delete all integers from all words on new new list
-    #[structopt(short = "i", long = "delete-integers")]
+    #[clap(short = 'i', long = "delete-integers")]
     delete_integers: bool,
 
     /// Delete all characters through first tab of each line
-    #[structopt(short = "t", long = "delete-through-tab")]
+    #[clap(short = 't', long = "delete-through-tab")]
     delete_through_first_tab: bool,
 
     /// Delete all characters through first space of each line
-    #[structopt(short = "s", long = "delete-through-space")]
+    #[clap(short = 's', long = "delete-through-space")]
     delete_through_first_space: bool,
 
     /// Only take first N words from inputted word list.
     /// If two or more word lists are inputted, it will
     /// combine arbitrarily and then take first N words.
-    #[structopt(long = "take-first")]
+    #[clap(long = "take-first")]
     take_first: Option<usize>,
 
     /// Only take a random N number of words from inputted word list.
     /// If two or more word lists are inputted, it will
     /// combine arbitrarily and then take a random N words.
-    #[structopt(long = "take-rand")]
+    #[clap(long = "take-rand")]
     take_rand: Option<usize>,
 
     /// Just before printing generated list, cut list down
     /// to a set number of words. Can accept expressions in the
     /// form of base**exponent (helpful for generating diceware lists).
     /// Cuts are done randomly.
-    #[structopt(short = "c", long = "cut-to", parse(from_str = eval_cut_length))]
+    #[clap(short = 'c', long = "cut-to", parse(from_str = eval_cut_length))]
     cut_to: Option<usize>,
 
     /// Set minimum word length
-    #[structopt(short = "m", long = "minimum-word-length")]
+    #[clap(short = 'm', long = "minimum-word-length")]
     minimum_length: Option<usize>,
 
     /// Set maximum word length
-    #[structopt(short = "M", long = "maximum-word-length")]
+    #[clap(short = 'M', long = "maximum-word-length")]
     maximum_length: Option<usize>,
 
     /// Set minimum edit distance between words, which
     /// can reduce the cost of typos when entering words
-    #[structopt(short = "d", long = "minimum-edit-distance")]
+    #[clap(short = 'd', long = "minimum-edit-distance")]
     minimum_edit_distance: Option<usize>,
 
     /// Set number of leading characters to get to a unique prefix,
@@ -128,43 +128,43 @@ struct Opt {
     /// Setting this value to say, 4, means that knowing the first
     /// 4 characters of any word on the generated list is enough
     /// to know which word it is.
-    #[structopt(short = "x", long = "shared-prefix-length")]
+    #[clap(short = 'x', long = "shared-prefix-length")]
     maximum_shared_prefix_length: Option<usize>,
 
     /// Path(s) for optional list of words to reject. Can accept multiple
     /// files.
-    #[structopt(short = "r", long = "reject", parse(from_os_str))]
+    #[clap(short = 'r', long = "reject", parse(from_os_str))]
     reject_list: Option<Vec<PathBuf>>,
 
     /// Path(s) for optional list of approved words. Can accept multiple
     /// files.
-    #[structopt(short = "a", long = "approve", parse(from_os_str))]
+    #[clap(short = 'a', long = "approve", parse(from_os_str))]
     approved_list: Option<Vec<PathBuf>>,
 
     /// Path(s) to file(s) containing homophone pairs. There must be one pair
     /// of homophones per line, separated by a comma (sun,son).
-    #[structopt(short = "h", long = "homophones", parse(from_os_str))]
+    #[clap(short = 'h', long = "homophones", parse(from_os_str))]
     homophones_list: Option<Vec<PathBuf>>,
 
     /// Print dice roll next to word in output. Set number of sides
     /// of dice. Must be between 2 and 36. Use 6 for normal dice.
-    #[structopt(short = "D", long = "dice")]
+    #[clap(short = 'D', long = "dice")]
     dice_sides: Option<u8>,
 
     /// Path for outputted list file. If none given, generated word list
     /// will be printed to terminal.
-    #[structopt(short = "o", long = "output", parse(from_os_str))]
+    #[clap(short = 'o', long = "output", parse(from_os_str))]
     output: Option<PathBuf>,
 
     /// Word list input files. Can be more than one, in which case
     /// they'll be combined and de-duplicated. Requires at least
     /// one file.
-    #[structopt(name = "Inputted Word Lists", parse(from_os_str))]
+    #[clap(name = "Inputted Word Lists", parse(from_os_str))]
     inputted_word_list: Vec<PathBuf>,
 }
 
 fn main() {
-    let opt = Opt::from_args();
+    let opt = Args::parse();
 
     // Require at least one inputted list
     if opt.inputted_word_list.is_empty() {
