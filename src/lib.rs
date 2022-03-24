@@ -461,9 +461,13 @@ fn remove_prefix_words(list: Vec<String>) -> Vec<String> {
 /// Calulates edit distance using a function in the edit_distance module.
 fn enfore_minimum_edit_distance(list: Vec<String>, minimum_edit_distance: usize) -> Vec<String> {
     let minimum_edit_distance: u32 = minimum_edit_distance.try_into().unwrap();
+    let mut list_to_read = list.to_vec();
+    // Sort short words first to prefer them
+    list_to_read.sort_by(|a, b| a.chars().count().cmp(&b.chars().count()));
+
     let mut new_list = list.to_vec();
     new_list.retain(|potential_too_close_word| {
-        for word in &list {
+        for word in &list_to_read {
             // Skip if we're looking at the same word
             if word == potential_too_close_word {
                 continue;
