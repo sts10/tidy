@@ -305,4 +305,4 @@ See [this repo](https://github.com/sts10/splitter) for more information.
 - [r/wordlists subreddit](https://www.reddit.com/r/wordlists/), which seems to have links to a few non-English word lists.
 
 ### Shameless plugs
-- I created [a ~16k word list](https://github.com/sts10/common_word_list_maker/blob/main/example_word_list.txt) using [Google Books Ngram data](https://github.com/sts10/common_word_list_maker).
+- I've created [a few word lists](https://github.com/sts10/generated-wordlists) using Tidy and Google Books Ngram data.
