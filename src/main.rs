@@ -75,8 +75,9 @@ struct Args {
     #[clap(short = 'n', long = "delete-nonalphanumeric")]
     delete_nonalphanumeric: bool,
 
-    /// Remove all words with non-alphabetic characters from new list
-    /// (leaving only words composed entirely of letters [A-Z] or [a-z])
+    /// Remove all words with any non-alphabetic characters or accented letters
+    /// from new list (leaving only words composed entirely of letters
+    /// [A-Z] or [a-z])
     #[clap(short = 'L', long = "remove-nonalphabetic")]
     remove_nonalphabetic: bool,
 

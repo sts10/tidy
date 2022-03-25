@@ -98,8 +98,8 @@ OPTIONS:
             Lowercase all words on new list
 
     -L, --remove-nonalphabetic
-            Remove all words with non-alphabetic characters from new list (leaving only words
-            composed entirely of letters [A-Z] or [a-z])
+            Remove all words with any non-alphabetic characters or accented letters from new list
+            (leaving only words composed entirely of letters [A-Z] or [a-z])
 
     -m, --minimum-word-length <MINIMUM_LENGTH>
             Set minimum word length
