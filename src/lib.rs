@@ -376,13 +376,21 @@ fn remove_nonalphanumeric(list: &[String]) -> Vec<String> {
 /// that have only alphabetic characters in it.
 fn remove_nonalphabetic(list: &[String]) -> Vec<String> {
     let mut new_list = list.to_vec();
-    new_list.retain(|word| !word.chars().any(|chr| !is_alphabetic(chr as u8)));
+    new_list.retain(|word| !word.chars().any(|chr| !is_alphabetic(chr as u16)));
     new_list
 }
 
-/// Helper function to determine if a given `u8` is a letter.
-fn is_alphabetic(chr: u8) -> bool {
-    (chr >= 0x41 && chr <= 0x5A) || (chr >= 0x61 && chr <= 0x7A)
+/// Helper function to determine if a given char as `u16` is a letter.
+/// ```
+/// use tidy::is_alphabetic;
+/// assert_eq!(is_alphabetic('h' as u16), true);
+/// assert_eq!(is_alphabetic('A' as u16), true);
+/// assert_eq!(is_alphabetic('1' as u16), false);
+/// assert_eq!(is_alphabetic(',' as u16), false);
+/// assert_eq!(is_alphabetic('ő' as u16), false);
+/// ```
+pub fn is_alphabetic(chr: u16) -> bool {
+    (chr >= 65 && chr <= 90) || (chr >= 97 && chr <= 122)
 }
 
 /// Search inputted list for any words that have any
