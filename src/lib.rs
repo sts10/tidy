@@ -640,7 +640,7 @@ pub fn print_as_dice(n: usize, base: u8, list_length: usize, use_letters: bool) 
 }
 
 fn format_high_dice_roll(ch: char, use_letters: bool) -> String {
-    if use_letters == false {
+    if !use_letters {
         match ch {
             '0' => "01",
             '1' => "02",
