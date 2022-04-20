@@ -157,6 +157,12 @@ struct Args {
     #[clap(short = 'D', long = "dice")]
     dice_sides: Option<u8>,
 
+    /// When printing dice roll next to word in output, use letters to represent
+    /// numbers higher than 10. Default is `false`, which will
+    /// print double-digit numbers when necessary (e.g. 18-03-08).
+    #[clap(short = 'S', long = "sides-as-letters")]
+    print_high_dice_sides_as_letters: bool,
+
     /// Path for outputted list file. If none given, generated word list
     /// will be printed to terminal.
     #[clap(short = 'o', long = "output", parse(from_os_str))]
@@ -240,8 +246,17 @@ fn main() {
                     // If user set a number of dice_sides, we'll add the appropriate
                     // dice roll information, then a tab, then the word.
                     if let Some(dice_sides) = opt.dice_sides {
-                        write!(f, "{}\t", print_as_dice(i, dice_sides, tidied_list.len()),)
-                            .expect("Unable to write dice roll to file");
+                        write!(
+                            f,
+                            "{}\t",
+                            print_as_dice(
+                                i,
+                                dice_sides,
+                                tidied_list.len(),
+                                opt.print_high_dice_sides_as_letters
+                            ),
+                        )
+                        .expect("Unable to write dice roll to file");
                     }
                     // Else, just print the word
                     writeln!(f, "{}", word).expect("Unable to write word to file");
@@ -252,7 +267,15 @@ fn main() {
             None => {
                 for (i, word) in tidied_list.iter().enumerate() {
                     if let Some(dice_sides) = opt.dice_sides {
-                        print!("{:}\t", print_as_dice(i, dice_sides, tidied_list.len()));
+                        print!(
+                            "{:}\t",
+                            print_as_dice(
+                                i,
+                                dice_sides,
+                                tidied_list.len(),
+                                opt.print_high_dice_sides_as_letters
+                            )
+                        );
                     }
                     println!("{}", word);
                 }

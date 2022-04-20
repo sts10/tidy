@@ -368,14 +368,22 @@ mod list_manipulation_tests {
 
     #[test]
     fn can_print_dice_rolls_of_base_6() {
-        assert_eq!(print_as_dice(0, 6, 7776), "11111".to_string());
-        assert_eq!(print_as_dice(7775, 6, 7776), "66666".to_string());
-        assert_eq!(print_as_dice(2548, 6, 7776), "26555".to_string());
-        assert_eq!(print_as_dice(2548, 6, 7000), "26555".to_string());
+        assert_eq!(print_as_dice(0, 6, 7776, false), "11111".to_string());
+        assert_eq!(print_as_dice(7775, 6, 7776, false), "66666".to_string());
+        assert_eq!(print_as_dice(2548, 6, 7776, false), "26555".to_string());
+        assert_eq!(print_as_dice(2548, 6, 7000, false), "26555".to_string());
     }
     #[test]
     fn can_print_dice_rolls_of_base_2() {
-        assert_eq!(print_as_dice(1, 2, 7776), "0000000000001".to_string());
-        assert_eq!(print_as_dice(127, 2, 128), "1111111".to_string());
+        assert_eq!(
+            print_as_dice(1, 2, 7776, false),
+            "0000000000001".to_string()
+        );
+        assert_eq!(print_as_dice(127, 2, 128, false), "1111111".to_string());
+    }
+    #[test]
+    fn can_print_dice_rolls_of_base_20() {
+        assert_eq!(print_as_dice(1000, 20, 8000, false), "03-11-01".to_string());
+        assert_eq!(print_as_dice(1000, 20, 8000, true), "2-a-0".to_string());
     }
 }

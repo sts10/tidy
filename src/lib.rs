@@ -590,7 +590,7 @@ use radix_fmt::*; // https://stackoverflow.com/a/50278316
 ///
 /// I wish I could replicate this radix function easily without the dependency,
 /// but that doesn't seem [very easy](https://stackoverflow.com/a/50278316).
-pub fn print_as_dice(n: usize, base: u8, list_length: usize) -> String {
+pub fn print_as_dice(n: usize, base: u8, list_length: usize, use_letters: bool) -> String {
     // Set width for zero-padding
 
     // First, get the literal width of the largest number we'll be printing.
@@ -620,7 +620,8 @@ pub fn print_as_dice(n: usize, base: u8, list_length: usize) -> String {
         // If base is 2 or 3, just print as-is, zero-indexed.
         2 | 3 => padded_n,
         // If base is a common dice size (between 4 and 8), we'll add
-        // one to each digit, to make it easier to compare to actual rolled dice
+        // one to each digit (i.e. no longer zero-indexed), to make it
+        // easier to compare to actual rolled dice
         4..=8 => padded_n
             .chars()
             .map(|ch| (ch.to_string().parse::<usize>().unwrap() + 1).to_string())
@@ -629,10 +630,58 @@ pub fn print_as_dice(n: usize, base: u8, list_length: usize) -> String {
         // but we'll add a hyphen _between_ digits to make it easier to read.
         9..=36 => padded_n
             .chars()
-            .map(|ch| ch.to_string() + "-")
-            .collect::<String>()[0..padded_n.chars().count() * 2 - 1]
+            .map(|ch| format_high_dice_roll(ch, use_letters) + "-")
+            .collect::<String>() //[0..padded_n.chars().count() * 2 - 1]
+            .trim_end_matches('-')
             .trim()
             .to_string(),
         _ => panic!("Amount of dice sides received is too high"),
+    }
+}
+
+fn format_high_dice_roll(ch: char, use_letters: bool) -> String {
+    if use_letters == false {
+        match ch {
+            '0' => "01",
+            '1' => "02",
+            '2' => "03",
+            '3' => "04",
+            '4' => "05",
+            '5' => "06",
+            '6' => "07",
+            '7' => "08",
+            '8' => "09",
+            '9' => "10",
+            'a' => "11",
+            'b' => "12",
+            'c' => "13",
+            'd' => "14",
+            'e' => "15",
+            'f' => "16",
+            'g' => "17",
+            'h' => "18",
+            'i' => "19",
+            'j' => "20",
+            'k' => "21",
+            'l' => "22",
+            'm' => "23",
+            'n' => "24",
+            'o' => "25",
+            'p' => "26",
+            'q' => "27",
+            'r' => "28",
+            's' => "29",
+            't' => "30",
+            'u' => "31",
+            'v' => "32",
+            'w' => "33",
+            'x' => "34",
+            'y' => "35",
+            'z' => "36",
+            _ => panic!("Unable to convert this dice number from a letter to a number."),
+        }
+        .to_string()
+    } else {
+        ch.to_string()
     }
 }
