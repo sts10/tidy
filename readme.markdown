@@ -10,9 +10,9 @@ Tidy aims to help users create "_better_" word lists -- generally word lists tha
 
 Tidy performs basic list-cleaning operations like removing duplicates words and blank lines by default. It additionally provides various optional standardizations and filters, like lowercasing all words (`-l`), or removing words in with integers in them (`-I`), as well as protections against rare-but-possible passphrase pitfalls, such as prefix codes (`-P`) and low minimum word lengths (see below for explanations).
 
-Tidy also can make word lists more "typo-resistant" by enforcing a minimum edit distance (`-d`), remove homophones and/or allow users to auto-complete words by enforcing a unique prefix length (`-x`).
+Tidy also can make word lists more "typo-resistant" by enforcing a minimum edit distance (`-d`), removing homophones and/or enforcing a unique prefix length (`-x`), which can allow users to auto-complete words after a certain number of characters.
 
-Tidy can be used to create new word lists (for example, if given more than one list, it will combine and de-dupe them) with desirable qualities, but it can also assist in audits of existing lists by removing duplicates and optionally printing notable information about a given word list (`-AA`).
+Tidy can be used to create new word lists (for example, if given more than one list, it will combine and de-duplicate them) with desirable qualities, but it can also assist in audits of existing lists by removing duplicates and optionally printing notable information about a given word list (`-AA`).
 
 ## Features
 
