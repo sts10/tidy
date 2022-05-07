@@ -71,7 +71,7 @@ pub fn display_list_information(list: &[String], level: u8) {
 /// Entropy is meausred in bits, hence use of constant `2`.
 ///
 /// Returns `f64` because this value to return (bits of entropy per
-/// word) will most likely not be a whole bumber (which is fine!)
+/// word) will most likely not be a whole number (which is fine!)
 pub fn calc_entropy_per_word(list_size: usize) -> f64 {
     (list_size as f64).ln() / (2_f64.ln() as f64)
 }
