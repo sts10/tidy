@@ -21,8 +21,20 @@ mod list_information_tests {
     #[test]
     fn can_find_first_different_character() {
         assert_eq!(
+            find_first_different_character_zero_indexed("apple", "zebra"),
+            0
+        );
+        assert_eq!(
+            find_first_different_character_zero_indexed("berry", "bicker"),
+            1
+        );
+        assert_eq!(
             find_first_different_character_zero_indexed("hello", "help"),
             3
+        );
+        assert_eq!(
+            find_first_different_character_zero_indexed("radius", "radical"),
+            4
         );
         assert_eq!(
             find_first_different_character_zero_indexed("zip", "zippy"),
