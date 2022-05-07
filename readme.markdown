@@ -299,7 +299,13 @@ See [this repo](https://github.com/sts10/splitter) for more information.
 
 -   [SecureDrop](https://github.com/freedomofpress/securedrop/) has separate lists of [adjectives](https://github.com/freedomofpress/securedrop/blob/develop/securedrop/dictionaries/adjectives.txt) and [nouns](https://github.com/freedomofpress/securedrop/blob/develop/securedrop/dictionaries/nouns.txt).
 
--   This diceware password generating program called ["diceware"](https://github.com/ulif/diceware) seems to have collected [a few word lists](https://github.com/ulif/diceware/tree/master/diceware/wordlists) in its Github repo, along with [a separate page that explains each of the lists](https://github.com/ulif/diceware/blob/master/docs/wordlists.rst).
+-  [ulif's "diceware"](https://github.com/ulif/diceware) seems to have collected [a few word lists](https://github.com/ulif/diceware/tree/master/diceware/wordlists) in its Github repo, along with [a separate page that explains each of the lists](https://github.com/ulif/diceware/blob/master/docs/wordlists.rst).
+
+-   [dmuth's "diceware" program](https://github.com/dmuth/diceware) has a [collection of lists](https://github.com/dmuth/diceware/tree/master/wordlist) (h/t [atoponce](https://www.reddit.com/r/Passwords/comments/sqrymt/comment/hwnfb94/?utm_source=reddit&utm_medium=web2x&context=3))
+
+-   [Monero's word list](https://github.com/monero-project/monero/blob/master/src/mnemonics/english.h) (1,626 words) (h/t [atoponce](https://www.reddit.com/r/Passwords/comments/sqrymt/comment/hwnfb94/?utm_source=reddit&utm_medium=web2x&context=3))
+
+-   [Bitcoin BIPS-0039](https://github.com/bitcoin/bips/tree/master/bip-0039) (2,048 words) (h/t [atoponce](https://www.reddit.com/r/Passwords/comments/sqrymt/comment/hwnfb94/?utm_source=reddit&utm_medium=web2x&context=3))
 
 -   [Niceware list](https://github.com/diracdeltas/niceware/blob/master/lib/wordlist.js) (~65,000 words) (there's also [a Rust port of niceware](https://github.com/healeycodes/niceware)).
 
@@ -319,4 +325,4 @@ See [this repo](https://github.com/sts10/splitter) for more information.
 
 ### Shameless plugs
 
--   I've created [a few word lists](https://github.com/sts10/generated-wordlists) using Tidy and Google Books Ngram data.
+-   I've created [a few word lists](https://github.com/sts10/generated-wordlists) using Tidy and [Google Books Ngram data](https://github.com/sts10/common_word_list_maker).
