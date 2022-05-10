@@ -284,7 +284,7 @@ fn main() {
     }
     if opt.attributes > 0 && !opt.quiet {
         if !opt.dry_run {
-            eprintln!("Done making list\n");
+            eprintln!("\nDone making list\n");
         } else {
             eprintln!("Dry run complete");
         }
