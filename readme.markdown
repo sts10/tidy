@@ -250,19 +250,21 @@ This is useful if you intend the list to be used by software that uses auto-comp
 
 Use the attributes flag twice (`-AA`) to get information about shared prefix length for a generated list. Tidy will print both "Longest shared prefix" and "Unique character prefix" (which is longest shared prefix + 1).
 
-## What is "assumed entropy per letter"?
+## What is "Efficiency per character" and "Assumed entropy per char" and what's the difference?
 
-If we take the entropy per word from a list (`log2(list_length)`) and divide it by the length of the shortest word on the list, we get a value we might call "assumed entropy per letter".
+If we take the entropy per word from a list (`log2(list_length)`) and divide it by the length of the **average**-length word on the list, we get a value we might call "efficiency per character". This just means that, on average, you get X bits per character typed. 
 
-For example, if we're looking at the 7,776-word EFF long list, we'd assume an entropy of 12.925 bits per word. The list has 82 three-letter words on it, so we'd divide 12.925 by 3 and get about 4.31 bits per letter.
+If we take the entropy per word from a list (`log2(list_length)`) and divide it by the length of the **shortest** word on the list, we get a value we might call "assumed entropy per char" (or character).
 
-I contend that this value may be useful when we ask what the shortest word on a good word list should be. There may be an established method for determining what this minimum word length should be, but if there is I don't know about it yet. Here's the math I've worked out on my own.
+For example, if we're looking at the 7,776-word EFF long list, we'd assume an entropy of 12.925 bits per word. The average word length is 7.0, so the efficiency is 1.8 bits per character. (I got this definition of efficiency from [an EFF blog post about their list](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases).) The list has 82 three-letter words on it, so we'd divide 12.925 by 3 and get an "assumed entropy per character" of about 4.31 bits per character.
+
+I contend that this second value in particular may be useful when we ask what the shortest word on a good word list should be. There may be an established method for determining what this minimum word length should be, but if there is I don't know about it yet. Here's the math I've worked out on my own.
 
 <!-- Consider the story of a user who gets a passphrase compromised of only the shortest words on the list. Does this passphrase genuinely have the entropy of `log2(list_length)` per word? -->
 
 ### The "brute force line"
 
-If the shortest word on a word list is shorter than `log26(word_list_length)`, there's a possibility that users generate a passphrase that the formula of `entropy_per_word = log2(list_length)` will _overestimate_ the entropy per word. This is because a brute-force letter attack would have fewer guesses to run through than the number of guesses we'd assume given the word list we used to create the passphrase.
+Assuming the list is comprised of 26 unique characters, if the shortest word on a word list is shorter than `log26(list_length)`, there's a possibility that a user generates a passphrase such that the formula of `entropy_per_word = log2(list_length)` will _overestimate_ the entropy per word. This is because a brute-force character attack would have fewer guesses to run through than the number of guesses we'd assume given the word list we used to create the passphrase.
 
 As an example, let's say we had a 10,000-word list that contained the one-character word "a" on it. Given that it's 10,000 words, we'd expect each word to add an additional ~13.28 bits of entropy. That would mean a three-word passphrase would give users 39.86 bits of entropy. However! If a user happened to get "a-a-a" as their passphrase, a brute force method shows that entropy to be only 14.10 bits (4.7 \* 3 words). Thus we can say that it falls below the "brute force line", a phrase I made up.
 
@@ -270,11 +272,11 @@ To see if a given generated list falls above or below this line, use the `-A`/`-
 
 ### An even more strict "line"
 
-If we go by [a 1951 Claude Shannon paper](https://www.princeton.edu/~wbialek/rome/refs/shannon_51.pdf), each letter in English actually only gives 2.62 bits of entropy. Users can see if their generated word list falls above this (stricter) line by using the `-A`/`--attributes` flag.
+If we go by [a 1951 Claude Shannon paper](https://www.princeton.edu/~wbialek/rome/refs/shannon_51.pdf), each letter in English actually only gives 2.62 bits of entropy. Users can see if their generated word list falls above this (stricter) line -- which I've dubbed the "Shannon line" -- by using the `-A`/`--attributes` flag.
 
 ## Language limitations
 
-As a native English speaker, I wrote this program with lists of English (US) words in mind. Unfortunately, I haven't tested it with other languages. That said, if you have ideas for how to make it more usable for other languages, please open an Issue or submit a Pull Request.
+As a native English speaker, I wrote this program with lists of English (US) words in mind. Unfortunately, I haven't tested it with other languages. If you have ideas for how to make it more usable for other languages, please open an Issue or submit a Pull Request.
 
 ## What's up with the memchr dependency?
 
