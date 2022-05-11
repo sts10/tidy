@@ -12,7 +12,7 @@ Tidy performs basic list-cleaning operations like removing duplicates words and 
 
 Tidy also can make word lists more "typo-resistant" by enforcing a minimum edit distance (`-d`), removing homophones and/or enforcing a unique prefix length (`-x`), which can allow users to auto-complete words after a certain number of characters.
 
-Tidy can be used to create new word lists (for example, if given more than one list, it will combine and de-duplicate them) with desirable qualities, but it can also assist in audits of existing lists by removing duplicates and optionally printing notable information about a given word list (`-AA`).
+Tidy can be used to create new word lists (for example, if given more than one list, it will combine and de-duplicate them) with desirable qualities, but it can also assist in audits of existing lists by removing duplicates and optionally printing notable information about a given word list (`-AA`), and/or some pseudorandomly generated same passphrases (`--samples`).
 
 ## Features
 
@@ -59,7 +59,7 @@ OPTIONS:
 
     -A, --attributes
             Print attributes about new list to terminal. Can be used more than once to print more
-            attributes
+            attributes. Some attributes may take a nontrivial amount of time to calculate
 
     -c, --cut-to <CUT_TO>
             Just before printing generated list, cut list down to a set number of words. Can accept
@@ -139,6 +139,10 @@ OPTIONS:
             When printing dice roll next to word in output, use letters to represent numbers higher
             than 10. Default is `false`, which will print double-digit numbers when necessary (e.g.
             18-03-08)
+
+        --samples
+            Print a handful of pseudorandomly selected words from the created list to the terminal.
+            Should NOT be used as secure passphrases
 
     -t, --delete-through-tab
             Delete all characters through first tab of each line

@@ -6,6 +6,7 @@ use std::path::PathBuf;
 use tidy::*;
 pub mod display_information;
 use crate::display_information::display_list_information;
+use crate::display_information::generate_samples;
 
 /// Parse user's input to the `cut_to` option, either directly as a `usize`,
 /// or, if they entered Python exponent notation (base**exponent), which
@@ -50,9 +51,15 @@ struct Args {
     debug: bool,
 
     /// Print attributes about new list to terminal. Can be used more than once
-    /// to print more attributes.
+    /// to print more attributes. Some attributes may take a nontrivial amount
+    /// of time to calculate.
     #[clap(short = 'A', long = "attributes", parse(from_occurrences))]
     attributes: u8,
+
+    /// Print a handful of pseudorandomly selected words from the created list
+    /// to the terminal. Should NOT be used as secure passphrases.
+    #[clap(long = "samples")]
+    samples: bool,
 
     /// Lowercase all words on new list
     #[clap(short = 'l', long = "lowercase")]
@@ -282,13 +289,27 @@ fn main() {
             }
         }
     }
-    if opt.attributes > 0 && !opt.quiet {
+    if !opt.quiet {
         if !opt.dry_run {
             eprintln!("\nDone making list\n");
         } else {
             eprintln!("Dry run complete");
         }
-        display_list_information(&tidied_list, opt.attributes);
+        if opt.attributes > 0 {
+            display_list_information(&tidied_list, opt.attributes);
+        }
+        if opt.samples {
+            let samples = generate_samples(&tidied_list);
+            eprintln!("\nPseudorandomly generated sample words");
+            eprintln!("-------------------------------------");
+            for n in 0..30 {
+                if n != 0 && n % 6 == 0 {
+                    eprintln!();
+                }
+                eprint!("{} ", samples[n]);
+            }
+            eprintln!();
+        }
     }
 }
 

@@ -73,6 +73,19 @@ pub fn display_list_information(list: &[String], level: u8) {
         eprintln!("Unique character prefix   : {}", longest_shared_prefix + 1);
     }
 }
+use rand::seq::SliceRandom;
+/// Print 5 sample 6-word passphrases from the newly created
+/// word list.
+pub fn generate_samples(list: &[String]) -> Vec<String> {
+    let mut samples: Vec<String> = vec![];
+    for _n in 0..30 {
+        match list.choose(&mut rand::thread_rng()) {
+            Some(word) => samples.push(word.to_string()),
+            None => panic!("Couldn't pick a random word"),
+        }
+    }
+    samples
+}
 
 /// Calculate the entropy per word of a word list, given its size.
 /// Entropy is meausred in bits, hence use of constant `2`.
