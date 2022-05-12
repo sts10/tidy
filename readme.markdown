@@ -4,7 +4,7 @@ A command-line tool for combining and cleaning large word list files.
 
 ## What this tool aims to help users do
 
-> A throw of the dice will never abolish chance. — Stéphane Mallarmé
+<!-- > A throw of the dice will never abolish chance. — Stéphane Mallarmé -->
 
 Tidy aims to help users create "_better_" word lists -- generally word lists that will be used to create passphrases.
 
@@ -12,7 +12,7 @@ Tidy performs basic list-cleaning operations like removing duplicates words and 
 
 Tidy also can make word lists more "typo-resistant" by enforcing a minimum edit distance (`-d`), removing homophones and/or enforcing a unique prefix length (`-x`), which can allow users to auto-complete words after a certain number of characters.
 
-Tidy can be used to create new word lists (for example, if given more than one list, it will combine and de-duplicate them) with desirable qualities, but it can also assist in audits of existing lists by removing duplicates and optionally printing notable information about a given word list (`-AA`), and/or some pseudorandomly generated same passphrases (`--samples`).
+Tidy can be used to create new word lists (for example, if given more than one list, it will combine and de-duplicate them) with desirable qualities, but it can also assist in audits of existing lists by removing duplicates and optionally printing notable information about a given word list (`-AA`), and/or some pseudorandomly generated sample passphrases (`--samples`).
 
 ## Features
 
