@@ -19,6 +19,29 @@ mod list_information_tests {
     }
 
     #[test]
+    fn can_calculate_mean_edit_distance() {
+        let list: Vec<String> = vec![
+            "bat", "cat", "rat", "hat", "mat", "tat", "fat", "oat", "pat", "sat", "vat",
+        ]
+        .iter()
+        .map(|x| x.to_string())
+        .collect();
+        assert_eq!(find_mean_edit_distance(&list), 1.0);
+
+        let list2: Vec<String> = vec!["abcd", "abce", "abxz"]
+            .iter()
+            .map(|x| x.to_string())
+            .collect();
+        assert_eq!(find_mean_edit_distance(&list2), 1.6666666666666667);
+
+        let list3: Vec<String> = vec!["abcd", "abce", "abxz", "abpt"]
+            .iter()
+            .map(|x| x.to_string())
+            .collect();
+        assert_eq!(find_mean_edit_distance(&list3), (11.0 / 6.0) as f64);
+    }
+
+    #[test]
     fn can_find_first_different_character() {
         assert_eq!(
             find_first_different_character_zero_indexed("apple", "zebra"),

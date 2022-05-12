@@ -120,6 +120,25 @@ fn find_shortest_edit_distance(list: &[String]) -> usize {
     shortest_edit_distance.try_into().unwrap()
 }
 
+/// Calculate the mean edit distance between all pairs of words on the list.
+pub fn find_mean_edit_distance(list: &[String]) -> f64 {
+    let mut sum_of_all_edit_distances = 0;
+    let mut number_of_edit_distances_measured = 0;
+    for (i, word1) in list.iter().enumerate() {
+        // The list[0..i] upper-bound in this inner loop is so that we don't do
+        // twice as many calls as necessary. Otherwise we would be finding the
+        // edit distance from word1 -> word2 and word2 -> word1.
+        // This also loop helpfully prevents us from checking a word's edit
+        // distance to itself (0).
+        for word2 in list[0..i].iter() {
+            let this_edit_distance = find_edit_distance(word1, word2);
+            number_of_edit_distances_measured += 1;
+            sum_of_all_edit_distances += this_edit_distance as usize;
+        }
+    }
+    (sum_of_all_edit_distances as f64) / (number_of_edit_distances_measured as f64)
+}
+
 /// Nested loops in this function get the `longest_shared_prefix`
 /// between any two words on the given list. Returns length of this
 /// longest shared prefix, a notable cryptographic metric.
