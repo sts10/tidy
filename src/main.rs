@@ -74,15 +74,17 @@ struct Args {
     #[clap(short = 'P', long = "remove-prefix")]
     remove_prefix_words: bool,
 
-    /// Remove all words with non-alphanumeric characters from new list
+    /// Remove all words with non-alphanumeric characters from new list. Words with diacritics will
+    /// remain
     #[clap(short = 'N', long = "remove-nonalphanumeric")]
     remove_nonalphanumeric: bool,
 
-    /// Delete all non-alphanumeric characters from all words on new list
+    /// Delete all non-alphanumeric characters from all words on new list. Characters with diacritics
+    /// will remain
     #[clap(short = 'n', long = "delete-nonalphanumeric")]
     delete_nonalphanumeric: bool,
 
-    /// Remove all words with any non-alphabetic characters or accented letters
+    /// Remove all words with any non-alphabetic characters or diacritic characters
     /// from new list (leaving only words composed entirely of letters
     /// [A-Z] or [a-z])
     #[clap(short = 'L', long = "remove-nonalphabetic")]
