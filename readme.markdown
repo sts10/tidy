@@ -12,7 +12,7 @@ Tidy performs basic list-cleaning operations like removing duplicates words and 
 
 Tidy also can make word lists more "typo-resistant" by enforcing a minimum edit distance (`-d`), removing homophones and/or enforcing a unique prefix length (`-x`), which can allow users to auto-complete words after a certain number of characters.
 
-Tidy can be used to create new word lists (for example, if given more than one list, it will combine and de-duplicate them) with desirable qualities, but it can also assist in audits of existing lists by removing duplicates and optionally printing notable information about a given word list (`-AA`), and/or some pseudorandomly generated sample passphrases (`--samples`).
+Tidy can be used to create new word lists (for example, if given more than one list, it will combine and de-duplicate them) with desirable qualities, but it can also assist in audits of existing lists by removing duplicates and optionally printing notable information about a given word list (`-AAA`), and/or some pseudorandomly generated sample passphrases (`--samples`).
 
 ## Features
 
@@ -180,6 +180,8 @@ OPTIONS:
 
 -   `tidy -I -o new_list.txt inputted_word_list.txt` Using the `-I` flag removes any words with integers from the list. For example, "hello1" would be removed from the list.
 
+-   `tidy -AAA -I -o new_list.txt inputted_word_list.txt` Adding `-AAA` prints some information about the created list to the terminal.
+
 -   `tidy -l -o new_list.txt -r bad_words.txt inputted_word_list.txt` Similar to above, but ensures that none of the words in the bad_words.txt file make it on to the final list that is printed to new_list.txt. The reject list is case sensitive, so you may want to run it through tidy using the -l flag before using it. (You can find [a list of bad words here](https://code.google.com/archive/p/badwordslist/downloads).)
 
 -   `tidy -l -o new_list.txt -a approved_words.txt inputted_word_list.txt` Similar to above, but ensures that only words in the approved_words.txt file make it on to the final list that is printed to new_list.txt. The approved list is case sensitive. (On Mac and some Linux distributions, `/usr/share/dict/words` should contain a list of words for spellcheck purposes.)
@@ -196,7 +198,7 @@ OPTIONS:
 
 -   `tidy -P -x 4 --cut-to 6**5 --dice 6 --output diceware.txt 1password-2021.txt` Same as above, but use exponent notation to represent the `--cut-to` number, saving you some arithmetic.
 
--   `tidy -D 20 --cut-to 20**3 1password-2021.txt` Create an 8,000-word list where each word corresponds to 3 rolls of a 20-sided die (`06-18-16 enclave`).
+-   `tidy -o d-and-d.txt -D 20 --cut-to 20**3 1password-2021.txt` Create an 8,000-word list where each word corresponds to 3 rolls of a 20-sided die (`06-07-07	dragon`).
 
 ## On verbs used
 
