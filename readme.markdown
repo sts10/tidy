@@ -200,6 +200,41 @@ OPTIONS:
 
 -   `tidy -o d-and-d.txt -D 20 --cut-to 20**3 1password-2021.txt` Create an 8,000-word list where each word corresponds to 3 rolls of a 20-sided die (`06-07-07	dragon`).
 
+## List attributes
+
+Tidy can also calculate different attributes about a created list. `tidy -AAAts --dry-run eff_long_list.txt` prints:
+
+```text
+Attributes of new list
+----------------------
+List length               : 7776 words
+Mean word length          : 6.99 characters
+Length of shortest word   : 3 characters (aim)
+Length of longest word    : 9 characters (zoologist)
+Free of prefix words      : true
+Entropy per word          : 12.925 bits
+Efficiency per character  : 1.849 bits
+Assumed entropy per char  : 4.308 bits
+Above brute force line    : true
+Above Shannon line        : false
+Shortest edit distance    : 1
+Mean edit distance        : 6.858
+Longest shared prefix     : 8
+Unique character prefix   : 9
+```
+
+Using the `--samples` flag will print 5 sample passphrases to the terminal. (Note that these sample passphrases should not be used for security purposes, as Tidy has not been audited.)
+
+```txt
+Pseudorandomly generated sample words
+-------------------------------------
+departure traitor augmented supremacy device annoying 
+steep frigidity wreath barterer tibia reprimand 
+creamlike strum snowfall tannery clean protrude 
+favorable unlivable vanquish crate sarcastic exclude 
+fastness september boasting unbroken battalion sweep
+```
+
 ## On verbs used
 
 In both Tidy's code and documentation, "remove" means that a word will be removed (e.g. words with integers will be removed from the list), while "delete" means that a word will only be modified (e.g. integers removed from words). Uppercase flags remove words, while lowercase flags delete specified characters. All delete calls occur before any remove call.
