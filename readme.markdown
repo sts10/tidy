@@ -12,7 +12,7 @@ Tidy performs basic list-cleaning operations like removing duplicates words and 
 
 Tidy also can make word lists more "typo-resistant" by enforcing a minimum edit distance (`-d`), removing homophones and/or enforcing a unique prefix length (`-x`), which can allow users to auto-complete words after a certain number of characters.
 
-Tidy can be used to create new word lists (for example, if given more than one list, it will combine and de-duplicate them) with desirable qualities, but it can also assist in audits of existing lists by removing duplicates and optionally printing notable information about a given word list (`-AAA`), and/or some pseudorandomly generated sample passphrases (`--samples`).
+Tidy can be used to create new word lists (for example, if given more than one list, it will combine and de-duplicate them) with desirable qualities, but it can also assist in audits of existing lists by removing duplicates and optionally printing notable information about a given word list (`-AA`), and/or some pseudorandomly generated sample passphrases (`--samples`).
 
 ## Features
 
@@ -180,7 +180,7 @@ OPTIONS:
 
 -   `tidy -I -o new_list.txt inputted_word_list.txt` Using the `-I` flag removes any words with integers from the list. For example, "hello1" would be removed from the list.
 
--   `tidy -AAA -I -o new_list.txt inputted_word_list.txt` Adding `-AAA` prints some information about the created list to the terminal.
+-   `tidy -AA -I -o new_list.txt inputted_word_list.txt` Adding `-AA` prints some information about the created list to the terminal.
 
 -   `tidy -l -o new_list.txt -r bad_words.txt inputted_word_list.txt` Similar to above, but ensures that none of the words in the bad_words.txt file make it on to the final list that is printed to new_list.txt. The reject list is case sensitive, so you may want to run it through tidy using the -l flag before using it. (You can find [a list of bad words here](https://code.google.com/archive/p/badwordslist/downloads).)
 
