@@ -65,12 +65,6 @@ pub fn display_list_information(list: &[String], level: u8) {
             "Shortest edit distance    : {}",
             find_shortest_edit_distance(list)
         );
-        if level >= 3 {
-            eprintln!(
-                "Mean edit distance        : {:.3}",
-                find_mean_edit_distance(list)
-            );
-        }
         let longest_shared_prefix = find_longest_shared_prefix(list);
         eprintln!("Longest shared prefix     : {}", longest_shared_prefix);
         // Numbers of characters required to definitely get to a unique
@@ -125,6 +119,7 @@ fn find_shortest_edit_distance(list: &[String]) -> usize {
     }
     shortest_edit_distance.try_into().unwrap()
 }
+
 
 /// Calculate the mean edit distance between all pairs of words on the list.
 pub fn find_mean_edit_distance(list: &[String]) -> f64 {
