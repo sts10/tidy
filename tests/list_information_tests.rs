@@ -19,17 +19,6 @@ mod list_information_tests {
     }
 
     #[test]
-    fn can_calculate_mean_edit_distance() {
-        let list: Vec<String> = vec![
-            "bat", "cat", "rat", "hat", "mat", "tat", "fat", "oat", "pat", "sat", "vat",
-        ]
-        .iter()
-        .map(|x| x.to_string())
-        .collect();
-        assert_eq!(find_mean_edit_distance(&list), 1.0);
-    }
-
-    #[test]
     fn can_find_first_different_character() {
         assert_eq!(
             find_first_different_character_zero_indexed("apple", "zebra"),

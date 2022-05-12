@@ -65,12 +65,6 @@ pub fn display_list_information(list: &[String], level: u8) {
             "Shortest edit distance    : {}",
             find_shortest_edit_distance(list)
         );
-        if level >= 3 {
-            eprintln!(
-                "Mean edit distance        : {:.3}",
-                find_mean_edit_distance(list)
-            );
-        }
         let longest_shared_prefix = find_longest_shared_prefix(list);
         eprintln!("Longest shared prefix     : {}", longest_shared_prefix);
         // Numbers of characters required to definitely get to a unique
@@ -124,24 +118,6 @@ fn find_shortest_edit_distance(list: &[String]) -> usize {
         }
     }
     shortest_edit_distance.try_into().unwrap()
-}
-
-/// Calculate the mean edit distance between
-/// all pairs of words on the list.
-pub fn find_mean_edit_distance(list: &[String]) -> f64 {
-    let mut sum_of_all_edit_distances = 0;
-    let mut number_of_edit_distances_measured = 0;
-    // I think I can cheat and only go through half of the list here
-    for word1 in list[0..(list.len() / 2)].iter() {
-        for word2 in list {
-            if word1 != word2 {
-                let this_edit_distance = find_edit_distance(word1, word2);
-                number_of_edit_distances_measured += 1;
-                sum_of_all_edit_distances += this_edit_distance as usize;
-            }
-        }
-    }
-    (sum_of_all_edit_distances as f64) / number_of_edit_distances_measured as f64
 }
 
 /// Nested loops in this function get the `longest_shared_prefix`
