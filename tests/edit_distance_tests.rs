@@ -20,4 +20,12 @@ mod edit_distance_tests {
         assert_eq!(7, find_edit_distance("Hello, world!", "Goodbye, world!"));
         assert_eq!(6, find_edit_distance("Test_Case_#3", "Case #3"))
     }
+
+    #[test]
+    fn order_agnostic() {
+        assert_eq!(2, find_edit_distance("My Cat", "My Case"));
+        assert_eq!(2, find_edit_distance("My Case", "My Cat"));
+        assert_eq!(7, find_edit_distance("Hello, world!", "Goodbye, world!"));
+        assert_eq!(7, find_edit_distance("Goodbye, world!", "Hello, world!"));
+    }
 }
