@@ -387,6 +387,7 @@ fn remove_nonalphabetic(list: &[String]) -> Vec<String> {
 /// assert_eq!(is_alphabetic('A' as u16), true);
 /// assert_eq!(is_alphabetic('1' as u16), false);
 /// assert_eq!(is_alphabetic(',' as u16), false);
+/// assert_eq!(is_alphabetic('é' as u16), false);
 /// assert_eq!(is_alphabetic('ő' as u16), false);
 /// ```
 pub fn is_alphabetic(chr: u16) -> bool {
