@@ -4,7 +4,7 @@ A command-line tool for combining and cleaning large word list files.
 
 ## What this tool aims to help users do
 
-<!-- > A throw of the dice will never abolish chance. — Stéphane Mallarmé -->
+> A throw of the dice will never abolish chance. — Stéphane Mallarmé
 
 Tidy aims to help users create "_better_" word lists -- generally word lists that will be used to create passphrases.
 
