@@ -18,6 +18,7 @@ pub struct TidyRequest {
     pub to_lowercase: bool,
     pub should_straighten_quotes: bool,
     pub should_remove_prefix_words: bool,
+    pub should_remove_suffix_words: bool,
     pub should_remove_nonalphabetic: bool,
     pub should_remove_nonalphanumeric: bool,
     pub should_delete_nonalphanumeric: bool,
@@ -230,6 +231,12 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         }
         None => tidied_list,
     };
+    tidied_list = if req.should_remove_suffix_words {
+        remove_suffix_words(sort_and_dedup(&mut tidied_list))
+    } else {
+        tidied_list
+    };
+
     tidied_list = if req.should_remove_prefix_words {
         remove_prefix_words(sort_and_dedup(&mut tidied_list))
     } else {
@@ -464,6 +471,33 @@ fn remove_prefix_words(list: Vec<String>) -> Vec<String> {
     list_without_prefix_words
 }
 
+/// Remove suffix words from the given Vector of `String`s.
+///
+/// A brief example: If both "news" and "newspaper" are on the inputted list
+/// we may, for cryptographic reasons, want to remove the suffix word,
+/// which is "paper" in this case.
+fn remove_suffix_words(list: Vec<String>) -> Vec<String> {
+    let mut list_without_suffix_words = list.to_vec();
+    list_without_suffix_words.retain(|potential_suffix_word| {
+        for word in &list {
+            if word.ends_with(potential_suffix_word) && word != potential_suffix_word {
+                // This is a suffix word, so we do NOT want to retain it. return false to the
+                // retain
+                return false;
+            } else {
+                // This particular word is not a suffix word of this potential_suffix_word.
+                // keep looping
+                continue;
+            };
+        }
+        // If we've made it here, we can be sure that potential_suffix_word is NOT a
+        // suffix word. So we want to retain it for the list_without_suffix_words.
+        // To do this, we return true to the retain.
+        true
+    });
+    list_without_suffix_words
+}
+
 /// Only retain words that are the given `minimum_edit_distance` away from all
 /// other words on the list.
 ///
@@ -487,12 +521,12 @@ fn enfore_minimum_edit_distance(list: Vec<String>, minimum_edit_distance: usize)
                 // return false to the retain
                 return false;
             } else {
-                // This particular word is not too close to this potential_prefix_word.
+                // This particular word is not too close to this potential_too_close_word.
                 // keep looping
                 continue;
             };
         }
-        // If we've made it here, we can be sure that potential_prefix_word is NOT too
+        // If we've made it here, we can be sure that potential_too_close_word is NOT too
         // close to another  word. So we want to retain it for the new_list.
         // To do this, we return true to the retain.
         true

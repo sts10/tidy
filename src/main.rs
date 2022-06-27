@@ -74,6 +74,10 @@ struct Args {
     #[clap(short = 'P', long = "remove-prefix")]
     remove_prefix_words: bool,
 
+    /// Remove suffix words from new list
+    #[clap(short = 'U', long = "remove-suffix")]
+    remove_suffix_words: bool,
+
     /// Remove all words with non-alphanumeric characters from new list. Words with diacritics will
     /// remain
     #[clap(short = 'N', long = "remove-nonalphanumeric")]
@@ -217,6 +221,7 @@ fn main() {
         to_lowercase: opt.to_lowercase,
         should_straighten_quotes: opt.straighten_quotes,
         should_remove_prefix_words: opt.remove_prefix_words,
+        should_remove_suffix_words: opt.remove_suffix_words,
         should_remove_integers: opt.remove_integers,
         should_delete_integers: opt.delete_integers,
         should_remove_nonalphabetic: opt.remove_nonalphabetic,

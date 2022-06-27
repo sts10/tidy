@@ -11,6 +11,7 @@ mod list_manipulation_tests {
                 "tea",
                 "addiction",
                 "zoo",
+                "keeper",
                 "stationary ",
                 "tea",
                 "station",
@@ -214,6 +215,18 @@ mod list_manipulation_tests {
         assert!(new_list.contains(&"stationary".to_string()));
         assert!(!new_list.contains(&"zoo".to_string()));
         assert!(new_list.contains(&"zookeeper".to_string()));
+        assert!(new_list.contains(&"apple".to_string()));
+    }
+
+    #[test]
+    fn can_remove_suffix_words() {
+        let this_tidy_request = TidyRequest {
+            list: make_lists().0,
+            should_remove_suffix_words: true,
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
+        assert!(!new_list.contains(&"keeper".to_string()));
         assert!(new_list.contains(&"apple".to_string()));
     }
 
