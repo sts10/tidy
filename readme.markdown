@@ -36,6 +36,7 @@ Optionally, the tool can...
 -   remove homophones from a provided list of comma-separated pairs of homophones
 -   enforce a minimum [edit distance](https://en.wikipedia.org/wiki/Edit_distance) between words (`-d`)
 -   remove prefix words (see below) (`-P`)
+-   remove suffix words (`-U`)
 -   remove all words with non-alphabetic characters from new list, leaving only words composed entirely of letters without accents (assumes an English alphabet) (`-L`)
 -   straighten curly/smart quotes, i.e. replacing them with their "straight" equivalents (`-q`)
 -   guarantee a maximum shared prefix length (see below) (`-x`)
@@ -156,6 +157,9 @@ OPTIONS:
         --take-rand <TAKE_RAND>
             Only take a random N number of words from inputted word list. If two or more word lists
             are inputted, it will combine arbitrarily and then take a random N words
+
+    -U, --remove-suffix
+            Remove suffix words from new list
 
     -V, --version
             Print version information
@@ -329,6 +333,7 @@ See [this repo](https://github.com/sts10/splitter) for more information.
 
 ## To do
 
+-   [X] Add option to remove suffix words 
 -   [ ] Add option to remove words that have characters from certain character sets, for example non-ASCII characters
 <!-- - [ ] Investigate making the list variable as [FxHashSet](https://docs.rs/fxhash/0.2.1/fxhash/type.FxHashSet.html)<String> rather than a `Vec<String>` to potentially boost performance, as is done in [csafe](https://github.com/sts10/csafe/blob/main/src/lib.rs). Will probably need to write some benchmarks with Criterion to measure potential performance gains. -->
 

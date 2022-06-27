@@ -29,6 +29,9 @@ pub fn display_list_information(list: &[String], level: u8) {
     let free_of_prefix_words = !has_prefix_words(list);
     eprintln!("Free of prefix words      : {}", free_of_prefix_words);
 
+    let free_of_suffix_words = !has_suffix_words(list);
+    eprintln!("Free of suffix words      : {}", free_of_suffix_words);
+
     let entropy_per_word = calc_entropy_per_word(list.len());
     eprintln!("Entropy per word          : {:.3} bits", entropy_per_word);
     eprintln!(
@@ -216,6 +219,19 @@ fn has_prefix_words(list: &[String]) -> bool {
     for word1 in list {
         for word2 in list {
             if word1 != word2 && word1.starts_with(word2) {
+                return true;
+            }
+        }
+    }
+    false
+}
+
+/// Checks if a list has any words that are suffixes of other
+/// words on the list.
+fn has_suffix_words(list: &[String]) -> bool {
+    for word1 in list {
+        for word2 in list {
+            if word1 != word2 && word1.ends_with(word2) {
                 return true;
             }
         }
