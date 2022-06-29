@@ -307,8 +307,8 @@ fn main() {
         }
         if opt.samples {
             let samples = generate_samples(&tidied_list);
-            eprintln!("\nPseudorandomly generated sample words");
-            eprintln!("-------------------------------------");
+            eprintln!("\nPseudorandomly generated sample passphrases");
+            eprintln!("-------------------------------------------");
             for n in 0..30 {
                 if n != 0 && n % 6 == 0 {
                     eprintln!();
