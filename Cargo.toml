@@ -1,6 +1,6 @@
 [package]
 name = "tidy"
-version = "0.2.22"
+version = "0.2.30"
 authors = ["sts10 <sschlinkert@gmail.com>"]
 edition = "2021"
 
@@ -9,3 +9,4 @@ clap = { version = "3.0.14", features = ["derive"] }
 memchr = "2.4"
 radix_fmt = "1.0.0"
 rand = "0.8.4"
+itertools = "0.10.3"

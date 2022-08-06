@@ -21,7 +21,7 @@ Given a text file with a word list, this tool will create a new word list in whi
 -   duplicate lines (words) are removed
 -   empty lines have been removed
 -   whitespace from beginning and end of words is deleted
--   words are sorted alphabetically
+-   words are sorted alphabetically (though this can be optionally prevented -- see below)
 
 and print that new word list to the terminal or to a new text file.
 
@@ -42,6 +42,8 @@ Optionally, the tool can...
 -   guarantee a maximum shared prefix length (see below) (`-x`)
 -   print corresponding dice rolls before words, separated by a tab. Dice can have 2 to 36 sides. (`-D`)
 -   print information about the new list, such as entropy per word, to the terminal (`-A`)
+
+If you do NOT want Tidy to sort list alphabetically, you can use the `--no-alpha` option.
 
 ## Usage
 
@@ -122,6 +124,10 @@ OPTIONS:
             Path for outputted list file. If none given, generated word list will be printed to
             terminal
 
+    -O, --no-alpha
+            Do NOT sort outputted list alphabetically. Preserves original list order. Note that
+            duplicates lines and blank lines will still be removed
+
     -P, --remove-prefix
             Remove prefix words from new list
 
@@ -181,6 +187,8 @@ OPTIONS:
 -   `tidy -lP -o new_list.txt inputted_word_list.txt` Same as above, but the added `-P` flag removes prefix words from the list. See below for more on prefix words.
 
 -   `tidy -lPi -o new_list.txt inputted_word_list.txt` Same as above, but the added `-i` flag deletes any integers in words. Words with integers in them are not removed, only the integers within them. For example, "11326 agency" becomes "agency".
+
+-   `tidy -lPiO -o new_list.txt inputted_word_list.txt` Same as above, but the added `-O` flag preserves the original order of the list, rather than sort it alphabetically. Note that duplicates and blank lines are still removed.
 
 -   `tidy -I -o new_list.txt inputted_word_list.txt` Using the `-I` flag removes any words with integers from the list. For example, "hello1" would be removed from the list.
 

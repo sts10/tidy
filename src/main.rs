@@ -61,6 +61,11 @@ struct Args {
     #[clap(long = "samples")]
     samples: bool,
 
+    /// Do NOT sort outputted list alphabetically. Preserves original list order.
+    /// Note that duplicates lines and blank lines will still be removed.
+    #[clap(short = 'O', long = "no-alpha")]
+    no_alpha: bool,
+
     /// Lowercase all words on new list
     #[clap(short = 'l', long = "lowercase")]
     to_lowercase: bool,
@@ -218,6 +223,7 @@ fn main() {
         list: make_vec_from_filenames(&opt.inputted_word_list),
         take_first: opt.take_first,
         take_rand: opt.take_rand,
+        sort_alphabetically: !opt.no_alpha,
         to_lowercase: opt.to_lowercase,
         should_straighten_quotes: opt.straighten_quotes,
         should_remove_prefix_words: opt.remove_prefix_words,

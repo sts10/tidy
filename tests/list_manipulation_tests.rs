@@ -65,12 +65,26 @@ mod list_manipulation_tests {
     fn can_sort_words_alphabetically() {
         let this_tidy_request = TidyRequest {
             list: make_lists().0,
+            sort_alphabetically: true,
             ..Default::default()
         };
         let new_list = tidy_list(this_tidy_request);
         assert!(new_list[0] == "addiction".to_string());
         assert!(new_list.contains(&"station".to_string()));
         assert!(new_list[new_list.len() - 1] == "zookeeper".to_string());
+    }
+
+    #[test]
+    fn respect_option_to_not_sort_alphabetically() {
+        let this_tidy_request = TidyRequest {
+            list: make_lists().0,
+            sort_alphabetically: false,
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
+        assert!(new_list[0] == "zookeeper".to_string());
+        assert!(new_list.contains(&"apple".to_string()));
+        assert!(new_list[new_list.len() - 1] == "station".to_string());
     }
 
     #[test]

@@ -15,6 +15,7 @@ pub struct TidyRequest {
     pub list: Vec<String>,
     pub take_first: Option<usize>,
     pub take_rand: Option<usize>,
+    pub sort_alphabetically: bool,
     pub to_lowercase: bool,
     pub should_straighten_quotes: bool,
     pub should_remove_prefix_words: bool,
@@ -232,13 +233,13 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         None => tidied_list,
     };
     tidied_list = if req.should_remove_suffix_words {
-        remove_suffix_words(sort_and_dedup(&mut tidied_list))
+        remove_suffix_words(dedup_without_sorting(&mut tidied_list))
     } else {
         tidied_list
     };
 
     tidied_list = if req.should_remove_prefix_words {
-        remove_prefix_words(sort_and_dedup(&mut tidied_list))
+        remove_prefix_words(dedup_without_sorting(&mut tidied_list))
     } else {
         tidied_list
     };
@@ -250,7 +251,12 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     };
 
     // Sort and dedup here
-    tidied_list = sort_and_dedup(&mut tidied_list);
+    // tidied_list = sort_and_dedup(&mut tidied_list);
+
+    if req.sort_alphabetically {
+        tidied_list.sort();
+    }
+    tidied_list = dedup_without_sorting(&mut tidied_list);
 
     // User can cut words from nearly finished list.
     // Does so randomly.
@@ -264,7 +270,11 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         None => tidied_list,
     };
     // Finally, sort and dedup list (for final time)
-    tidied_list = sort_and_dedup(&mut tidied_list);
+    // tidied_list = sort_and_dedup(&mut tidied_list);
+    if req.sort_alphabetically {
+        tidied_list.sort();
+    }
+    tidied_list = dedup_without_sorting(&mut tidied_list);
     tidied_list
 }
 
@@ -433,15 +443,11 @@ fn straighten_quotes(input: &str) -> String {
     result
 }
 
-/// Alphabetizes and de-duplicates a Vector of `String`s.
-///
-/// For Rust's [`dedup()`](https://doc.rust-lang.org/std/vec/struct.Vec.html#method.dedup)
-/// function to remove all duplicates, the Vector needs to be
-/// [`sort()`](https://doc.rust-lang.org/std/vec/struct.Vec.html#method.sort)ed first.
-fn sort_and_dedup(list: &mut Vec<String>) -> Vec<String> {
-    list.sort();
-    list.dedup();
-    list.to_vec()
+use itertools::Itertools;
+/// De-duplicates a Vector of `String`s while maintaining list order.
+fn dedup_without_sorting(list: &mut [String]) -> Vec<String> {
+    let dedup: Vec<String> = list.iter().unique().map(|s| s.to_string()).collect();
+    dedup.to_vec()
 }
 
 /// Remove prefix words from the given Vector of `String`s.
