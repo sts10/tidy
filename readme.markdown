@@ -69,6 +69,9 @@ OPTIONS:
             expressions in the form of base**exponent (helpful for generating diceware lists). Cuts
             are done randomly
 
+    -C, --delete-after-comma
+            Delete all characters after first comma of each line
+
     -d, --minimum-edit-distance <MINIMUM_EDIT_DISTANCE>
             Set minimum edit distance between words, which can reduce the cost of typos when
             entering words
@@ -79,6 +82,9 @@ OPTIONS:
 
         --debug
             Debug mode
+
+        --delete-through-comma
+            Delete all characters through first comma of each line
 
         --dry-run
             Dry run. Don't write new list to file or terminal
@@ -144,17 +150,23 @@ OPTIONS:
     -s, --delete-through-space
             Delete all characters through first space of each line
 
-    -S, --sides-as-letters
-            When printing dice roll next to word in output, use letters to represent numbers higher
-            than 10. Default is `false`, which will print double-digit numbers when necessary (e.g.
-            18-03-08)
+    -S, --delete-after-space
+            Delete all characters after first space of each line
 
         --samples
             Print a handful of pseudorandomly selected words from the created list to the terminal.
             Should NOT be used as secure passphrases
 
+        --sides-as-letters
+            When printing dice roll next to word in output, use letters to represent numbers higher
+            than 10. Default is `false`, which will print double-digit numbers when necessary (e.g.
+            18-03-08)
+
     -t, --delete-through-tab
             Delete all characters through first tab of each line
+
+    -T, --delete-after-tab
+            Delete all characters after first tab of each line
 
         --take-first <TAKE_FIRST>
             Only take first N words from inputted word list. If two or more word lists are inputted,

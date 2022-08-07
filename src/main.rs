@@ -115,6 +115,22 @@ struct Args {
     #[clap(short = 's', long = "delete-through-space")]
     delete_through_first_space: bool,
 
+    /// Delete all characters through first comma of each line
+    #[clap(long = "delete-through-comma")]
+    delete_through_first_comma: bool,
+
+    /// Delete all characters after first tab of each line
+    #[clap(short = 'T', long = "delete-after-tab")]
+    delete_after_first_tab: bool,
+
+    /// Delete all characters after first space of each line
+    #[clap(short = 'S', long = "delete-after-space")]
+    delete_after_first_space: bool,
+
+    /// Delete all characters after first comma of each line
+    #[clap(short = 'C', long = "delete-after-comma")]
+    delete_after_first_comma: bool,
+
     /// Only take first N words from inputted word list.
     /// If two or more word lists are inputted, it will
     /// combine arbitrarily and then take first N words.
@@ -178,7 +194,7 @@ struct Args {
     /// When printing dice roll next to word in output, use letters to represent
     /// numbers higher than 10. Default is `false`, which will
     /// print double-digit numbers when necessary (e.g. 18-03-08).
-    #[clap(short = 'S', long = "sides-as-letters")]
+    #[clap(long = "sides-as-letters")]
     print_high_dice_sides_as_letters: bool,
 
     /// Path for outputted list file. If none given, generated word list
@@ -235,6 +251,11 @@ fn main() {
         should_delete_nonalphanumeric: opt.delete_nonalphanumeric,
         should_delete_through_first_tab: opt.delete_through_first_tab,
         should_delete_through_first_space: opt.delete_through_first_space,
+        should_delete_through_first_comma: opt.delete_through_first_comma,
+        should_delete_after_first_tab: opt.delete_after_first_tab,
+        should_delete_after_first_space: opt.delete_after_first_space,
+        should_delete_after_first_comma: opt.delete_after_first_comma,
+
         // If given more than one file of reject words, combine them
         // right here.
         reject_list: opt

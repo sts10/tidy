@@ -39,6 +39,7 @@ mod list_manipulation_tests {
                 "tee",
                 "post-modern",
                 "13910 word with spaces in it",
+                "comma,203478",
                 "“smart”",
                 "‘quotes’",
                 "  h as spaces ",
@@ -195,6 +196,55 @@ mod list_manipulation_tests {
         // Tidy trims whitespace AFTER the delete_through_character function,
         // so that doesn't affect this example
         // (Maybe should trim leading whitespace first though...)
+        assert!(new_list.contains(&"h as spaces".to_string()));
+    }
+    #[test]
+    fn can_delete_through_first_comma() {
+        let this_tidy_request = TidyRequest {
+            list: make_lists().1,
+            should_delete_through_first_comma: true,
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
+        assert!(new_list.contains(&"203478".to_string()));
+        assert!(new_list.contains(&"h as spaces".to_string()));
+    }
+
+    #[test]
+    fn can_delete_after_first_tab() {
+        let this_tidy_request = TidyRequest {
+            list: make_lists().1,
+            should_delete_after_first_tab: true,
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
+        assert!(new_list.contains(&"11225".to_string()));
+        assert!(new_list.contains(&"11152".to_string()));
+        // remove after FIRST tab
+        assert!(new_list.contains(&"11156".to_string()));
+    }
+    #[test]
+    fn can_delete_after_first_space() {
+        let this_tidy_request = TidyRequest {
+            list: make_lists().1,
+            should_delete_after_first_space: true,
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
+        assert!(new_list.contains(&"19-6-8".to_string()));
+        assert!(new_list.contains(&"13910".to_string()));
+        assert!(new_list.contains(&"post-modern".to_string()));
+        assert!(new_list.contains(&"comma,203478".to_string()));
+    }
+    #[test]
+    fn can_delete_after_first_comma() {
+        let this_tidy_request = TidyRequest {
+            list: make_lists().1,
+            should_delete_after_first_comma: true,
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
+        assert!(new_list.contains(&"comma".to_string()));
         assert!(new_list.contains(&"h as spaces".to_string()));
     }
 

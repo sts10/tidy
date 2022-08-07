@@ -27,6 +27,10 @@ pub struct TidyRequest {
     pub should_delete_integers: bool,
     pub should_delete_through_first_tab: bool,
     pub should_delete_through_first_space: bool,
+    pub should_delete_through_first_comma: bool,
+    pub should_delete_after_first_tab: bool,
+    pub should_delete_after_first_space: bool,
+    pub should_delete_after_first_comma: bool,
     pub reject_list: Option<Vec<String>>,
     pub approved_list: Option<Vec<String>>,
     pub homophones_list: Option<Vec<(String, String)>>,
@@ -140,6 +144,39 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     } else {
         tidied_list
     };
+    tidied_list = if req.should_delete_through_first_comma {
+        tidied_list
+            .iter()
+            .map(|w| delete_through_first_char(w, ',').to_string())
+            .collect()
+    } else {
+        tidied_list
+    };
+    tidied_list = if req.should_delete_after_first_tab {
+        tidied_list
+            .iter()
+            .map(|w| delete_after_first_char(w, '\t').to_string())
+            .collect()
+    } else {
+        tidied_list
+    };
+    tidied_list = if req.should_delete_after_first_space {
+        tidied_list
+            .iter()
+            .map(|w| delete_after_first_char(w, ' ').to_string())
+            .collect()
+    } else {
+        tidied_list
+    };
+    tidied_list = if req.should_delete_after_first_comma {
+        tidied_list
+            .iter()
+            .map(|w| delete_after_first_char(w, ',').to_string())
+            .collect()
+    } else {
+        tidied_list
+    };
+
     tidied_list = if req.should_delete_integers {
         tidied_list
             .iter()
@@ -296,7 +333,7 @@ pub fn delete_nonalphanumeric(mut word: String) -> String {
     word
 }
 
-/// Delete all character through and including the first appearance
+/// Delete all characters through and including the first appearance
 /// of character `ch` in inputted `&str` `s`. Program uses this to
 /// remove character through first tab or first space, a common task
 /// when dealing with diceware passphrase word lists that have dice roll
@@ -313,6 +350,21 @@ fn delete_through_first_char(s: &str, ch: char) -> &str {
     match memchr(ch as u8, s.as_bytes()) {
         None => s, // not found => return the whole string
         Some(pos) => &s[pos + 1..],
+    }
+}
+
+/// Delete all characters after and including the first appearance
+/// of character `ch` in inputted `&str` `s`.
+///
+/// Uses [memchr library](https://docs.rs/memchr/latest/memchr/)
+/// to find this character a bit quicker than standard function.
+///
+/// I outlined other approaches to this function in
+/// [a separate repo](https://github.com/sts10/splitter/blob/main/src/lib.rs).
+fn delete_after_first_char(s: &str, ch: char) -> &str {
+    match memchr(ch as u8, s.as_bytes()) {
+        None => s, // not found => return the whole string
+        Some(pos) => &s[0..pos],
     }
 }
 
