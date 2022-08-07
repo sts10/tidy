@@ -37,7 +37,7 @@ Optionally, the tool can...
 -   enforce a minimum [edit distance](https://en.wikipedia.org/wiki/Edit_distance) between words (`-d`)
 -   remove prefix words (see below) (`-P`)
 -   remove suffix words (`-U`)
--   remove all words with non-alphabetic characters from new list, leaving only words composed entirely of letters without accents (assumes an English alphabet) (`-L`)
+-   remove all words with non-alphabetic characters from new list
 -   straighten curly/smart quotes, i.e. replacing them with their "straight" equivalents (`-q`)
 -   guarantee a maximum shared prefix length (see below) (`-x`)
 -   print corresponding dice rolls before words, separated by a tab. Dice can have 2 to 36 sides. (`-D`)
@@ -108,9 +108,10 @@ OPTIONS:
     -l, --lowercase
             Lowercase all words on new list
 
-    -L, --remove-nonalphabetic
-            Remove all words with any non-alphabetic characters or diacritic characters from new
-            list (leaving only words composed entirely of letters [A-Z] or [a-z])
+    -L, --remove-non-latin-alphabetic
+            Remove all words with any characters not in the Latin alphabet (A through Z and a
+            through z). All words with accented or diacritic characters will be removed, as well as
+            any words with puncuation and internal whitespace
 
     -m, --minimum-word-length <MINIMUM_LENGTH>
             Set minimum word length
@@ -146,6 +147,10 @@ OPTIONS:
 
     -r, --reject <REJECT_LIST>
             Path(s) for optional list of words to reject. Can accept multiple files
+
+        --remove-nonalphabetic
+            Remove all words with non-alphabetic characters from new list. Words with diacritcis and
+            other non-Latin characters will remain
 
     -s, --delete-through-space
             Delete all characters through first space of each line

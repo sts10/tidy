@@ -20,9 +20,10 @@ pub struct TidyRequest {
     pub should_straighten_quotes: bool,
     pub should_remove_prefix_words: bool,
     pub should_remove_suffix_words: bool,
-    pub should_remove_nonalphabetic: bool,
     pub should_remove_nonalphanumeric: bool,
     pub should_delete_nonalphanumeric: bool,
+    pub should_remove_nonalphabetic: bool,
+    pub should_remove_non_latin_alphabetic: bool,
     pub should_remove_integers: bool,
     pub should_delete_integers: bool,
     pub should_delete_through_first_tab: bool,
@@ -236,6 +237,11 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     } else {
         tidied_list
     };
+    tidied_list = if req.should_remove_non_latin_alphabetic {
+        remove_non_latin_alphabetic(&tidied_list)
+    } else {
+        tidied_list
+    };
     tidied_list = if req.should_remove_integers {
         remove_integers(&tidied_list)
     } else {
@@ -445,21 +451,27 @@ fn remove_nonalphanumeric(list: &[String]) -> Vec<String> {
 /// that have only alphabetic characters in it.
 fn remove_nonalphabetic(list: &[String]) -> Vec<String> {
     let mut new_list = list.to_vec();
-    new_list.retain(|word| !word.chars().any(|chr| !is_alphabetic(chr as u16)));
+    new_list.retain(|word| !word.chars().any(|chr| !chr.is_alphabetic()));
     new_list
 }
 
-/// Helper function to determine if a given char as `u16` is a letter.
+fn remove_non_latin_alphabetic(list: &[String]) -> Vec<String> {
+    let mut new_list = list.to_vec();
+    new_list.retain(|word| !word.chars().any(|chr| !is_latin_alphabetic(chr as u16)));
+    new_list
+}
+/// Helper function to determine if a given char as `u16` is a
+/// Latin letter (A through Z or a through z, no diacritics).
 /// ```
-/// use tidy::is_alphabetic;
-/// assert_eq!(is_alphabetic('h' as u16), true);
-/// assert_eq!(is_alphabetic('A' as u16), true);
-/// assert_eq!(is_alphabetic('1' as u16), false);
-/// assert_eq!(is_alphabetic(',' as u16), false);
-/// assert_eq!(is_alphabetic('é' as u16), false);
-/// assert_eq!(is_alphabetic('ő' as u16), false);
+/// use tidy::is_latin_alphabetic;
+/// assert_eq!(is_latin_alphabetic('h' as u16), true);
+/// assert_eq!(is_latin_alphabetic('A' as u16), true);
+/// assert_eq!(is_latin_alphabetic('1' as u16), false);
+/// assert_eq!(is_latin_alphabetic(',' as u16), false);
+/// assert_eq!(is_latin_alphabetic('é' as u16), false);
+/// assert_eq!(is_latin_alphabetic('ő' as u16), false);
 /// ```
-pub fn is_alphabetic(chr: u16) -> bool {
+pub fn is_latin_alphabetic(chr: u16) -> bool {
     (chr >= 65 && chr <= 90) || (chr >= 97 && chr <= 122)
 }
 

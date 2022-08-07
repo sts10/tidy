@@ -93,11 +93,16 @@ struct Args {
     #[clap(short = 'n', long = "delete-nonalphanumeric")]
     delete_nonalphanumeric: bool,
 
-    /// Remove all words with any non-alphabetic characters or diacritic characters
-    /// from new list (leaving only words composed entirely of letters
-    /// [A-Z] or [a-z])
-    #[clap(short = 'L', long = "remove-nonalphabetic")]
+    /// Remove all words with non-alphabetic characters from new list. Words with diacritcis and
+    /// other non-Latin characters will remain.
+    #[clap(long = "remove-nonalphabetic")]
     remove_nonalphabetic: bool,
+
+    /// Remove all words with any characters not in the Latin alphabet (A through Z and a through
+    /// z). All words with accented or diacritic characters will be removed, as well as
+    /// any words with puncuation and internal whitespace.
+    #[clap(short = 'L', long = "remove-non-latin-alphabetic")]
+    remove_non_latin_alphabetic: bool,
 
     /// Remove all words with integers in them from list
     #[clap(short = 'I', long = "remove-integers")]
@@ -246,9 +251,10 @@ fn main() {
         should_remove_suffix_words: opt.remove_suffix_words,
         should_remove_integers: opt.remove_integers,
         should_delete_integers: opt.delete_integers,
-        should_remove_nonalphabetic: opt.remove_nonalphabetic,
         should_remove_nonalphanumeric: opt.remove_nonalphanumeric,
         should_delete_nonalphanumeric: opt.delete_nonalphanumeric,
+        should_remove_nonalphabetic: opt.remove_nonalphabetic,
+        should_remove_non_latin_alphabetic: opt.remove_non_latin_alphabetic,
         should_delete_through_first_tab: opt.delete_through_first_tab,
         should_delete_through_first_space: opt.delete_through_first_space,
         should_delete_through_first_comma: opt.delete_through_first_comma,

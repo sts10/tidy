@@ -1,7 +1,7 @@
 mod list_manipulation_tests {
     use tidy::*;
 
-    fn make_lists() -> (Vec<String>, Vec<String>) {
+    fn make_lists() -> (Vec<String>, Vec<String>, Vec<String>) {
         (
             vec![
                 "  zookeeper",
@@ -43,6 +43,27 @@ mod list_manipulation_tests {
                 "“smart”",
                 "‘quotes’",
                 "  h as spaces ",
+            ]
+            .iter()
+            .map(|x| x.to_string())
+            .collect(),
+            vec![
+                "Normal",
+                "the,2048",
+                "اج 12",
+                "11225	tab",
+                "11152 space",
+                "11156	word	tabs",
+                "word-with-hypens",
+                "Uppercase",
+                "hello109823",
+                "   ",
+                "",
+                "13910 word with spaces in it",
+                "comma,203478",
+                "京",
+                "can't",
+                "\"dumb quotes\"",
             ]
             .iter()
             .map(|x| x.to_string())
@@ -164,6 +185,53 @@ mod list_manipulation_tests {
         let new_list = tidy_list(this_tidy_request);
         assert!(new_list.contains(&"1968clad".to_string()));
         assert!(new_list.contains(&"take".to_string()));
+    }
+
+    #[test]
+    fn can_remove_nonalphanumeric_words_from_list() {
+        let this_tidy_request = TidyRequest {
+            list: make_lists().2,
+            should_remove_nonalphanumeric: true,
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
+
+        assert!(new_list.contains(&"Uppercase".to_string()));
+        assert!(new_list.contains(&"京".to_string()));
+        assert!(new_list.contains(&"hello109823".to_string()));
+        assert!(!new_list.contains(&"word-with-hypens".to_string()));
+        assert!(!new_list.contains(&"comma,203478".to_string()));
+    }
+
+    #[test]
+    fn can_remove_nonalphabetic_words_from_list() {
+        let this_tidy_request = TidyRequest {
+            list: make_lists().2,
+            should_remove_nonalphabetic: true,
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
+
+        assert!(new_list.contains(&"Uppercase".to_string()));
+        assert!(new_list.contains(&"京".to_string()));
+        assert!(!new_list.contains(&"hello109823".to_string()));
+        assert!(!new_list.contains(&"word-with-hypens".to_string()));
+        assert!(!new_list.contains(&"comma,203478".to_string()));
+    }
+    #[test]
+    fn can_remove_non_latin_alphabetic_words_from_list() {
+        let this_tidy_request = TidyRequest {
+            list: make_lists().2,
+            should_remove_non_latin_alphabetic: true,
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
+
+        assert!(new_list.contains(&"Uppercase".to_string()));
+        assert!(!new_list.contains(&"京".to_string()));
+        assert!(!new_list.contains(&"hello109823".to_string()));
+        assert!(!new_list.contains(&"word-with-hypens".to_string()));
+        assert!(!new_list.contains(&"comma,203478".to_string()));
     }
 
     #[test]
