@@ -230,7 +230,7 @@ OPTIONS:
 
 -   `tidy -P -x 4 --cut-to 6**5 --dice 6 --output diceware.txt 1password-2021.txt` Same as above, but use exponent notation to represent the `--cut-to` number, saving you some arithmetic.
 
--   `tidy -o d-and-d.txt -D 20 --cut-to 20**3 1password-2021.txt` Create an 8,000-word list where each word corresponds to 3 rolls of a 20-sided die (`06-07-07	dragon`).
+-   `tidy -o d-and-d.txt -D 20 --cut-to 20**3 wordlist.txt` Create an 8,000-word list where each word corresponds to 3 rolls of a 20-sided die (`06-07-07	dragon`). See [EFF's fandom-inspired wordlists](https://www.eff.org/deeplinks/2018/08/dragon-con-diceware) for more.
 
 ## List attributes
 
