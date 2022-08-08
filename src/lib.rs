@@ -16,7 +16,7 @@ pub struct TidyRequest {
     pub take_first: Option<usize>,
     pub take_rand: Option<usize>,
     pub sort_alphabetically: bool,
-    pub keep_metadata: Option<String>,
+    pub ignore_metadata: Option<String>,
     pub to_lowercase: bool,
     pub should_straighten_quotes: bool,
     pub should_remove_prefix_words: bool,
@@ -130,7 +130,7 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     let mut tidied_list = vec![];
     for word in &req.list {
         // haha, love this
-        // If user chose to keep metadata, split word vs. metadata on the first comma
+        // If user chose to ignore metadata, split word vs. metadata on the first comma
         // found.
         // We'll then do removals operations on the "word", ignoriong metadata.
         // Later, we'll re-add the metadata to the word.
@@ -139,7 +139,7 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         // when we re-add the metadata at the end. Default to comma, but can be changed
         // in match statement here.
         let mut delimiter_to_use = ",";
-        let (mut new_word, metadata) = match req.keep_metadata {
+        let (mut new_word, metadata) = match req.ignore_metadata {
             Some(ref delimiter) => {
                 delimiter_to_use = if delimiter == "space" {
                     " "

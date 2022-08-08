@@ -92,6 +92,12 @@ OPTIONS:
     -f, --force
             Force overwrite of output file if it exists
 
+    -g, --ignore-metadata <IGNORE_METADATA>
+            Ignore metadata after first given delimiter. Accepts delimiter string like ','. User can
+            write out "space" or "tab" for convenience. Treats anything before first instance of
+            delimiter as the "word". Only works with word removals, not word modifications (like to
+            lowercase)
+
     -h, --homophones <HOMOPHONES_LIST>
             Path(s) to file(s) containing homophone pairs. There must be one pair of homophones per
             line, separated by a comma (sun,son)
@@ -104,11 +110,6 @@ OPTIONS:
 
     -I, --remove-integers
             Remove all words with integers in them from list
-
-    -k, --keep-metadata <KEEP_METADATA>
-            Keep metadata after first delimiter. Accepts delimiter string like ','. User can write
-            out "space" or "tab" for easier use. Treats anything before first instance of delimiter
-            as the "word". Only works with word removals, not word modifications (like to lowercase)
 
     -l, --lowercase
             Lowercase all words on new list

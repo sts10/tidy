@@ -6,8 +6,8 @@
 /// We just want to "display" this information, rather than print it to files
 /// or stdout, so we use `eprintln!`
 use crate::split_and_vectorize;
-pub fn display_list_information(list: &[String], level: u8, keep_metadata: Option<String>) {
-    let list = match keep_metadata {
+pub fn display_list_information(list: &[String], level: u8, ignore_metadata: Option<String>) {
+    let list = match ignore_metadata {
         Some(ref delimiter) => {
             let mut just_the_words = vec![];
             for word in list {

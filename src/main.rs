@@ -61,13 +61,13 @@ struct Args {
     #[clap(long = "samples")]
     samples: bool,
 
-    /// Keep metadata after first delimiter. Accepts delimiter string like ','. User can
-    /// write out "space" or "tab" for easier use.
+    /// Ignore metadata after first given delimiter. Accepts delimiter string
+    /// like ','. User can write out "space" or "tab" for convenience.
     /// Treats anything before first instance of delimiter as
     /// the "word". Only works with word removals, not word modifications
     /// (like to lowercase)
-    #[clap(short = 'k', long = "keep-metadata")]
-    keep_metadata: Option<String>,
+    #[clap(short = 'g', long = "ignore-metadata")]
+    ignore_metadata: Option<String>,
 
     /// Do NOT sort outputted list alphabetically. Preserves original list order.
     /// Note that duplicates lines and blank lines will still be removed.
@@ -243,8 +243,8 @@ fn main() {
             return;
         }
     }
-    // Warn about limits of the Keep Metadata option
-    if opt.keep_metadata.is_some() {
+    // Warn about limits of the Ignore Metadata option
+    if opt.ignore_metadata.is_some() {
         if opt.to_lowercase
             || opt.straighten_quotes
             || opt.remove_prefix_words
@@ -263,7 +263,7 @@ fn main() {
             || opt.dice_sides.is_some()
             || opt.print_high_dice_sides_as_letters
         {
-            panic!("--keep-metadata option does not work with one of the other options you selected. Please reconsider. Exiting");
+            panic!("--ignore-metadata option does not work with one of the other options you selected. Please reconsider. Exiting");
         }
     }
     // Check if output file exists
@@ -280,7 +280,7 @@ fn main() {
         take_first: opt.take_first,
         take_rand: opt.take_rand,
         sort_alphabetically: !opt.no_alpha_sort,
-        keep_metadata: opt.keep_metadata.clone(),
+        ignore_metadata: opt.ignore_metadata.clone(),
         to_lowercase: opt.to_lowercase,
         should_straighten_quotes: opt.straighten_quotes,
         should_remove_prefix_words: opt.remove_prefix_words,
@@ -373,7 +373,7 @@ fn main() {
             eprintln!("Dry run complete");
         }
         if opt.attributes > 0 {
-            display_list_information(&tidied_list, opt.attributes, opt.keep_metadata);
+            display_list_information(&tidied_list, opt.attributes, opt.ignore_metadata);
         }
         if opt.samples {
             let samples = generate_samples(&tidied_list);
