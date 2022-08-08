@@ -24,6 +24,7 @@ pub struct TidyRequest {
     pub should_delete_nonalphanumeric: bool,
     pub should_remove_nonalphabetic: bool,
     pub should_remove_non_latin_alphabetic: bool,
+    pub should_remove_nonascii: bool,
     pub should_remove_integers: bool,
     pub should_delete_integers: bool,
     pub should_delete_through_first_tab: bool,
@@ -227,6 +228,11 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         tidied_list
     };
     // Move on to word removals
+    tidied_list = if req.should_remove_nonascii {
+        remove_nonascii(&tidied_list)
+    } else {
+        tidied_list
+    };
     tidied_list = if req.should_remove_nonalphanumeric {
         remove_nonalphanumeric(&tidied_list)
     } else {
@@ -455,6 +461,7 @@ fn remove_nonalphabetic(list: &[String]) -> Vec<String> {
     new_list
 }
 
+/// Remove all words that have any characters not 'A' through 'Z' or 'a' through 'z'
 fn remove_non_latin_alphabetic(list: &[String]) -> Vec<String> {
     let mut new_list = list.to_vec();
     new_list.retain(|word| !word.chars().any(|chr| !is_latin_alphabetic(chr as u16)));
@@ -473,6 +480,14 @@ fn remove_non_latin_alphabetic(list: &[String]) -> Vec<String> {
 /// ```
 pub fn is_latin_alphabetic(chr: u16) -> bool {
     (chr >= 65 && chr <= 90) || (chr >= 97 && chr <= 122)
+}
+
+/// Remove all words that have any characters that are not ASCII
+/// https://doc.rust-lang.org/std/primitive.char.html#method.is_ascii
+fn remove_nonascii(list: &[String]) -> Vec<String> {
+    let mut new_list = list.to_vec();
+    new_list.retain(|word| !word.chars().any(|chr| !chr.is_ascii()));
+    new_list
 }
 
 /// Search inputted list for any words that have any
@@ -517,7 +532,7 @@ fn dedup_without_sorting(list: &mut [String]) -> Vec<String> {
 /// Remove prefix words from the given Vector of `String`s.
 ///
 /// A brief example: If both "news" and "newspaper" are on the inputted list
-/// we may, for cryptographic reasons, want to remove the prefix word,
+/// we may, for security reasons, want to remove the prefix word,
 /// which is "news" in this case.
 fn remove_prefix_words(list: Vec<String>) -> Vec<String> {
     let mut list_without_prefix_words = list.to_vec();
@@ -544,7 +559,7 @@ fn remove_prefix_words(list: Vec<String>) -> Vec<String> {
 /// Remove suffix words from the given Vector of `String`s.
 ///
 /// A brief example: If both "news" and "newspaper" are on the inputted list
-/// we may, for cryptographic reasons, want to remove the suffix word,
+/// we may, for security reasons, want to remove the suffix word,
 /// which is "paper" in this case.
 fn remove_suffix_words(list: Vec<String>) -> Vec<String> {
     let mut list_without_suffix_words = list.to_vec();

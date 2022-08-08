@@ -104,6 +104,10 @@ struct Args {
     #[clap(short = 'L', long = "remove-non-latin-alphabetic")]
     remove_non_latin_alphabetic: bool,
 
+    /// Remove all words that have any non-ASCII characters from new list
+    #[clap(long = "remove-non-ascii")]
+    remove_nonascii: bool,
+
     /// Remove all words with integers in them from list
     #[clap(short = 'I', long = "remove-integers")]
     remove_integers: bool,
@@ -255,6 +259,7 @@ fn main() {
         should_delete_nonalphanumeric: opt.delete_nonalphanumeric,
         should_remove_nonalphabetic: opt.remove_nonalphabetic,
         should_remove_non_latin_alphabetic: opt.remove_non_latin_alphabetic,
+        should_remove_nonascii: opt.remove_nonascii,
         should_delete_through_first_tab: opt.delete_through_first_tab,
         should_delete_through_first_space: opt.delete_through_first_space,
         should_delete_through_first_comma: opt.delete_through_first_comma,

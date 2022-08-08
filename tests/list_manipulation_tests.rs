@@ -201,6 +201,7 @@ mod list_manipulation_tests {
         assert!(new_list.contains(&"hello109823".to_string()));
         assert!(!new_list.contains(&"word-with-hypens".to_string()));
         assert!(!new_list.contains(&"comma,203478".to_string()));
+        assert!(!new_list.contains(&"اج 12".to_string()));
     }
 
     #[test]
@@ -217,6 +218,7 @@ mod list_manipulation_tests {
         assert!(!new_list.contains(&"hello109823".to_string()));
         assert!(!new_list.contains(&"word-with-hypens".to_string()));
         assert!(!new_list.contains(&"comma,203478".to_string()));
+        assert!(!new_list.contains(&"اج 12".to_string()));
     }
     #[test]
     fn can_remove_non_latin_alphabetic_words_from_list() {
@@ -232,6 +234,24 @@ mod list_manipulation_tests {
         assert!(!new_list.contains(&"hello109823".to_string()));
         assert!(!new_list.contains(&"word-with-hypens".to_string()));
         assert!(!new_list.contains(&"comma,203478".to_string()));
+        assert!(!new_list.contains(&"اج 12".to_string()));
+    }
+
+    #[test]
+    fn can_remove_non_ascii_words_from_list() {
+        let this_tidy_request = TidyRequest {
+            list: make_lists().2,
+            should_remove_nonascii: true,
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
+
+        assert!(new_list.contains(&"Uppercase".to_string()));
+        assert!(new_list.contains(&"hello109823".to_string()));
+        assert!(new_list.contains(&"word-with-hypens".to_string()));
+        assert!(new_list.contains(&"comma,203478".to_string()));
+        assert!(!new_list.contains(&"京".to_string()));
+        assert!(!new_list.contains(&"اج 12".to_string()));
     }
 
     #[test]

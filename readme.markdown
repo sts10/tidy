@@ -148,6 +148,9 @@ OPTIONS:
     -r, --reject <REJECT_LIST>
             Path(s) for optional list of words to reject. Can accept multiple files
 
+        --remove-non-ascii
+            Remove all words that have any non-ASCII characters from new list
+
         --remove-nonalphabetic
             Remove all words with non-alphabetic characters from new list. Words with diacritcis and
             other non-Latin characters will remain
@@ -359,8 +362,8 @@ See [this repo](https://github.com/sts10/splitter) for more information.
 ## To do
 
 -   [X] Add option to remove suffix words 
--   [ ] Add option to remove words that have characters from certain character sets, for example non-ASCII characters
-<!-- - [ ] Investigate making the list variable as [FxHashSet](https://docs.rs/fxhash/0.2.1/fxhash/type.FxHashSet.html)<String> rather than a `Vec<String>` to potentially boost performance, as is done in [csafe](https://github.com/sts10/csafe/blob/main/src/lib.rs). Will probably need to write some benchmarks with Criterion to measure potential performance gains. -->
+-   [X] Add option to remove words that have characters from certain character sets, for example non-ASCII characters
+-   [ ] Investigate making the list variable as [FxHashSet](https://docs.rs/fxhash/0.2.1/fxhash/type.FxHashSet.html)<String> rather than a `Vec<String>` to potentially boost performance, as is done in [csafe](https://github.com/sts10/csafe/blob/main/src/lib.rs). Will probably need to write some benchmarks with Criterion to measure potential performance gains.
 
 ## Appendix: Where can I find some large word lists?
 
