@@ -314,7 +314,7 @@ fn main() {
                     writeln!(f, "{}", word).expect("Unable to write word to file");
                 }
             }
-            // If no output file destination, print resulting like, word by word
+            // If no output file destination, print resulting list, word by word,
             // to println (which goes to stdout, allowing for use of > on command like)
             None => {
                 for (i, word) in tidied_list.iter().enumerate() {
