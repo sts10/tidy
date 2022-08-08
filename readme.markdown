@@ -10,13 +10,13 @@ Tidy aims to help users create "_better_" word lists -- generally word lists tha
 
 Tidy performs basic list-cleaning operations like removing duplicates words and blank lines by default. It additionally provides various optional standardizations and filters, like lowercasing all words (`-l`), or removing words in with integers in them (`-I`), as well as protections against rare-but-possible passphrase pitfalls, such as prefix codes (`-P`) and low minimum word lengths (see below for explanations).
 
-Tidy also can make word lists more "typo-resistant" by enforcing a minimum edit distance (`-d`), removing homophones and/or enforcing a unique prefix length (`-x`), which can allow users to auto-complete words after a certain number of characters.
+Tidy also can make word lists more "typo-resistant" by enforcing a minimum edit distance (`-d`), removing homophones and/or enforcing a unique prefix length (`-x`), which can allow users to auto-complete words after a specified number of characters.
 
-Tidy can be used to create new word lists (for example, if given more than one list, it will combine and de-duplicate them) with desirable qualities, but it can also assist in audits of existing lists by removing duplicates and optionally printing notable information about a given word list (`-AA`), and/or some pseudorandomly generated sample passphrases (`--samples`).
+Tidy can be used to create new word lists (for example, if given more than one list, it will combine and de-duplicate them) with desirable qualities, but it can also assist in audits of existing lists by removing duplicates and optionally printing notable information about a given word list, and/or a handful of pseudorandomly generated sample passphrases (`--samples`).
 
 ## Features
 
-Given a text file with a word list, this tool will create a new word list in which...
+Given a text file with one word per line, this tool will create a new word list in which...
 
 -   duplicate lines (words) are removed
 -   empty lines have been removed
@@ -41,7 +41,7 @@ Optionally, the tool can...
 -   straighten curly/smart quotes, i.e. replacing them with their "straight" equivalents (`-q`)
 -   guarantee a maximum shared prefix length (see below) (`-x`)
 -   print corresponding dice rolls before words, separated by a tab. Dice can have 2 to 36 sides. (`-D`)
--   print information about the new list, such as entropy per word, to the terminal (`-A`)
+-   print information about the new list, such as entropy per word, to the terminal (`-A`, `-AA`, or `-AAA`, depending on how much information you want to be printed)
 
 If you do NOT want Tidy to sort list alphabetically, you can use the `--no-alpha` option.
 
