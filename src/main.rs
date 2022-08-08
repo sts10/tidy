@@ -72,7 +72,7 @@ struct Args {
     /// Do NOT sort outputted list alphabetically. Preserves original list order.
     /// Note that duplicates lines and blank lines will still be removed.
     #[clap(short = 'O', long = "no-alpha")]
-    no_alpha: bool,
+    no_alpha_sort: bool,
 
     /// Lowercase all words on new list
     #[clap(short = 'l', long = "lowercase")]
@@ -279,7 +279,7 @@ fn main() {
         list: make_vec_from_filenames(&opt.inputted_word_list),
         take_first: opt.take_first,
         take_rand: opt.take_rand,
-        sort_alphabetically: !opt.no_alpha,
+        sort_alphabetically: !opt.no_alpha_sort,
         keep_metadata: opt.keep_metadata.clone(),
         to_lowercase: opt.to_lowercase,
         should_straighten_quotes: opt.straighten_quotes,
