@@ -154,12 +154,12 @@ OPTIONS:
     -r, --reject <REJECT_LIST>
             Path(s) for optional list of words to reject. Can accept multiple files
 
-        --remove-non-ascii
-            Remove all words that have any non-ASCII characters from new list
-
         --remove-nonalphabetic
             Remove all words with non-alphabetic characters from new list. Words with diacritcis and
             other non-Latin characters will remain
+
+        --remove-nonascii
+            Remove all words that have any non-ASCII characters from new list
 
     -s, --delete-through-space
             Delete all characters through first space of each line

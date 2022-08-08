@@ -113,7 +113,7 @@ struct Args {
     remove_non_latin_alphabetic: bool,
 
     /// Remove all words that have any non-ASCII characters from new list
-    #[clap(long = "remove-non-ascii")]
+    #[clap(long = "remove-nonascii")]
     remove_nonascii: bool,
 
     /// Remove all words with integers in them from list
@@ -244,28 +244,33 @@ fn main() {
         }
     }
     // Warn about limits of the Ignore Metadata option
-    if opt.ignore_metadata.is_some() {
-        if opt.to_lowercase
-            || opt.straighten_quotes
-            || opt.remove_prefix_words
-            || opt.remove_suffix_words
-            || opt.delete_nonalphanumeric
-            || opt.delete_integers
-            || opt.delete_through_first_tab
-            || opt.delete_through_first_space
-            || opt.delete_through_first_comma
-            || opt.delete_after_first_tab
-            || opt.delete_after_first_space
-            || opt.delete_after_first_comma
-            || opt.minimum_edit_distance.is_some()
-            || opt.maximum_shared_prefix_length.is_some()
-            || opt.homophones_list.is_some()
-            || opt.dice_sides.is_some()
-            || opt.print_high_dice_sides_as_letters
-        {
-            panic!("--ignore-metadata option does not work with one of the other options you selected. Please reconsider. Exiting");
+    let ignore_metadata = match opt.ignore_metadata {
+        Some(delimiter) => {
+            if opt.to_lowercase
+                || opt.straighten_quotes
+                || opt.remove_prefix_words
+                || opt.remove_suffix_words
+                || opt.delete_nonalphanumeric
+                || opt.delete_integers
+                || opt.delete_through_first_tab
+                || opt.delete_through_first_space
+                || opt.delete_through_first_comma
+                || opt.delete_after_first_tab
+                || opt.delete_after_first_space
+                || opt.delete_after_first_comma
+                || opt.minimum_edit_distance.is_some()
+                || opt.maximum_shared_prefix_length.is_some()
+                || opt.homophones_list.is_some()
+                || opt.dice_sides.is_some()
+                || opt.print_high_dice_sides_as_letters
+            {
+                panic!("--ignore-metadata option does not work with one of the other options you selected. Please reconsider. Exiting");
+            } else {
+                parse_delimiter(delimiter)
+            }
         }
-    }
+        None => None,
+    };
     // Check if output file exists
     if let Some(ref output_file_name) = opt.output {
         if !opt.force_overwrite && Path::new(output_file_name).exists() {
@@ -280,7 +285,7 @@ fn main() {
         take_first: opt.take_first,
         take_rand: opt.take_rand,
         sort_alphabetically: !opt.no_alpha_sort,
-        ignore_metadata: opt.ignore_metadata.clone(),
+        ignore_metadata: ignore_metadata.clone(),
         to_lowercase: opt.to_lowercase,
         should_straighten_quotes: opt.straighten_quotes,
         should_remove_prefix_words: opt.remove_prefix_words,
@@ -373,10 +378,10 @@ fn main() {
             eprintln!("Dry run complete");
         }
         if opt.attributes > 0 {
-            display_list_information(&tidied_list, opt.attributes, opt.ignore_metadata);
+            display_list_information(&tidied_list, opt.attributes, ignore_metadata.clone());
         }
         if opt.samples {
-            let samples = generate_samples(&tidied_list);
+            let samples = generate_samples(&tidied_list, ignore_metadata);
             eprintln!("\nPseudorandomly generated sample passphrases");
             eprintln!("-------------------------------------------");
             for n in 0..30 {
@@ -388,6 +393,19 @@ fn main() {
             eprintln!();
         }
     }
+}
+
+/// Little helper function that allows users to write out whitespace
+/// delimiters "space" and "tab", rather than having to enter the whitespace
+/// characters literally.
+fn parse_delimiter(delimiter: String) -> Option<String> {
+    if delimiter == "space" {
+        return Some(" ".to_string());
+    } else if delimiter == "tab" {
+        return Some("\t".to_string());
+    } else {
+        return Some(delimiter);
+    };
 }
 
 #[cfg(test)]

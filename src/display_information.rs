@@ -11,14 +11,7 @@ pub fn display_list_information(list: &[String], level: u8, ignore_metadata: Opt
         Some(ref delimiter) => {
             let mut just_the_words = vec![];
             for word in list {
-                let delimiter_to_use = if delimiter == "space" {
-                    " "
-                } else if delimiter == "tab" {
-                    "\t"
-                } else {
-                    delimiter
-                };
-                let split_vec = split_and_vectorize(word, &delimiter_to_use);
+                let split_vec = split_and_vectorize(word, &delimiter);
                 // We're just going to use the word and ignore the
                 // metadata when calculating and printing attributes
                 just_the_words.push(split_vec[0].to_string());
@@ -105,11 +98,17 @@ pub fn display_list_information(list: &[String], level: u8, ignore_metadata: Opt
 use rand::seq::SliceRandom;
 /// Print 5 sample 6-word passphrases from the newly created
 /// word list.
-pub fn generate_samples(list: &[String]) -> Vec<String> {
+pub fn generate_samples(list: &[String], ignore_metadata: Option<String>) -> Vec<String> {
     let mut samples: Vec<String> = vec![];
     for _n in 0..30 {
         match list.choose(&mut rand::thread_rng()) {
-            Some(word) => samples.push(word.to_string()),
+            Some(word) => match ignore_metadata {
+                Some(ref delimiter) => {
+                    samples.push(split_and_vectorize(word, &delimiter)[0].to_string())
+                }
+
+                None => samples.push(word.to_string()),
+            },
             None => panic!("Couldn't pick a random word"),
         }
     }
