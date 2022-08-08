@@ -5,14 +5,35 @@
 ///
 /// We just want to "display" this information, rather than print it to files
 /// or stdout, so we use `eprintln!`
-pub fn display_list_information(list: &[String], level: u8) {
+use crate::split_and_vectorize;
+pub fn display_list_information(list: &[String], level: u8, keep_metadata: Option<String>) {
+    let list = match keep_metadata {
+        Some(ref delimiter) => {
+            let mut just_the_words = vec![];
+            for word in list {
+                let delimiter_to_use = if delimiter == "space" {
+                    " "
+                } else if delimiter == "tab" {
+                    "\t"
+                } else {
+                    delimiter
+                };
+                let split_vec = split_and_vectorize(word, &delimiter_to_use);
+                // We're just going to use the word and ignore the
+                // metadata when calculating and printing attributes
+                just_the_words.push(split_vec[0].to_string());
+            }
+            just_the_words
+        }
+        None => list.to_vec(),
+    };
     eprintln!("Attributes of new list");
     eprintln!("----------------------");
     let list_length = list.len();
     eprintln!("List length               : {} words", list_length);
     eprintln!(
         "Mean word length          : {:.2} characters",
-        mean_word_length(list)
+        mean_word_length(&list)
     );
     let shortest_word = list.iter().min_by(|a, b| a.len().cmp(&b.len())).unwrap();
     eprintln!(
@@ -26,19 +47,19 @@ pub fn display_list_information(list: &[String], level: u8) {
         longest_word.chars().count(),
         longest_word
     );
-    let free_of_prefix_words = !has_prefix_words(list);
+    let free_of_prefix_words = !has_prefix_words(&list);
     eprintln!("Free of prefix words      : {}", free_of_prefix_words);
 
-    let free_of_suffix_words = !has_suffix_words(list);
+    let free_of_suffix_words = !has_suffix_words(&list);
     eprintln!("Free of suffix words      : {}", free_of_suffix_words);
 
     let entropy_per_word = calc_entropy_per_word(list.len());
     eprintln!("Entropy per word          : {:.3} bits", entropy_per_word);
     eprintln!(
         "Efficiency per character  : {:.3} bits",
-        efficiency_per_character(list)
+        efficiency_per_character(&list)
     );
-    let assumed_entropy_per_character = assumed_entropy_per_character(list);
+    let assumed_entropy_per_character = assumed_entropy_per_character(&list);
     eprintln!(
         "Assumed entropy per char  : {:.3} bits",
         assumed_entropy_per_character
@@ -66,15 +87,15 @@ pub fn display_list_information(list: &[String], level: u8) {
     if level >= 2 {
         eprintln!(
             "Shortest edit distance    : {}",
-            find_shortest_edit_distance(list)
+            find_shortest_edit_distance(&list)
         );
         if level >= 3 {
             eprintln!(
                 "Mean edit distance        : {:.3}",
-                find_mean_edit_distance(list)
+                find_mean_edit_distance(&list)
             );
         }
-        let longest_shared_prefix = find_longest_shared_prefix(list);
+        let longest_shared_prefix = find_longest_shared_prefix(&list);
         eprintln!("Longest shared prefix     : {}", longest_shared_prefix);
         // Numbers of characters required to definitely get to a unique
         // prefix

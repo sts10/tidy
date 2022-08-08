@@ -280,7 +280,7 @@ fn main() {
         take_first: opt.take_first,
         take_rand: opt.take_rand,
         sort_alphabetically: !opt.no_alpha,
-        keep_metadata: opt.keep_metadata,
+        keep_metadata: opt.keep_metadata.clone(),
         to_lowercase: opt.to_lowercase,
         should_straighten_quotes: opt.straighten_quotes,
         should_remove_prefix_words: opt.remove_prefix_words,
@@ -373,7 +373,7 @@ fn main() {
             eprintln!("Dry run complete");
         }
         if opt.attributes > 0 {
-            display_list_information(&tidied_list, opt.attributes);
+            display_list_information(&tidied_list, opt.attributes, opt.keep_metadata);
         }
         if opt.samples {
             let samples = generate_samples(&tidied_list);
