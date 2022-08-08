@@ -110,7 +110,7 @@ pub fn read_homophones_list_from_filenames(filenames: &[PathBuf]) -> Vec<(String
     homophones_list
 }
 
-/// Simple helper functions that splits a `str` by a given substring `str`,
+/// Simple helper function that splits a `str` by a given substring `str`,
 /// Then returns a Vector of `str`s.
 /// ```
 /// use tidy::split_and_vectorize;
@@ -126,79 +126,120 @@ pub fn split_and_vectorize<'a>(string_to_split: &'a str, splitter: &str) -> Vec<
 /// and performs whatever functions the user has requesteed to
 /// perform on the list.
 pub fn tidy_list(req: TidyRequest) -> Vec<String> {
-    // guess this function is what I should clean-up next...
-    // Remove blank lines first
-    let mut tidied_list = remove_blank_lines(&req.list);
-    tidied_list = if req.should_delete_through_first_tab {
-        tidied_list
-            .iter()
-            // Should figure out how to remove these to_string calls
-            .map(|w| delete_through_first_char(w, '\t').to_string())
-            .collect()
-    } else {
-        tidied_list
-    };
-    tidied_list = if req.should_delete_through_first_space {
-        tidied_list
-            .iter()
-            .map(|w| delete_through_first_char(w, ' ').to_string())
-            .collect()
-    } else {
-        tidied_list
-    };
-    tidied_list = if req.should_delete_through_first_comma {
-        tidied_list
-            .iter()
-            .map(|w| delete_through_first_char(w, ',').to_string())
-            .collect()
-    } else {
-        tidied_list
-    };
-    tidied_list = if req.should_delete_after_first_tab {
-        tidied_list
-            .iter()
-            .map(|w| delete_after_first_char(w, '\t').to_string())
-            .collect()
-    } else {
-        tidied_list
-    };
-    tidied_list = if req.should_delete_after_first_space {
-        tidied_list
-            .iter()
-            .map(|w| delete_after_first_char(w, ' ').to_string())
-            .collect()
-    } else {
-        tidied_list
-    };
-    tidied_list = if req.should_delete_after_first_comma {
-        tidied_list
-            .iter()
-            .map(|w| delete_after_first_char(w, ',').to_string())
-            .collect()
-    } else {
-        tidied_list
-    };
+    let mut tidied_list = vec![];
+    for word in &req.list {
+        let mut new_word = word.to_string();
+        // Important to trim starting and ending whitespace first.
+        new_word = new_word.trim_start().trim_end().to_string();
 
-    tidied_list = if req.should_delete_integers {
-        tidied_list
-            .iter()
-            .map(|w| delete_integers(w.to_string()))
-            .collect()
-    } else {
-        tidied_list
-    };
-    tidied_list = if req.should_delete_nonalphanumeric {
-        tidied_list
-            .iter()
-            .map(|w| delete_nonalphanumeric(w.to_string()))
-            .collect()
-    } else {
-        tidied_list
-    };
-    tidied_list = trim_whitespace(&tidied_list);
-    // We're going to check for blank lines again in
-    // case we made any lines blank with delete/trim calls
-    tidied_list = remove_blank_lines(&tidied_list);
+        // First, remove words that should be removed
+        // Could switch to an Option?
+        // let new_word: Option<String> = Some(new_word);
+
+        if req.should_remove_nonascii {
+            // https://doc.rust-lang.org/std/primitive.char.html#method.is_ascii
+            if new_word.chars().any(|chr| !chr.is_ascii()) {
+                new_word = "".to_string();
+                // new_word = None
+            }
+        }
+        if req.should_remove_nonalphanumeric {
+            if new_word.chars().any(|c| !c.is_alphanumeric()) {
+                new_word = "".to_string();
+            }
+        }
+        if req.should_remove_nonalphabetic {
+            if new_word.chars().any(|c| !c.is_alphabetic()) {
+                new_word = "".to_string();
+            }
+        }
+        if req.should_remove_non_latin_alphabetic {
+            if new_word.chars().any(|chr| !is_latin_alphabetic(chr as u16)) {
+                new_word = "".to_string();
+            }
+        }
+        if req.should_remove_integers {
+            if new_word.chars().any(|c| c.is_numeric()) {
+                new_word = "".to_string();
+            }
+        }
+
+        match req.reject_list {
+            Some(ref reject_list) => {
+                if reject_list.contains(&new_word) {
+                    new_word = "".to_string();
+                }
+            }
+            None => (),
+        };
+
+        match req.approved_list {
+            Some(ref approved_list) => {
+                if !approved_list.contains(&new_word) {
+                    new_word = "".to_string();
+                }
+            }
+            None => (),
+        };
+
+        // trim whitespace
+        new_word = new_word.trim_start().trim_end().to_string();
+
+        match req.minimum_length {
+            Some(minimum_length) => {
+                if new_word.chars().count() < minimum_length {
+                    new_word = "".to_string();
+                }
+            }
+            None => (),
+        };
+        match req.maximum_length {
+            Some(maximum_length) => {
+                if new_word.chars().count() > maximum_length {
+                    new_word = "".to_string();
+                }
+            }
+            None => (),
+        };
+        if req.should_delete_through_first_tab {
+            new_word = delete_through_first_char(&new_word, '\t').to_string();
+        }
+        if req.should_delete_through_first_space {
+            new_word = delete_through_first_char(&new_word, ' ').to_string();
+        }
+        if req.should_delete_through_first_comma {
+            new_word = delete_through_first_char(&new_word, ',').to_string();
+        }
+        if req.should_delete_after_first_tab {
+            new_word = delete_after_first_char(&new_word, '\t').to_string();
+        }
+        if req.should_delete_after_first_space {
+            new_word = delete_after_first_char(&new_word, ' ').to_string();
+        }
+        if req.should_delete_after_first_comma {
+            new_word = delete_after_first_char(&new_word, ',').to_string();
+        }
+        if req.should_delete_integers {
+            new_word = delete_integers(new_word.to_string());
+        }
+        if req.should_delete_nonalphanumeric {
+            new_word = delete_nonalphanumeric(new_word.to_string());
+        }
+        if req.to_lowercase {
+            new_word = new_word.to_ascii_lowercase();
+        }
+        if req.should_straighten_quotes {
+            new_word = straighten_quotes(&new_word).to_string();
+        }
+
+        // trim whitespace
+        new_word = new_word.trim_start().trim_end().to_string();
+        // check if blank
+        // if new_word.is_some() && new_word != Some("") {
+        if new_word != "" {
+            tidied_list.push(new_word);
+        }
+    }
     // Now truncate list, if requested
     // Maybe should move this up in the order though...
     tidied_list = match req.take_first {
@@ -217,58 +258,10 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         }
         None => tidied_list,
     };
-    tidied_list = if req.to_lowercase {
-        tidied_list.iter().map(|w| w.to_ascii_lowercase()).collect()
-    } else {
-        tidied_list
-    };
-    tidied_list = if req.should_straighten_quotes {
-        tidied_list.iter().map(|w| straighten_quotes(w)).collect()
-    } else {
-        tidied_list
-    };
-    // Move on to word removals
-    tidied_list = if req.should_remove_nonascii {
-        remove_nonascii(&tidied_list)
-    } else {
-        tidied_list
-    };
-    tidied_list = if req.should_remove_nonalphanumeric {
-        remove_nonalphanumeric(&tidied_list)
-    } else {
-        tidied_list
-    };
-    tidied_list = if req.should_remove_nonalphabetic {
-        remove_nonalphabetic(&tidied_list)
-    } else {
-        tidied_list
-    };
-    tidied_list = if req.should_remove_non_latin_alphabetic {
-        remove_non_latin_alphabetic(&tidied_list)
-    } else {
-        tidied_list
-    };
-    tidied_list = if req.should_remove_integers {
-        remove_integers(&tidied_list)
-    } else {
-        tidied_list
-    };
-    tidied_list = match req.reject_list {
-        Some(reject_list) => remove_reject_words(tidied_list, reject_list),
-        None => tidied_list,
-    };
-    tidied_list = match req.approved_list {
-        Some(approved_list) => remove_words_not_on_approved_list(tidied_list, approved_list),
-        None => tidied_list,
-    };
-    tidied_list = match req.minimum_length {
-        Some(minimum_length) => remove_words_below_minimum_length(tidied_list, minimum_length),
-        None => tidied_list,
-    };
-    tidied_list = match req.maximum_length {
-        Some(maximum_length) => remove_words_above_maximum_length(tidied_list, maximum_length),
-        None => tidied_list,
-    };
+    // Some operations are just a bit too complex for
+    // me to figure out how to do on a per-word basis
+    // at this time. Maybe something to revisit in the
+    // future
     tidied_list = match req.homophones_list {
         Some(homophones_list) => remove_homophones(tidied_list, homophones_list),
         None => tidied_list,
@@ -300,8 +293,6 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     };
 
     // Sort and dedup here
-    // tidied_list = sort_and_dedup(&mut tidied_list);
-
     if req.sort_alphabetically {
         tidied_list.sort();
     }
@@ -318,8 +309,9 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         }
         None => tidied_list,
     };
-    // Finally, sort and dedup list (for final time)
-    // tidied_list = sort_and_dedup(&mut tidied_list);
+    // Finally, sort and dedup list one more time
+    // (probably unneccesary, since we've only cut
+    // words since that last time we sorted and de-duped.
     if req.sort_alphabetically {
         tidied_list.sort();
     }
@@ -435,38 +427,6 @@ pub fn get_prefix(word: &str, length: usize) -> String {
     word.chars().take(length).collect::<String>()
 }
 
-/// Iterates through a list of lines. Only `retain` lines
-/// that are not empty (`!line.is_empty()`)
-fn remove_blank_lines(list: &[String]) -> Vec<String> {
-    let mut new_list = list.to_vec();
-    new_list.retain(|line| !line.is_empty());
-    new_list
-}
-
-/// Search inputted list for any words that have any
-/// non-alphanumeric characters in it. Retain only words
-/// that have only alphanumeric characters in it.
-fn remove_nonalphanumeric(list: &[String]) -> Vec<String> {
-    let mut new_list = list.to_vec();
-    new_list.retain(|word| !word.chars().any(|c| !c.is_alphanumeric()));
-    new_list
-}
-
-/// Search inputted list for any words that have any
-/// non-alphabetic characters in them. Retain only words
-/// that have only alphabetic characters in it.
-fn remove_nonalphabetic(list: &[String]) -> Vec<String> {
-    let mut new_list = list.to_vec();
-    new_list.retain(|word| !word.chars().any(|chr| !chr.is_alphabetic()));
-    new_list
-}
-
-/// Remove all words that have any characters not 'A' through 'Z' or 'a' through 'z'
-fn remove_non_latin_alphabetic(list: &[String]) -> Vec<String> {
-    let mut new_list = list.to_vec();
-    new_list.retain(|word| !word.chars().any(|chr| !is_latin_alphabetic(chr as u16)));
-    new_list
-}
 /// Helper function to determine if a given char as `u16` is a
 /// Latin letter (A through Z or a through z, no diacritics).
 /// ```
@@ -480,31 +440,6 @@ fn remove_non_latin_alphabetic(list: &[String]) -> Vec<String> {
 /// ```
 pub fn is_latin_alphabetic(chr: u16) -> bool {
     (chr >= 65 && chr <= 90) || (chr >= 97 && chr <= 122)
-}
-
-/// Remove all words that have any characters that are not ASCII
-/// https://doc.rust-lang.org/std/primitive.char.html#method.is_ascii
-fn remove_nonascii(list: &[String]) -> Vec<String> {
-    let mut new_list = list.to_vec();
-    new_list.retain(|word| !word.chars().any(|chr| !chr.is_ascii()));
-    new_list
-}
-
-/// Search inputted list for any words that have any
-/// integers in them (as determined by `is_numeric()`).
-/// Retain only words that don't have any integers in them.
-fn remove_integers(list: &[String]) -> Vec<String> {
-    let mut new_list = list.to_vec();
-    new_list.retain(|word| !word.chars().any(|c| c.is_numeric()));
-    new_list
-}
-
-/// Iterates through list of `String`s, removing leading
-/// and trailing whitespace from each `String`.
-fn trim_whitespace(list: &[String]) -> Vec<String> {
-    list.iter()
-        .map(|w| w.trim_start().trim_end().to_string())
-        .collect()
 }
 
 /// Replaces curly or smart quotes with straight quotes.
@@ -616,44 +551,6 @@ fn enfore_minimum_edit_distance(list: Vec<String>, minimum_edit_distance: usize)
         // To do this, we return true to the retain.
         true
     });
-    new_list
-}
-
-/// Remove all words on the list that are on the given `reject_list`.
-/// This `reject_list`, a Vector of `String`s, is read from a file.
-fn remove_reject_words(list: Vec<String>, reject_list: Vec<String>) -> Vec<String> {
-    let mut new_list = list.to_vec();
-    new_list.retain(|x| !reject_list.contains(x));
-    new_list
-}
-
-/// Remove all words on the list that are NOT on the given `approved_list`
-/// This `approved_list`, a Vector of `String`s, is read from a file.
-fn remove_words_not_on_approved_list(list: Vec<String>, approved_list: Vec<String>) -> Vec<String> {
-    let mut new_list = list.to_vec();
-    new_list.retain(|x| approved_list.contains(x));
-    new_list
-}
-
-/// Remove words that are below the inputted `minimum_length`.
-///
-/// Any words equal to the inputted `minimum_length` will be preserved.
-/// For example, if `minimum_length` is set to `4`, 4-character
-/// words like "star" will be preserved.
-fn remove_words_below_minimum_length(list: Vec<String>, minimum_length: usize) -> Vec<String> {
-    let mut new_list = list.to_vec();
-    new_list.retain(|w| w.chars().count() >= minimum_length);
-    new_list
-}
-
-/// Remove words that are above the inputted `maximum_length`.
-///
-/// Any words equal to the inputted `maximum_length` will be preserved.
-/// For example, if `maximum_length` is set to `9`, 9-character
-/// words like "alignment" will be preserved.
-fn remove_words_above_maximum_length(list: Vec<String>, maximum_length: usize) -> Vec<String> {
-    let mut new_list = list.to_vec();
-    new_list.retain(|w| w.chars().count() <= maximum_length);
     new_list
 }
 

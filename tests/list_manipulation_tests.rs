@@ -280,11 +280,9 @@ mod list_manipulation_tests {
         // Check that it only removes characters through first space, rather than just
         // between first space and second space, for example
         assert!(new_list.contains(&"word with spaces in it".to_string()));
-        // If has a leading space, just removes the first leading space
-        // Tidy trims whitespace AFTER the delete_through_character function,
-        // so that doesn't affect this example
-        // (Maybe should trim leading whitespace first though...)
-        assert!(new_list.contains(&"h as spaces".to_string()));
+        // Tidy trims leading whitespace first, so the "h"
+        // will be cut here.
+        assert!(new_list.contains(&"as spaces".to_string()));
     }
     #[test]
     fn can_delete_through_first_comma() {
@@ -493,7 +491,7 @@ mod list_manipulation_tests {
 
     #[test]
     fn can_remove_all_words_not_on_approved_list_words() {
-        let approved_words: Vec<String> = vec!["take", "vacation", "airplane"]
+        let approved_words: Vec<String> = vec!["take", "vAcation", "airplane"]
             .iter()
             .map(|x| x.to_string())
             .collect();
@@ -501,12 +499,11 @@ mod list_manipulation_tests {
         let this_tidy_request = TidyRequest {
             list: make_lists().1,
             approved_list: Some(approved_words),
-            to_lowercase: true,
             ..Default::default()
         };
         let new_list = tidy_list(this_tidy_request);
         assert!(new_list.contains(&"take".to_string()));
-        assert!(new_list.contains(&"vacation".to_string()));
+        assert!(new_list.contains(&"vAcation".to_string()));
         assert!(!new_list.contains(&"carnival".to_string()));
         assert!(!new_list.contains(&"wizard".to_string()));
         assert!(!new_list.contains(&"airplane".to_string()));
