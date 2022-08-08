@@ -16,6 +16,7 @@ pub struct TidyRequest {
     pub take_first: Option<usize>,
     pub take_rand: Option<usize>,
     pub sort_alphabetically: bool,
+    pub keep_metadata: Option<String>,
     pub to_lowercase: bool,
     pub should_straighten_quotes: bool,
     pub should_remove_prefix_words: bool,
@@ -128,7 +129,36 @@ pub fn split_and_vectorize<'a>(string_to_split: &'a str, splitter: &str) -> Vec<
 pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     let mut tidied_list = vec![];
     for word in &req.list {
-        let mut new_word = word.to_string();
+        // haha, love this
+        // If user chose to keep metadata, split word vs. metadata on the first comma
+        // found.
+        // We'll then do removals operations on the "word", ignoriong metadata.
+        // Later, we'll re-add the metadata to the word.
+
+        // We need delimiter_to_use to have a broad scope so that we can use it
+        // when we re-add the metadata at the end. Default to comma, but can be changed
+        // in match statement here.
+        let mut delimiter_to_use = ",";
+        let (mut new_word, metadata) = match req.keep_metadata {
+            Some(ref delimiter) => {
+                delimiter_to_use = if delimiter == "space" {
+                    " "
+                } else if delimiter == "tab" {
+                    "\t"
+                } else {
+                    delimiter
+                };
+                let split_vec = split_and_vectorize(word, &delimiter_to_use);
+                if split_vec.len() == 1 {
+                    eprintln!("No metadata found for word: {:?}", word);
+                    (word.to_string(), None)
+                } else {
+                    (split_vec[0].to_string(), Some(split_vec[1]))
+                }
+            }
+            None => (word.to_string(), None),
+        };
+
         // Important to trim starting and ending whitespace first.
         new_word = new_word.trim_start().trim_end().to_string();
 
@@ -201,6 +231,22 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
             }
             None => (),
         };
+
+        // trim whitespace
+        new_word = new_word.trim_start().trim_end().to_string();
+
+        // If there was metadata, re-add it to the word now.
+        if new_word != "" {
+            match metadata {
+                Some(metadata) => new_word = new_word + delimiter_to_use + metadata,
+                None => (),
+            };
+        }
+
+        // trim whitespace
+        new_word = new_word.trim_start().trim_end().to_string();
+
+        // Now on to word MODIFICATIONS, rather than word removals
         if req.should_delete_through_first_tab {
             new_word = delete_through_first_char(&new_word, '\t').to_string();
         }

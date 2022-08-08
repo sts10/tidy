@@ -61,6 +61,14 @@ struct Args {
     #[clap(long = "samples")]
     samples: bool,
 
+    /// Keep metadata after first delimiter. Accepts delimiter string like ','. User can
+    /// write out "space" or "tab" for easier use.
+    /// Treats anything before first instance of delimiter as
+    /// the "word". Only works with word removals, not word modifications
+    /// (like to lowercase)
+    #[clap(short = 'K', long = "keep-metadata")]
+    keep_metadata: Option<String>,
+
     /// Do NOT sort outputted list alphabetically. Preserves original list order.
     /// Note that duplicates lines and blank lines will still be removed.
     #[clap(short = 'O', long = "no-alpha")]
@@ -235,6 +243,29 @@ fn main() {
             return;
         }
     }
+    // Warn about limits of the Keep Metadata option
+    if opt.keep_metadata.is_some() {
+        if opt.to_lowercase
+            || opt.straighten_quotes
+            || opt.remove_prefix_words
+            || opt.remove_suffix_words
+            || opt.delete_nonalphanumeric
+            || opt.delete_integers
+            || opt.delete_through_first_tab
+            || opt.delete_through_first_space
+            || opt.delete_through_first_comma
+            || opt.delete_after_first_tab
+            || opt.delete_after_first_space
+            || opt.delete_after_first_comma
+            || opt.minimum_edit_distance.is_some()
+            || opt.maximum_shared_prefix_length.is_some()
+            || opt.homophones_list.is_some()
+            || opt.dice_sides.is_some()
+            || opt.print_high_dice_sides_as_letters
+        {
+            panic!("--keep-metadata option does not work with one of the other options you selected. Please reconsider. Exiting");
+        }
+    }
     // Check if output file exists
     if let Some(ref output_file_name) = opt.output {
         if !opt.force_overwrite && Path::new(output_file_name).exists() {
@@ -249,6 +280,7 @@ fn main() {
         take_first: opt.take_first,
         take_rand: opt.take_rand,
         sort_alphabetically: !opt.no_alpha,
+        keep_metadata: opt.keep_metadata,
         to_lowercase: opt.to_lowercase,
         should_straighten_quotes: opt.straighten_quotes,
         should_remove_prefix_words: opt.remove_prefix_words,
