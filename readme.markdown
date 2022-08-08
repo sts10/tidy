@@ -105,6 +105,11 @@ OPTIONS:
     -I, --remove-integers
             Remove all words with integers in them from list
 
+    -K, --keep-metadata <KEEP_METADATA>
+            Keep metadata after first delimiter. Accepts delimiter string like ','. User can write
+            out "space" or "tab" for easier use. Treats anything before first instance of delimiter
+            as the "word". Only works with word removals, not word modifications (like to lowercase)
+
     -l, --lowercase
             Lowercase all words on new list
 
