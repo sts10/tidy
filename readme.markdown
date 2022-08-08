@@ -90,7 +90,7 @@ OPTIONS:
     -f, --force
             Force overwrite of output file if it exists
 
-    -g, --ignore-metadata <IGNORE_METADATA>
+    -g, --ignore-metadata <IGNORE_METADATA_DELIMITER>
             Ignore metadata after first given delimiter. Accepts delimiter character like ','.
             Maximum of one character. Use 't' for tab and 's' for space. Treats anything before
             first instance of delimiter as the "word". Only works with word removals, not word

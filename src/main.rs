@@ -67,7 +67,7 @@ struct Args {
     /// the "word". Only works with word removals, not word modifications
     /// (like to lowercase)
     #[clap(short = 'g', long = "ignore-metadata")]
-    ignore_metadata: Option<char>,
+    ignore_metadata_delimiter: Option<char>,
 
     /// Do NOT sort outputted list alphabetically. Preserves original list order.
     /// Note that duplicates lines and blank lines will still be removed.
@@ -230,7 +230,7 @@ fn main() {
         }
     }
     // Warn about limits of the Ignore Metadata option
-    let ignore_metadata = match opt.ignore_metadata {
+    let ignore_metadata = match opt.ignore_metadata_delimiter {
         Some(delimiter) => {
             if opt.to_lowercase
                 || opt.straighten_quotes
