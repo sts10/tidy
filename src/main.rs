@@ -66,7 +66,7 @@ struct Args {
     /// Treats anything before first instance of delimiter as
     /// the "word". Only works with word removals, not word modifications
     /// (like to lowercase)
-    #[clap(short = 'K', long = "keep-metadata")]
+    #[clap(short = 'k', long = "keep-metadata")]
     keep_metadata: Option<String>,
 
     /// Do NOT sort outputted list alphabetically. Preserves original list order.
