@@ -61,13 +61,13 @@ struct Args {
     #[clap(long = "samples")]
     samples: bool,
 
-    /// Ignore metadata after first given delimiter. Accepts delimiter string
-    /// like ','. User can write out "space" or "tab" for convenience.
+    /// Ignore metadata after first given delimiter. Accepts delimiter character
+    /// like ','. Maximum of one character. Use 't' for tab and 's' for space.
     /// Treats anything before first instance of delimiter as
     /// the "word". Only works with word removals, not word modifications
     /// (like to lowercase)
     #[clap(short = 'g', long = "ignore-metadata")]
-    ignore_metadata: Option<String>,
+    ignore_metadata: Option<char>,
 
     /// Do NOT sort outputted list alphabetically. Preserves original list order.
     /// Note that duplicates lines and blank lines will still be removed.
@@ -124,29 +124,15 @@ struct Args {
     #[clap(short = 'i', long = "delete-integers")]
     delete_integers: bool,
 
-    /// Delete all characters through first tab of each line
-    #[clap(short = 't', long = "delete-through-tab")]
-    delete_through_first_tab: bool,
+    /// Delete all characters after given delimiter (including the delimiter).
+    /// Maximum of one character. Use 't' for tab and 's' for space.
+    #[clap(short = 'd', long = "delete-after")]
+    delete_after_delimiter: Option<char>,
 
-    /// Delete all characters through first space of each line
-    #[clap(short = 's', long = "delete-through-space")]
-    delete_through_first_space: bool,
-
-    /// Delete all characters through first comma of each line
-    #[clap(long = "delete-through-comma")]
-    delete_through_first_comma: bool,
-
-    /// Delete all characters after first tab of each line
-    #[clap(short = 'T', long = "delete-after-tab")]
-    delete_after_first_tab: bool,
-
-    /// Delete all characters after first space of each line
-    #[clap(short = 'S', long = "delete-after-space")]
-    delete_after_first_space: bool,
-
-    /// Delete all characters after first comma of each line
-    #[clap(short = 'C', long = "delete-after-comma")]
-    delete_after_first_comma: bool,
+    /// Delete all characters up to and including given delimiter.
+    /// Maximum of one character. Use 't' for tab and 's' for space.
+    #[clap(short = 'D', long = "delete-through")]
+    delete_through_delimiter: Option<char>,
 
     /// Only take first N words from inputted word list.
     /// If two or more word lists are inputted, it will
@@ -177,7 +163,7 @@ struct Args {
 
     /// Set minimum edit distance between words, which
     /// can reduce the cost of typos when entering words
-    #[clap(short = 'd', long = "minimum-edit-distance")]
+    #[clap(long = "minimum-edit-distance")]
     minimum_edit_distance: Option<usize>,
 
     /// Set number of leading characters to get to a unique prefix,
@@ -205,7 +191,7 @@ struct Args {
 
     /// Print dice roll next to word in output. Set number of sides
     /// of dice. Must be between 2 and 36. Use 6 for normal dice.
-    #[clap(short = 'D', long = "dice")]
+    #[clap(long = "dice")]
     dice_sides: Option<u8>,
 
     /// When printing dice roll next to word in output, use letters to represent
@@ -252,12 +238,8 @@ fn main() {
                 || opt.remove_suffix_words
                 || opt.delete_nonalphanumeric
                 || opt.delete_integers
-                || opt.delete_through_first_tab
-                || opt.delete_through_first_space
-                || opt.delete_through_first_comma
-                || opt.delete_after_first_tab
-                || opt.delete_after_first_space
-                || opt.delete_after_first_comma
+                || opt.delete_through_delimiter.is_some()
+                || opt.delete_after_delimiter.is_some()
                 || opt.minimum_edit_distance.is_some()
                 || opt.maximum_shared_prefix_length.is_some()
                 || opt.homophones_list.is_some()
@@ -271,6 +253,16 @@ fn main() {
         }
         None => None,
     };
+
+    let delete_after_delimiter = match opt.delete_after_delimiter {
+        Some(delimiter) => parse_delimiter(delimiter),
+        None => None,
+    };
+    let delete_through_delimiter = match opt.delete_through_delimiter {
+        Some(delimiter) => parse_delimiter(delimiter),
+        None => None,
+    };
+
     // Check if output file exists
     if let Some(ref output_file_name) = opt.output {
         if !opt.force_overwrite && Path::new(output_file_name).exists() {
@@ -285,7 +277,7 @@ fn main() {
         take_first: opt.take_first,
         take_rand: opt.take_rand,
         sort_alphabetically: !opt.no_alpha_sort,
-        ignore_metadata: ignore_metadata.clone(),
+        ignore_metadata: ignore_metadata,
         to_lowercase: opt.to_lowercase,
         should_straighten_quotes: opt.straighten_quotes,
         should_remove_prefix_words: opt.remove_prefix_words,
@@ -297,12 +289,8 @@ fn main() {
         should_remove_nonalphabetic: opt.remove_nonalphabetic,
         should_remove_non_latin_alphabetic: opt.remove_non_latin_alphabetic,
         should_remove_nonascii: opt.remove_nonascii,
-        should_delete_through_first_tab: opt.delete_through_first_tab,
-        should_delete_through_first_space: opt.delete_through_first_space,
-        should_delete_through_first_comma: opt.delete_through_first_comma,
-        should_delete_after_first_tab: opt.delete_after_first_tab,
-        should_delete_after_first_space: opt.delete_after_first_space,
-        should_delete_after_first_comma: opt.delete_after_first_comma,
+        should_delete_after_first_delimiter: delete_after_delimiter,
+        should_delete_through_first_delimiter: delete_through_delimiter,
 
         // If given more than one file of reject words, combine them
         // right here.
@@ -378,7 +366,7 @@ fn main() {
             eprintln!("Dry run complete");
         }
         if opt.attributes > 0 {
-            display_list_information(&tidied_list, opt.attributes, ignore_metadata.clone());
+            display_list_information(&tidied_list, opt.attributes, ignore_metadata);
         }
         if opt.samples {
             let samples = generate_samples(&tidied_list, ignore_metadata);
@@ -396,13 +384,13 @@ fn main() {
 }
 
 /// Little helper function that allows users to write out whitespace
-/// delimiters "space" and "tab", rather than having to enter the whitespace
+/// delimiters "s" and "t", rather than having to enter the whitespace
 /// characters literally.
-fn parse_delimiter(delimiter: String) -> Option<String> {
-    if delimiter == "space" {
-        return Some(" ".to_string());
-    } else if delimiter == "tab" {
-        return Some("\t".to_string());
+fn parse_delimiter(delimiter: char) -> Option<char> {
+    if delimiter == 's' {
+        return Some(' ');
+    } else if delimiter == 't' {
+        return Some('\t');
     } else {
         return Some(delimiter);
     };

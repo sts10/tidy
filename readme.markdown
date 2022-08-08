@@ -69,22 +69,20 @@ OPTIONS:
             expressions in the form of base**exponent (helpful for generating diceware lists). Cuts
             are done randomly
 
-    -C, --delete-after-comma
-            Delete all characters after first comma of each line
+    -d, --delete-after <DELETE_AFTER_DELIMITER>
+            Delete all characters after given delimiter (including the delimiter). Maximum of one
+            character. Use 't' for tab and 's' for space
 
-    -d, --minimum-edit-distance <MINIMUM_EDIT_DISTANCE>
-            Set minimum edit distance between words, which can reduce the cost of typos when
-            entering words
-
-    -D, --dice <DICE_SIDES>
-            Print dice roll next to word in output. Set number of sides of dice. Must be between 2
-            and 36. Use 6 for normal dice
+    -D, --delete-through <DELETE_THROUGH_DELIMITER>
+            Delete all characters up to and including given delimiter. Maximum of one character. Use
+            't' for tab and 's' for space
 
         --debug
             Debug mode
 
-        --delete-through-comma
-            Delete all characters through first comma of each line
+        --dice <DICE_SIDES>
+            Print dice roll next to word in output. Set number of sides of dice. Must be between 2
+            and 36. Use 6 for normal dice
 
         --dry-run
             Dry run. Don't write new list to file or terminal
@@ -93,10 +91,10 @@ OPTIONS:
             Force overwrite of output file if it exists
 
     -g, --ignore-metadata <IGNORE_METADATA>
-            Ignore metadata after first given delimiter. Accepts delimiter string like ','. User can
-            write out "space" or "tab" for convenience. Treats anything before first instance of
-            delimiter as the "word". Only works with word removals, not word modifications (like to
-            lowercase)
+            Ignore metadata after first given delimiter. Accepts delimiter character like ','.
+            Maximum of one character. Use 't' for tab and 's' for space. Treats anything before
+            first instance of delimiter as the "word". Only works with word removals, not word
+            modifications (like to lowercase)
 
     -h, --homophones <HOMOPHONES_LIST>
             Path(s) to file(s) containing homophone pairs. There must be one pair of homophones per
@@ -124,6 +122,10 @@ OPTIONS:
 
     -M, --maximum-word-length <MAXIMUM_LENGTH>
             Set maximum word length
+
+        --minimum-edit-distance <MINIMUM_EDIT_DISTANCE>
+            Set minimum edit distance between words, which can reduce the cost of typos when
+            entering words
 
     -n, --delete-nonalphanumeric
             Delete all non-alphanumeric characters from all words on new list. Characters with
@@ -161,12 +163,6 @@ OPTIONS:
         --remove-nonascii
             Remove all words that have any non-ASCII characters from new list
 
-    -s, --delete-through-space
-            Delete all characters through first space of each line
-
-    -S, --delete-after-space
-            Delete all characters after first space of each line
-
         --samples
             Print a handful of pseudorandomly selected words from the created list to the terminal.
             Should NOT be used as secure passphrases
@@ -175,12 +171,6 @@ OPTIONS:
             When printing dice roll next to word in output, use letters to represent numbers higher
             than 10. Default is `false`, which will print double-digit numbers when necessary (e.g.
             18-03-08)
-
-    -t, --delete-through-tab
-            Delete all characters through first tab of each line
-
-    -T, --delete-after-tab
-            Delete all characters after first tab of each line
 
         --take-first <TAKE_FIRST>
             Only take first N words from inputted word list. If two or more word lists are inputted,

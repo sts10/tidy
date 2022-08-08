@@ -16,7 +16,7 @@ pub struct TidyRequest {
     pub take_first: Option<usize>,
     pub take_rand: Option<usize>,
     pub sort_alphabetically: bool,
-    pub ignore_metadata: Option<String>,
+    pub ignore_metadata: Option<char>,
     pub to_lowercase: bool,
     pub should_straighten_quotes: bool,
     pub should_remove_prefix_words: bool,
@@ -28,12 +28,8 @@ pub struct TidyRequest {
     pub should_remove_nonascii: bool,
     pub should_remove_integers: bool,
     pub should_delete_integers: bool,
-    pub should_delete_through_first_tab: bool,
-    pub should_delete_through_first_space: bool,
-    pub should_delete_through_first_comma: bool,
-    pub should_delete_after_first_tab: bool,
-    pub should_delete_after_first_space: bool,
-    pub should_delete_after_first_comma: bool,
+    pub should_delete_after_first_delimiter: Option<char>,
+    pub should_delete_through_first_delimiter: Option<char>,
     pub reject_list: Option<Vec<String>>,
     pub approved_list: Option<Vec<String>>,
     pub homophones_list: Option<Vec<(String, String)>>,
@@ -138,25 +134,21 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         // We need delimiter_to_use to have a broad scope so that we can use it
         // when we re-add the metadata at the end. Default to comma, but can be changed
         // in match statement here.
-        let mut delimiter_to_use = ",";
-        let (mut new_word, metadata) = match req.ignore_metadata {
+        let (mut new_word, delimiter, metadata) = match req.ignore_metadata {
             Some(ref delimiter) => {
-                delimiter_to_use = if delimiter == "space" {
-                    " "
-                } else if delimiter == "tab" {
-                    "\t"
-                } else {
-                    delimiter
-                };
-                let split_vec = split_and_vectorize(word, &delimiter_to_use);
+                let split_vec = split_and_vectorize(word, &delimiter.to_string());
                 if split_vec.len() == 1 {
                     eprintln!("No metadata found for word: {:?}", word);
-                    (word.to_string(), None)
+                    (word.to_string(), Some(delimiter), None)
                 } else {
-                    (split_vec[0].to_string(), Some(split_vec[1]))
+                    (
+                        split_vec[0].to_string(),
+                        Some(delimiter),
+                        Some(split_vec[1]),
+                    )
                 }
             }
-            None => (word.to_string(), None),
+            None => (word.to_string(), None, None),
         };
 
         // Important to trim starting and ending whitespace first.
@@ -238,7 +230,7 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         // If there was metadata, re-add it to the word now.
         if new_word != "" {
             match metadata {
-                Some(metadata) => new_word = new_word + delimiter_to_use + metadata,
+                Some(metadata) => new_word = new_word + &delimiter.unwrap().to_string() + metadata,
                 None => (),
             };
         }
@@ -247,24 +239,14 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         new_word = new_word.trim_start().trim_end().to_string();
 
         // Now on to word MODIFICATIONS, rather than word removals
-        if req.should_delete_through_first_tab {
-            new_word = delete_through_first_char(&new_word, '\t').to_string();
-        }
-        if req.should_delete_through_first_space {
-            new_word = delete_through_first_char(&new_word, ' ').to_string();
-        }
-        if req.should_delete_through_first_comma {
-            new_word = delete_through_first_char(&new_word, ',').to_string();
-        }
-        if req.should_delete_after_first_tab {
-            new_word = delete_after_first_char(&new_word, '\t').to_string();
-        }
-        if req.should_delete_after_first_space {
-            new_word = delete_after_first_char(&new_word, ' ').to_string();
-        }
-        if req.should_delete_after_first_comma {
-            new_word = delete_after_first_char(&new_word, ',').to_string();
-        }
+        new_word = match req.should_delete_after_first_delimiter {
+            Some(delimiter) => delete_after_first_char(&new_word, delimiter).to_string(),
+            None => new_word,
+        };
+        new_word = match req.should_delete_through_first_delimiter {
+            Some(delimiter) => delete_through_first_char(&new_word, delimiter).to_string(),
+            None => new_word,
+        };
         if req.should_delete_integers {
             new_word = delete_integers(new_word.to_string());
         }

@@ -258,7 +258,7 @@ mod list_manipulation_tests {
     fn can_delete_through_first_tab() {
         let this_tidy_request = TidyRequest {
             list: make_lists().1,
-            should_delete_through_first_tab: true,
+            should_delete_through_first_delimiter: Some('\t'),
             ..Default::default()
         };
         let new_list = tidy_list(this_tidy_request);
@@ -272,7 +272,7 @@ mod list_manipulation_tests {
     fn can_delete_through_first_space() {
         let this_tidy_request = TidyRequest {
             list: make_lists().1,
-            should_delete_through_first_space: true,
+            should_delete_through_first_delimiter: Some(' '),
             ..Default::default()
         };
         let new_list = tidy_list(this_tidy_request);
@@ -288,7 +288,7 @@ mod list_manipulation_tests {
     fn can_delete_through_first_comma() {
         let this_tidy_request = TidyRequest {
             list: make_lists().1,
-            should_delete_through_first_comma: true,
+            should_delete_through_first_delimiter: Some(','),
             ..Default::default()
         };
         let new_list = tidy_list(this_tidy_request);
@@ -300,7 +300,7 @@ mod list_manipulation_tests {
     fn can_delete_after_first_tab() {
         let this_tidy_request = TidyRequest {
             list: make_lists().1,
-            should_delete_after_first_tab: true,
+            should_delete_after_first_delimiter: Some('\t'),
             ..Default::default()
         };
         let new_list = tidy_list(this_tidy_request);
@@ -313,7 +313,7 @@ mod list_manipulation_tests {
     fn can_delete_after_first_space() {
         let this_tidy_request = TidyRequest {
             list: make_lists().1,
-            should_delete_after_first_space: true,
+            should_delete_after_first_delimiter: Some(' '),
             ..Default::default()
         };
         let new_list = tidy_list(this_tidy_request);
@@ -326,7 +326,7 @@ mod list_manipulation_tests {
     fn can_delete_after_first_comma() {
         let this_tidy_request = TidyRequest {
             list: make_lists().1,
-            should_delete_after_first_comma: true,
+            should_delete_after_first_delimiter: Some(','),
             ..Default::default()
         };
         let new_list = tidy_list(this_tidy_request);

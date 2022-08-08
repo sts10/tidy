@@ -6,12 +6,12 @@
 /// We just want to "display" this information, rather than print it to files
 /// or stdout, so we use `eprintln!`
 use crate::split_and_vectorize;
-pub fn display_list_information(list: &[String], level: u8, ignore_metadata: Option<String>) {
+pub fn display_list_information(list: &[String], level: u8, ignore_metadata: Option<char>) {
     let list = match ignore_metadata {
         Some(ref delimiter) => {
             let mut just_the_words = vec![];
             for word in list {
-                let split_vec = split_and_vectorize(word, &delimiter);
+                let split_vec = split_and_vectorize(word, &delimiter.to_string());
                 // We're just going to use the word and ignore the
                 // metadata when calculating and printing attributes
                 just_the_words.push(split_vec[0].to_string());
@@ -98,13 +98,13 @@ pub fn display_list_information(list: &[String], level: u8, ignore_metadata: Opt
 use rand::seq::SliceRandom;
 /// Print 5 sample 6-word passphrases from the newly created
 /// word list.
-pub fn generate_samples(list: &[String], ignore_metadata: Option<String>) -> Vec<String> {
+pub fn generate_samples(list: &[String], ignore_metadata: Option<char>) -> Vec<String> {
     let mut samples: Vec<String> = vec![];
     for _n in 0..30 {
         match list.choose(&mut rand::thread_rng()) {
             Some(word) => match ignore_metadata {
                 Some(ref delimiter) => {
-                    samples.push(split_and_vectorize(word, &delimiter)[0].to_string())
+                    samples.push(split_and_vectorize(word, &delimiter.to_string())[0].to_string())
                 }
 
                 None => samples.push(word.to_string()),
