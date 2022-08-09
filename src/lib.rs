@@ -166,6 +166,8 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
                     }
                 }
                 (Some(ref _delimiter1), Some(ref _delimiter2)) => {
+                    // This situation should be caught and handled better
+                    // in src/main.rs, so this is really just in case.
                     panic!("Can't ignore metadata on both sides currently")
                 }
                 (None, None) => (word.to_string(), None, None, None),
