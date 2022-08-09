@@ -268,12 +268,12 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         new_word = new_word.trim_start().trim_end().to_string();
 
         // Now on to word MODIFICATIONS, rather than word removals
-        new_word = match req.should_delete_after_first_delimiter {
-            Some(delimiter) => delete_after_first_char(&new_word, delimiter).to_string(),
+        new_word = match req.should_delete_before_first_delimiter {
+            Some(delimiter) => delete_before_first_char(&new_word, delimiter).to_string(),
             None => new_word,
         };
-        new_word = match req.should_delete_before_first_delimiter {
-            Some(delimiter) => delete_through_first_char(&new_word, delimiter).to_string(),
+        new_word = match req.should_delete_after_first_delimiter {
+            Some(delimiter) => delete_after_first_char(&new_word, delimiter).to_string(),
             None => new_word,
         };
         if req.should_delete_integers {
@@ -407,7 +407,7 @@ pub fn delete_nonalphanumeric(mut word: String) -> String {
 ///
 /// I outlined other approaches to this function in
 /// [a separate repo](https://github.com/sts10/splitter/blob/main/src/lib.rs).
-fn delete_through_first_char(s: &str, ch: char) -> &str {
+fn delete_before_first_char(s: &str, ch: char) -> &str {
     match memchr(ch as u8, s.as_bytes()) {
         None => s, // not found => return the whole string
         Some(pos) => &s[pos + 1..],
