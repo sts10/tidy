@@ -300,8 +300,6 @@ fn main() {
             }
         }
     };
-    println!("ignore_after_delimiter is {:?}", ignore_after_delimiter);
-    println!("ignore_before_delimiter is {:?}", ignore_before_delimiter);
 
     let delete_after_delimiter = match opt.delete_after_delimiter {
         Some(delimiter) => parse_delimiter(delimiter),

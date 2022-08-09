@@ -141,9 +141,7 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
                     // Parse delimiter. Currently this converts 's' to ' '
                     // and 't' to '\t'.
                     let delimiter = parse_delimiter(delimiter).unwrap();
-                    println!("Received delimiter is {:?}", delimiter);
                     let split_vec = split_and_vectorize(word, &delimiter.to_string());
-                    println!("Split_vec is {:?}", split_vec);
                     if split_vec.len() == 1 {
                         eprintln!("No metadata found for word: {:?}", word);
                         (word.to_string(), Some(delimiter), None, None)
