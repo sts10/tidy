@@ -3,6 +3,7 @@ use std::fs::File;
 use std::io::Write;
 use std::path::Path;
 use std::path::PathBuf;
+use std::process;
 use tidy::*;
 pub mod display_information;
 use crate::display_information::display_list_information;
@@ -254,7 +255,9 @@ fn main() {
                 || opt.dice_sides.is_some()
                 || opt.print_high_dice_sides_as_letters
             {
-                panic!("--ignore-ending-metadata option does not work with one of the other options you selected. Please reconsider. Exiting");
+                let err_message = "--ignore-from option does not work with one of the other options you selected. Please change options. Exiting";
+                eprintln!("Error: {}", err_message);
+                process::exit(2);
             } else {
                 parse_delimiter(delimiter)
             }
@@ -278,7 +281,9 @@ fn main() {
                 || opt.dice_sides.is_some()
                 || opt.print_high_dice_sides_as_letters
             {
-                panic!("--ignore-starting-metadata option does not work with one of the other options you selected. Please reconsider. Exiting");
+                let err_message = "--ignore-from option does not work with one of the other options you selected. Please change options. Exiting";
+                eprintln!("Error: {}", err_message);
+                process::exit(2);
             } else {
                 parse_delimiter(delimiter)
             }
