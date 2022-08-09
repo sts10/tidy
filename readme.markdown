@@ -69,13 +69,15 @@ OPTIONS:
             expressions in the form of base**exponent (helpful for generating diceware lists). Cuts
             are done randomly
 
-    -d, --delete-after <DELETE_AFTER_DELIMITER>
-            Delete all characters after given delimiter (including the delimiter). Maximum of one
-            character. Use 't' for tab and 's' for space
+    -d, --delete-from <DELETE_FROM_DELIMITER>
+            Delete all characters from the first instance of the specified delimiter until the end
+            of line (including the delimiter). Delimiter must be a single character (e.g., ','). Use
+            't' for tab and 's' for space. May not be used together with -g or -G options
 
     -D, --delete-through <DELETE_THROUGH_DELIMITER>
-            Delete all characters up to and including given delimiter. Maximum of one character. Use
-            't' for tab and 's' for space
+            Delete all characters up to and including the first instance of the specified delimiter.
+            Delimiter must be a single character (e.g., ','). Use 't' for tab and 's' for space. May
+            not be used together with -g or -G options
 
         --debug
             Debug mode
@@ -90,17 +92,19 @@ OPTIONS:
     -f, --force
             Force overwrite of output file if it exists
 
-    -g, --ignore-ending-metadata <IGNORE_ENDING_METADATA_DELIMITER>
-            Ignore metadata after first appearance of given delimiter. Accepts delimiter character
-            like ','. Maximum of one character. Use 't' for tab and 's' for space. Treats anything
-            before first appearance of delimiter as the "word". Only works with word removals, not
-            word modifications (like to lowercase)
+    -g, --ignore-from <IGNORE_FROM_DELIMITER>
+            Ignore metadata from the first instance of the specified delimiter until the end of
+            line, treating anything before the delimiter as a word. Delimiter must be a single
+            character (e.g., ','). Use 't' for tab and 's' for space. Works with attribute analysis
+            and most word removal options, but not with word modifications (like to lowercase). May
+            not be used together with -d, -D or -G options
 
-    -G, --ignore-starting-metadata <IGNORE_STARTING_METADATA_DELIMITER>
-            Ignore metadata before first appearance of given delimiter. Accepts delimiter character
-            like ','. Maximum of one character. Use 't' for tab and 's' for space. Treats anything
-            after first appearance of delimiter as the "word". Only works with word removals, not
-            word modifications (like to lowercase)
+    -G, --ignore-through <IGNORE_THROUGH_DELIMITER>
+            Ignore metadata up to and including the first instance of the specified delimiter,
+            treating anything after the delimiter as a word. Delimiter must be a single character
+            (e.g., ','). Use 't' for tab and 's' for space. Works with attribute analysis and most
+            word removal options, but not with word modifications (like to lowercase). May not be
+            used together with -d, -D or -g options
 
     -h, --homophones <HOMOPHONES_LIST>
             Path(s) to file(s) containing homophone pairs. There must be one pair of homophones per

@@ -72,7 +72,7 @@ struct Args {
     /// anything after the delimiter as a word. Delimiter must be a single character (e.g., ','). Use 't'
     /// for tab and 's' for space. Works with attribute analysis and most word removal options, but not
     /// with word modifications (like to lowercase). May not be used together with -d, -D or -g options.
-    #[clap(short = 'G', long = "ignore-thorugh")]
+    #[clap(short = 'G', long = "ignore-through")]
     ignore_through_delimiter: Option<char>,
 
     /// Do NOT sort outputted list alphabetically. Preserves original list order.
@@ -132,13 +132,13 @@ struct Args {
 
     /// Delete all characters from the first instance of the specified delimiter until the end of line
     /// (including the delimiter). Delimiter must be a single character (e.g., ','). Use 't' for tab and
-    /// 's' for space. May not be used together with -D, -g or -G options.
+    /// 's' for space. May not be used together with -g or -G options.
     #[clap(short = 'd', long = "delete-from")]
     delete_from_delimiter: Option<char>,
 
     /// Delete all characters up to and including the first instance of the specified delimiter. Delimiter
     /// must be a single character (e.g., ','). Use 't' for tab and 's' for space. May not be used
-    /// together with -d, -g or -G options.
+    /// together with -g or -G options.
     #[clap(short = 'D', long = "delete-through")]
     delete_through_delimiter: Option<char>,
 
