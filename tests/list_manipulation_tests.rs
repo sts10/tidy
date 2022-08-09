@@ -27,6 +27,7 @@ mod list_manipulation_tests {
                 "   ",
                 "11225	active",
                 "11152	acclaim",
+                "its456",
                 "11156	word	tabs",
                 "19-6-8 clad",
                 "be",
@@ -440,9 +441,10 @@ mod list_manipulation_tests {
     }
 
     #[test]
-    fn can_remove_words_longer_than_a_specified_maximum_length() {
+    fn can_remove_words_longer_than_a_specified_minimum_and_maximum_length() {
         let this_tidy_request = TidyRequest {
             list: make_lists().0,
+            minimum_length: Some(4),
             maximum_length: Some(7),
             ..Default::default()
         };
@@ -450,7 +452,9 @@ mod list_manipulation_tests {
         assert!(!new_list.contains(&"addiction".to_string()));
         assert!(!new_list.contains(&"zookeeper".to_string()));
         assert!(!new_list.contains(&"stationary".to_string()));
-        assert!(new_list.contains(&"tea".to_string()));
+        assert!(!new_list.contains(&"its".to_string()));
+        assert!(!new_list.contains(&"its456".to_string()));
+        assert!(!new_list.contains(&"tea".to_string()));
         assert!(new_list.contains(&"station".to_string()));
     }
 
