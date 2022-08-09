@@ -69,15 +69,15 @@ OPTIONS:
             expressions in the form of base**exponent (helpful for generating diceware lists). Cuts
             are done randomly
 
-    -d, --delete-from <DELETE_FROM_DELIMITER>
-            Delete all characters from the first instance of the specified delimiter until the end
+    -d, --delete-after <DELETE_AFTER_DELIMITER>
+            Delete all characters after the first instance of the specified delimiter until the end
             of line (including the delimiter). Delimiter must be a single character (e.g., ','). Use
             't' for tab and 's' for space. May not be used together with -g or -G options
 
-    -D, --delete-through <DELETE_THROUGH_DELIMITER>
-            Delete all characters up to and including the first instance of the specified delimiter.
-            Delimiter must be a single character (e.g., ','). Use 't' for tab and 's' for space. May
-            not be used together with -g or -G options
+    -D, --delete-before <DELETE_BEFORE_DELIMITER>
+            Delete all characters before and including the first instance of the specified
+            delimiter. Delimiter must be a single character (e.g., ','). Use 't' for tab and 's' for
+            space. May not be used together with -g or -G options
 
         --debug
             Debug mode
@@ -92,15 +92,15 @@ OPTIONS:
     -f, --force
             Force overwrite of output file if it exists
 
-    -g, --ignore-from <IGNORE_FROM_DELIMITER>
-            Ignore metadata from the first instance of the specified delimiter until the end of
+    -g, --ignore-after <IGNORE_AFTER_DELIMITER>
+            Ignore metadata after the first instance of the specified delimiter until the end of
             line, treating anything before the delimiter as a word. Delimiter must be a single
             character (e.g., ','). Use 't' for tab and 's' for space. Works with attribute analysis
             and most word removal options, but not with word modifications (like to lowercase). May
             not be used together with -d, -D or -G options
 
-    -G, --ignore-through <IGNORE_THROUGH_DELIMITER>
-            Ignore metadata up to and including the first instance of the specified delimiter,
+    -G, --ignore-before <IGNORE_BEFORE_DELIMITER>
+            Ignore metadata before and including the first instance of the specified delimiter,
             treating anything after the delimiter as a word. Delimiter must be a single character
             (e.g., ','). Use 't' for tab and 's' for space. Works with attribute analysis and most
             word removal options, but not with word modifications (like to lowercase). May not be
