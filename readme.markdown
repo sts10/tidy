@@ -69,6 +69,9 @@ OPTIONS:
             expressions in the form of base**exponent (helpful for generating diceware lists). Cuts
             are done randomly
 
+    -C, --remove-nonascii
+            Remove all words that have any non-ASCII characters from new list
+
     -d, --delete-after <DELETE_AFTER_DELIMITER>
             Delete all characters after the first instance of the specified delimiter until the end
             of line (including the delimiter). Delimiter must be a single character (e.g., ','). Use
@@ -88,6 +91,10 @@ OPTIONS:
 
         --dry-run
             Dry run. Don't write new list to file or terminal
+
+    -e, --minimum-edit-distance <MINIMUM_EDIT_DISTANCE>
+            Set minimum edit distance between words, which can reduce the cost of typos when
+            entering words
 
     -f, --force
             Force overwrite of output file if it exists
@@ -133,10 +140,6 @@ OPTIONS:
     -M, --maximum-word-length <MAXIMUM_LENGTH>
             Set maximum word length
 
-        --minimum-edit-distance <MINIMUM_EDIT_DISTANCE>
-            Set minimum edit distance between words, which can reduce the cost of typos when
-            entering words
-
     -n, --delete-nonalphanumeric
             Delete all non-alphanumeric characters from all words on new list. Characters with
             diacritics will remain
@@ -149,7 +152,7 @@ OPTIONS:
             Path for outputted list file. If none given, generated word list will be printed to
             terminal
 
-    -O, --no-alpha
+    -O, --no-sort
             Do NOT sort outputted list alphabetically. Preserves original list order. Note that
             duplicates lines and blank lines will still be removed
 
@@ -170,12 +173,12 @@ OPTIONS:
             Remove all words with non-alphabetic characters from new list. Words with diacritcis and
             other non-Latin characters will remain
 
-        --remove-nonascii
-            Remove all words that have any non-ASCII characters from new list
-
-        --samples
+    -s, --samples
             Print a handful of pseudorandomly selected words from the created list to the terminal.
             Should NOT be used as secure passphrases
+
+    -S, --remove-suffix
+            Remove suffix words from new list
 
         --sides-as-letters
             When printing dice roll next to word in output, use letters to represent numbers higher
@@ -189,9 +192,6 @@ OPTIONS:
         --take-rand <TAKE_RAND>
             Only take a random N number of words from inputted word list. If two or more word lists
             are inputted, it will combine arbitrarily and then take a random N words
-
-    -U, --remove-suffix
-            Remove suffix words from new list
 
     -V, --version
             Print version information

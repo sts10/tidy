@@ -59,7 +59,7 @@ struct Args {
 
     /// Print a handful of pseudorandomly selected words from the created list
     /// to the terminal. Should NOT be used as secure passphrases.
-    #[clap(long = "samples")]
+    #[clap(short = 's', long = "samples")]
     samples: bool,
 
     /// Ignore metadata after the first instance of the specified delimiter until the end of line, treating
@@ -78,7 +78,7 @@ struct Args {
 
     /// Do NOT sort outputted list alphabetically. Preserves original list order.
     /// Note that duplicates lines and blank lines will still be removed.
-    #[clap(short = 'O', long = "no-alpha")]
+    #[clap(short = 'O', long = "no-sort")]
     no_alpha_sort: bool,
 
     /// Lowercase all words on new list
@@ -95,7 +95,7 @@ struct Args {
     remove_prefix_words: bool,
 
     /// Remove suffix words from new list
-    #[clap(short = 'U', long = "remove-suffix")]
+    #[clap(short = 'S', long = "remove-suffix")]
     remove_suffix_words: bool,
 
     /// Remove all words with non-alphanumeric characters from new list. Words with diacritics will
@@ -120,7 +120,7 @@ struct Args {
     remove_non_latin_alphabetic: bool,
 
     /// Remove all words that have any non-ASCII characters from new list
-    #[clap(long = "remove-nonascii")]
+    #[clap(short = 'C', long = "remove-nonascii")]
     remove_nonascii: bool,
 
     /// Remove all words with integers in them from list
@@ -172,7 +172,7 @@ struct Args {
 
     /// Set minimum edit distance between words, which
     /// can reduce the cost of typos when entering words
-    #[clap(long = "minimum-edit-distance")]
+    #[clap(short = 'e', long = "minimum-edit-distance")]
     minimum_edit_distance: Option<usize>,
 
     /// Set number of leading characters to get to a unique prefix,
