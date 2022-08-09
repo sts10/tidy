@@ -43,7 +43,7 @@ Optionally, the tool can...
 -   print corresponding dice rolls before words, separated by a tab. Dice can have 2 to 36 sides. (`-D`)
 -   print information about the new list, such as entropy per word, to the terminal (`-A`, `-AA`, or `-AAA`, depending on how much information you want to be printed)
 
-If you do NOT want Tidy to sort list alphabetically, you can use the `--no-alpha` option.
+If you do NOT want Tidy to sort list alphabetically, you can use the `--no-sort` option.
 
 ## Usage
 
