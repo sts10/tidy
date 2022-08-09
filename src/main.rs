@@ -239,8 +239,22 @@ fn main() {
         }
     }
     // Warn about limits of the Ignore Metadata option
-    let ignore_from_delimiter = match opt.ignore_from_delimiter {
-        Some(delimiter) => {
+    let (ignore_from_delimiter, ignore_through_delimiter) = match (
+        opt.ignore_from_delimiter,
+        opt.ignore_through_delimiter,
+    ) {
+        // If given both a from_delimiter and through_delimiter
+        // Error out nicely.
+        (Some(_from_delimiter), Some(_through_delimiter)) => {
+            let err_message = "Can't ignore metadata on both sides.";
+            eprintln!("Error: {}", err_message);
+            process::exit(2);
+        }
+        // No ignore delimiters given, so just return None to both
+        // variables.
+        (None, None) => (None, None),
+        // A from_delimiter given, but not a through_delimiter
+        (Some(from_delimiter), None) => {
             if opt.to_lowercase
                 || opt.straighten_quotes
                 || opt.remove_prefix_words
@@ -259,37 +273,34 @@ fn main() {
                 eprintln!("Error: {}", err_message);
                 process::exit(2);
             } else {
-                parse_delimiter(delimiter)
+                (parse_delimiter(from_delimiter), None)
             }
         }
-        None => None,
+        // No from_delimiter given, but a through_delimiter has been given
+        (None, Some(through_delimiter)) => {
+            if opt.to_lowercase
+                || opt.straighten_quotes
+                || opt.remove_prefix_words
+                || opt.remove_suffix_words
+                || opt.delete_nonalphanumeric
+                || opt.delete_integers
+                || opt.delete_through_delimiter.is_some()
+                || opt.delete_from_delimiter.is_some()
+                || opt.minimum_edit_distance.is_some()
+                || opt.maximum_shared_prefix_length.is_some()
+                || opt.homophones_list.is_some()
+                || opt.dice_sides.is_some()
+                || opt.print_high_dice_sides_as_letters
+            {
+                let err_message = "--ignore-through option does not work with one of the other options you selected. Please change options. Exiting";
+                eprintln!("Error: {}", err_message);
+                process::exit(2);
+            } else {
+                (parse_delimiter(through_delimiter), None)
+            }
+        }
     };
 
-    let ignore_through_delimiter = match opt.ignore_through_delimiter {
-        Some(delimiter) => {
-            if opt.to_lowercase
-                || opt.straighten_quotes
-                || opt.remove_prefix_words
-                || opt.remove_suffix_words
-                || opt.delete_nonalphanumeric
-                || opt.delete_integers
-                || opt.delete_through_delimiter.is_some()
-                || opt.delete_from_delimiter.is_some()
-                || opt.minimum_edit_distance.is_some()
-                || opt.maximum_shared_prefix_length.is_some()
-                || opt.homophones_list.is_some()
-                || opt.dice_sides.is_some()
-                || opt.print_high_dice_sides_as_letters
-            {
-                let err_message = "--ignore-from option does not work with one of the other options you selected. Please change options. Exiting";
-                eprintln!("Error: {}", err_message);
-                process::exit(2);
-            } else {
-                parse_delimiter(delimiter)
-            }
-        }
-        None => None,
-    };
     let delete_from_delimiter = match opt.delete_from_delimiter {
         Some(delimiter) => parse_delimiter(delimiter),
         None => None,
