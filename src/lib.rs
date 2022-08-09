@@ -16,8 +16,8 @@ pub struct TidyRequest {
     pub take_first: Option<usize>,
     pub take_rand: Option<usize>,
     pub sort_alphabetically: bool,
-    pub ignore_ending_metadata_delimiter: Option<char>,
-    pub ignore_starting_metadata_delimiter: Option<char>,
+    pub ignore_from_delimiter: Option<char>,
+    pub ignore_through_delimiter: Option<char>,
     pub to_lowercase: bool,
     pub should_straighten_quotes: bool,
     pub should_remove_prefix_words: bool,
@@ -29,7 +29,7 @@ pub struct TidyRequest {
     pub should_remove_nonascii: bool,
     pub should_remove_integers: bool,
     pub should_delete_integers: bool,
-    pub should_delete_after_first_delimiter: Option<char>,
+    pub should_delete_from_first_delimiter: Option<char>,
     pub should_delete_through_first_delimiter: Option<char>,
     pub reject_list: Option<Vec<String>>,
     pub approved_list: Option<Vec<String>>,
@@ -135,43 +135,41 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         // We need delimiter_to_use to have a broad scope so that we can use it
         // when we re-add the metadata at the end. Default to comma, but can be changed
         // in match statement here.
-        let (mut new_word, delimiter, metadata, metadata_position) = match (
-            req.ignore_ending_metadata_delimiter,
-            req.ignore_starting_metadata_delimiter,
-        ) {
-            (Some(delimiter), None) => {
-                let split_vec = split_and_vectorize(word, &delimiter.to_string());
-                if split_vec.len() == 1 {
-                    eprintln!("No metadata found for word: {:?}", word);
-                    (word.to_string(), Some(delimiter), None, None)
-                } else {
-                    (
-                        split_vec[0].to_string(),
-                        Some(delimiter),
-                        Some(split_vec[1]),
-                        Some("end"), // this should be an enum!
-                    )
+        let (mut new_word, delimiter, metadata, metadata_position) =
+            match (req.ignore_from_delimiter, req.ignore_through_delimiter) {
+                (Some(delimiter), None) => {
+                    let split_vec = split_and_vectorize(word, &delimiter.to_string());
+                    if split_vec.len() == 1 {
+                        eprintln!("No metadata found for word: {:?}", word);
+                        (word.to_string(), Some(delimiter), None, None)
+                    } else {
+                        (
+                            split_vec[0].to_string(),
+                            Some(delimiter),
+                            Some(split_vec[1]),
+                            Some("end"), // this should be an enum!
+                        )
+                    }
                 }
-            }
-            (None, Some(delimiter)) => {
-                let split_vec = split_and_vectorize(word, &delimiter.to_string());
-                if split_vec.len() == 1 {
-                    eprintln!("No metadata found for word: {:?}", word);
-                    (word.to_string(), Some(delimiter), None, None)
-                } else {
-                    (
-                        split_vec[1].to_string(),
-                        Some(delimiter),
-                        Some(split_vec[0]),
-                        Some("start"),
-                    )
+                (None, Some(delimiter)) => {
+                    let split_vec = split_and_vectorize(word, &delimiter.to_string());
+                    if split_vec.len() == 1 {
+                        eprintln!("No metadata found for word: {:?}", word);
+                        (word.to_string(), Some(delimiter), None, None)
+                    } else {
+                        (
+                            split_vec[1].to_string(),
+                            Some(delimiter),
+                            Some(split_vec[0]),
+                            Some("start"),
+                        )
+                    }
                 }
-            }
-            (Some(ref _delimiter1), Some(ref _delimiter2)) => {
-                panic!("Can't ignore metadata on both sides currently")
-            }
-            (None, None) => (word.to_string(), None, None, None),
-        };
+                (Some(ref _delimiter1), Some(ref _delimiter2)) => {
+                    panic!("Can't ignore metadata on both sides currently")
+                }
+                (None, None) => (word.to_string(), None, None, None),
+            };
 
         // Important to trim starting and ending whitespace first.
         new_word = new_word.trim_start().trim_end().to_string();
@@ -268,7 +266,7 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         new_word = new_word.trim_start().trim_end().to_string();
 
         // Now on to word MODIFICATIONS, rather than word removals
-        new_word = match req.should_delete_after_first_delimiter {
+        new_word = match req.should_delete_from_first_delimiter {
             Some(delimiter) => delete_after_first_char(&new_word, delimiter).to_string(),
             None => new_word,
         };

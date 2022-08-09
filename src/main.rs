@@ -61,22 +61,19 @@ struct Args {
     #[clap(long = "samples")]
     samples: bool,
 
-    /// Ignore metadata after first appearance of given delimiter. Accepts
-    /// delimiter character like ','. Maximum of one character. Use 't' for tab and 's' for space.
-    /// Treats anything before first appearance of delimiter as
-    /// the "word". Only works with word removals, not word modifications
-    /// (like to lowercase)
-    #[clap(short = 'g', long = "ignore-ending-metadata")]
-    ignore_ending_metadata_delimiter: Option<char>,
+    /// Ignore metadata from the first instance of the specified delimiter until the end of line, treating
+    /// anything before the delimiter as a word. Delimiter must be a single character (e.g., ','). Use 't'
+    /// for tab and 's' for space. Works with attribute analysis and most word removal options, but not
+    /// with word modifications (like to lowercase). May not be used together with -d, -D or -G options.
+    #[clap(short = 'g', long = "ignore-from")]
+    ignore_from_delimiter: Option<char>,
 
-    /// Ignore metadata before first appearance of given delimiter. Accepts
-    /// delimiter character
-    /// like ','. Maximum of one character. Use 't' for tab and 's' for space.
-    /// Treats anything after first appearance of delimiter as
-    /// the "word". Only works with word removals, not word modifications
-    /// (like to lowercase)
-    #[clap(short = 'G', long = "ignore-starting-metadata")]
-    ignore_starting_metadata_delimiter: Option<char>,
+    /// Ignore metadata up to and including the first instance of the specified delimiter, treating
+    /// anything after the delimiter as a word. Delimiter must be a single character (e.g., ','). Use 't'
+    /// for tab and 's' for space. Works with attribute analysis and most word removal options, but not
+    /// with word modifications (like to lowercase). May not be used together with -d, -D or -g options.
+    #[clap(short = 'G', long = "ignore-thorugh")]
+    ignore_through_delimiter: Option<char>,
 
     /// Do NOT sort outputted list alphabetically. Preserves original list order.
     /// Note that duplicates lines and blank lines will still be removed.
@@ -133,13 +130,15 @@ struct Args {
     #[clap(short = 'i', long = "delete-integers")]
     delete_integers: bool,
 
-    /// Delete all characters after given delimiter (including the delimiter).
-    /// Maximum of one character. Use 't' for tab and 's' for space.
-    #[clap(short = 'd', long = "delete-after")]
-    delete_after_delimiter: Option<char>,
+    /// Delete all characters from the first instance of the specified delimiter until the end of line
+    /// (including the delimiter). Delimiter must be a single character (e.g., ','). Use 't' for tab and
+    /// 's' for space. May not be used together with -D, -g or -G options.
+    #[clap(short = 'd', long = "delete-from")]
+    delete_from_delimiter: Option<char>,
 
-    /// Delete all characters up to and including given delimiter.
-    /// Maximum of one character. Use 't' for tab and 's' for space.
+    /// Delete all characters up to and including the first instance of the specified delimiter. Delimiter
+    /// must be a single character (e.g., ','). Use 't' for tab and 's' for space. May not be used
+    /// together with -d, -g or -G options.
     #[clap(short = 'D', long = "delete-through")]
     delete_through_delimiter: Option<char>,
 
@@ -239,7 +238,7 @@ fn main() {
         }
     }
     // Warn about limits of the Ignore Metadata option
-    let ignore_ending_metadata_delimiter = match opt.ignore_ending_metadata_delimiter {
+    let ignore_from_delimiter = match opt.ignore_from_delimiter {
         Some(delimiter) => {
             if opt.to_lowercase
                 || opt.straighten_quotes
@@ -248,7 +247,7 @@ fn main() {
                 || opt.delete_nonalphanumeric
                 || opt.delete_integers
                 || opt.delete_through_delimiter.is_some()
-                || opt.delete_after_delimiter.is_some()
+                || opt.delete_from_delimiter.is_some()
                 || opt.minimum_edit_distance.is_some()
                 || opt.maximum_shared_prefix_length.is_some()
                 || opt.homophones_list.is_some()
@@ -263,7 +262,7 @@ fn main() {
         None => None,
     };
 
-    let ignore_starting_metadata_delimiter = match opt.ignore_starting_metadata_delimiter {
+    let ignore_through_delimiter = match opt.ignore_through_delimiter {
         Some(delimiter) => {
             if opt.to_lowercase
                 || opt.straighten_quotes
@@ -272,7 +271,7 @@ fn main() {
                 || opt.delete_nonalphanumeric
                 || opt.delete_integers
                 || opt.delete_through_delimiter.is_some()
-                || opt.delete_after_delimiter.is_some()
+                || opt.delete_from_delimiter.is_some()
                 || opt.minimum_edit_distance.is_some()
                 || opt.maximum_shared_prefix_length.is_some()
                 || opt.homophones_list.is_some()
@@ -286,7 +285,7 @@ fn main() {
         }
         None => None,
     };
-    let delete_after_delimiter = match opt.delete_after_delimiter {
+    let delete_from_delimiter = match opt.delete_from_delimiter {
         Some(delimiter) => parse_delimiter(delimiter),
         None => None,
     };
@@ -309,8 +308,8 @@ fn main() {
         take_first: opt.take_first,
         take_rand: opt.take_rand,
         sort_alphabetically: !opt.no_alpha_sort,
-        ignore_ending_metadata_delimiter: ignore_ending_metadata_delimiter,
-        ignore_starting_metadata_delimiter: ignore_starting_metadata_delimiter,
+        ignore_from_delimiter: ignore_from_delimiter,
+        ignore_through_delimiter: ignore_through_delimiter,
         to_lowercase: opt.to_lowercase,
         should_straighten_quotes: opt.straighten_quotes,
         should_remove_prefix_words: opt.remove_prefix_words,
@@ -322,7 +321,7 @@ fn main() {
         should_remove_nonalphabetic: opt.remove_nonalphabetic,
         should_remove_non_latin_alphabetic: opt.remove_non_latin_alphabetic,
         should_remove_nonascii: opt.remove_nonascii,
-        should_delete_after_first_delimiter: delete_after_delimiter,
+        should_delete_from_first_delimiter: delete_from_delimiter,
         should_delete_through_first_delimiter: delete_through_delimiter,
 
         // If given more than one file of reject words, combine them
@@ -402,15 +401,15 @@ fn main() {
             display_list_information(
                 &tidied_list,
                 opt.attributes,
-                ignore_ending_metadata_delimiter,
-                ignore_starting_metadata_delimiter,
+                ignore_from_delimiter,
+                ignore_through_delimiter,
             );
         }
         if opt.samples {
             let samples = generate_samples(
                 &tidied_list,
-                ignore_ending_metadata_delimiter,
-                ignore_starting_metadata_delimiter,
+                ignore_from_delimiter,
+                ignore_through_delimiter,
             );
             eprintln!("\nPseudorandomly generated sample passphrases");
             eprintln!("-------------------------------------------");
