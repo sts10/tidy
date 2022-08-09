@@ -273,7 +273,7 @@ fn main() {
                 eprintln!("Error: {}", err_message);
                 process::exit(2);
             } else {
-                (parse_delimiter(after_delimiter), None)
+                (Some(after_delimiter), None)
             }
         }
         // No after_delimiter given, but a before_delimiter has been given
@@ -296,10 +296,12 @@ fn main() {
                 eprintln!("Error: {}", err_message);
                 process::exit(2);
             } else {
-                (None, parse_delimiter(before_delimiter))
+                (None, Some(before_delimiter))
             }
         }
     };
+    println!("ignore_after_delimiter is {:?}", ignore_after_delimiter);
+    println!("ignore_before_delimiter is {:?}", ignore_before_delimiter);
 
     let delete_after_delimiter = match opt.delete_after_delimiter {
         Some(delimiter) => parse_delimiter(delimiter),
@@ -438,19 +440,6 @@ fn main() {
             eprintln!();
         }
     }
-}
-
-/// Little helper function that allows users to write out whitespace
-/// delimiters "s" and "t", rather than having to enter the whitespace
-/// characters literally.
-fn parse_delimiter(delimiter: char) -> Option<char> {
-    if delimiter == 's' {
-        return Some(' ');
-    } else if delimiter == 't' {
-        return Some('\t');
-    } else {
-        return Some(delimiter);
-    };
 }
 
 #[cfg(test)]

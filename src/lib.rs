@@ -138,7 +138,12 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         let (mut new_word, delimiter, metadata, metadata_position) =
             match (req.ignore_after_delimiter, req.ignore_before_delimiter) {
                 (Some(delimiter), None) => {
+                    // Parse delimiter. Currently this converts 's' to ' '
+                    // and 't' to '\t'.
+                    let delimiter = parse_delimiter(delimiter).unwrap();
+                    println!("Received delimiter is {:?}", delimiter);
                     let split_vec = split_and_vectorize(word, &delimiter.to_string());
+                    println!("Split_vec is {:?}", split_vec);
                     if split_vec.len() == 1 {
                         eprintln!("No metadata found for word: {:?}", word);
                         (word.to_string(), Some(delimiter), None, None)
@@ -152,6 +157,7 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
                     }
                 }
                 (None, Some(delimiter)) => {
+                    let delimiter = parse_delimiter(delimiter).unwrap();
                     let split_vec = split_and_vectorize(word, &delimiter.to_string());
                     if split_vec.len() == 1 {
                         eprintln!("No metadata found for word: {:?}", word);
@@ -756,4 +762,17 @@ fn format_high_dice_roll(ch: char, use_letters: bool) -> String {
     } else {
         ch.to_string()
     }
+}
+
+/// Little helper function that allows users to write out whitespace
+/// delimiters "s" and "t", rather than having to enter the whitespace
+/// characters literally.
+pub fn parse_delimiter(delimiter: char) -> Option<char> {
+    if delimiter == 's' {
+        return Some(' ');
+    } else if delimiter == 't' {
+        return Some('\t');
+    } else {
+        return Some(delimiter);
+    };
 }
