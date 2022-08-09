@@ -6,19 +6,36 @@
 /// We just want to "display" this information, rather than print it to files
 /// or stdout, so we use `eprintln!`
 use crate::split_and_vectorize;
-pub fn display_list_information(list: &[String], level: u8, ignore_metadata: Option<char>) {
-    let list = match ignore_metadata {
-        Some(ref delimiter) => {
+pub fn display_list_information(
+    list: &[String],
+    level: u8,
+    ignore_ending_metadata_delimiter: Option<char>,
+    ignore_starting_metadata_delimiter: Option<char>,
+) {
+    let list = match (
+        ignore_ending_metadata_delimiter,
+        ignore_starting_metadata_delimiter,
+    ) {
+        (Some(delimiter), None) => {
             let mut just_the_words = vec![];
             for word in list {
                 let split_vec = split_and_vectorize(word, &delimiter.to_string());
-                // We're just going to use the word and ignore the
-                // metadata when calculating and printing attributes
                 just_the_words.push(split_vec[0].to_string());
             }
             just_the_words
         }
-        None => list.to_vec(),
+        (None, Some(delimiter)) => {
+            let mut just_the_words = vec![];
+            for word in list {
+                let split_vec = split_and_vectorize(word, &delimiter.to_string());
+                just_the_words.push(split_vec[1].to_string());
+            }
+            just_the_words
+        }
+        (Some(ref _delimiter1), Some(ref _delimiter2)) => {
+            panic!("Can't ignore metadata on both sides currently")
+        }
+        (None, None) => list.to_vec(),
     };
     eprintln!("Attributes of new list");
     eprintln!("----------------------");
@@ -98,17 +115,30 @@ pub fn display_list_information(list: &[String], level: u8, ignore_metadata: Opt
 use rand::seq::SliceRandom;
 /// Print 5 sample 6-word passphrases from the newly created
 /// word list.
-pub fn generate_samples(list: &[String], ignore_metadata: Option<char>) -> Vec<String> {
+pub fn generate_samples(
+    list: &[String],
+    ignore_ending_metadata_delimiter: Option<char>,
+    ignore_starting_metadata_delimiter: Option<char>,
+) -> Vec<String> {
     let mut samples: Vec<String> = vec![];
     for _n in 0..30 {
         match list.choose(&mut rand::thread_rng()) {
-            Some(word) => match ignore_metadata {
-                Some(ref delimiter) => {
-                    samples.push(split_and_vectorize(word, &delimiter.to_string())[0].to_string())
-                }
+            Some(word) => {
+                match (
+                    ignore_ending_metadata_delimiter,
+                    ignore_starting_metadata_delimiter,
+                ) {
+                    (Some(delimiter), None) => samples
+                        .push(split_and_vectorize(word, &delimiter.to_string())[0].to_string()),
+                    (None, Some(delimiter)) => samples
+                        .push(split_and_vectorize(word, &delimiter.to_string())[1].to_string()),
+                    (Some(_delimiter1), Some(_delimiter2)) => {
+                        panic!("Can't have starting and ending delimiters")
+                    }
 
-                None => samples.push(word.to_string()),
-            },
+                    (None, None) => samples.push(word.to_string()),
+                }
+            }
             None => panic!("Couldn't pick a random word"),
         }
     }

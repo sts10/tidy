@@ -61,13 +61,22 @@ struct Args {
     #[clap(long = "samples")]
     samples: bool,
 
-    /// Ignore metadata after first given delimiter. Accepts delimiter character
-    /// like ','. Maximum of one character. Use 't' for tab and 's' for space.
-    /// Treats anything before first instance of delimiter as
+    /// Ignore metadata after first appearance of given delimiter. Accepts
+    /// delimiter character like ','. Maximum of one character. Use 't' for tab and 's' for space.
+    /// Treats anything before first appearance of delimiter as
     /// the "word". Only works with word removals, not word modifications
     /// (like to lowercase)
-    #[clap(short = 'g', long = "ignore-metadata")]
-    ignore_metadata_delimiter: Option<char>,
+    #[clap(short = 'g', long = "ignore-ending-metadata")]
+    ignore_ending_metadata_delimiter: Option<char>,
+
+    /// Ignore metadata before first appearance of given delimiter. Accepts
+    /// delimiter character
+    /// like ','. Maximum of one character. Use 't' for tab and 's' for space.
+    /// Treats anything after first appearance of delimiter as
+    /// the "word". Only works with word removals, not word modifications
+    /// (like to lowercase)
+    #[clap(short = 'G', long = "ignore-starting-metadata")]
+    ignore_starting_metadata_delimiter: Option<char>,
 
     /// Do NOT sort outputted list alphabetically. Preserves original list order.
     /// Note that duplicates lines and blank lines will still be removed.
@@ -230,7 +239,7 @@ fn main() {
         }
     }
     // Warn about limits of the Ignore Metadata option
-    let ignore_metadata = match opt.ignore_metadata_delimiter {
+    let ignore_ending_metadata_delimiter = match opt.ignore_ending_metadata_delimiter {
         Some(delimiter) => {
             if opt.to_lowercase
                 || opt.straighten_quotes
@@ -246,7 +255,7 @@ fn main() {
                 || opt.dice_sides.is_some()
                 || opt.print_high_dice_sides_as_letters
             {
-                panic!("--ignore-metadata option does not work with one of the other options you selected. Please reconsider. Exiting");
+                panic!("--ignore-ending-metadata option does not work with one of the other options you selected. Please reconsider. Exiting");
             } else {
                 parse_delimiter(delimiter)
             }
@@ -254,6 +263,29 @@ fn main() {
         None => None,
     };
 
+    let ignore_starting_metadata_delimiter = match opt.ignore_starting_metadata_delimiter {
+        Some(delimiter) => {
+            if opt.to_lowercase
+                || opt.straighten_quotes
+                || opt.remove_prefix_words
+                || opt.remove_suffix_words
+                || opt.delete_nonalphanumeric
+                || opt.delete_integers
+                || opt.delete_through_delimiter.is_some()
+                || opt.delete_after_delimiter.is_some()
+                || opt.minimum_edit_distance.is_some()
+                || opt.maximum_shared_prefix_length.is_some()
+                || opt.homophones_list.is_some()
+                || opt.dice_sides.is_some()
+                || opt.print_high_dice_sides_as_letters
+            {
+                panic!("--ignore-starting-metadata option does not work with one of the other options you selected. Please reconsider. Exiting");
+            } else {
+                parse_delimiter(delimiter)
+            }
+        }
+        None => None,
+    };
     let delete_after_delimiter = match opt.delete_after_delimiter {
         Some(delimiter) => parse_delimiter(delimiter),
         None => None,
@@ -277,7 +309,8 @@ fn main() {
         take_first: opt.take_first,
         take_rand: opt.take_rand,
         sort_alphabetically: !opt.no_alpha_sort,
-        ignore_metadata: ignore_metadata,
+        ignore_ending_metadata_delimiter: ignore_ending_metadata_delimiter,
+        ignore_starting_metadata_delimiter: ignore_starting_metadata_delimiter,
         to_lowercase: opt.to_lowercase,
         should_straighten_quotes: opt.straighten_quotes,
         should_remove_prefix_words: opt.remove_prefix_words,
@@ -366,10 +399,19 @@ fn main() {
             eprintln!("Dry run complete");
         }
         if opt.attributes > 0 {
-            display_list_information(&tidied_list, opt.attributes, ignore_metadata);
+            display_list_information(
+                &tidied_list,
+                opt.attributes,
+                ignore_ending_metadata_delimiter,
+                ignore_starting_metadata_delimiter,
+            );
         }
         if opt.samples {
-            let samples = generate_samples(&tidied_list, ignore_metadata);
+            let samples = generate_samples(
+                &tidied_list,
+                ignore_ending_metadata_delimiter,
+                ignore_starting_metadata_delimiter,
+            );
             eprintln!("\nPseudorandomly generated sample passphrases");
             eprintln!("-------------------------------------------");
             for n in 0..30 {

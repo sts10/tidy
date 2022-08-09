@@ -90,11 +90,17 @@ OPTIONS:
     -f, --force
             Force overwrite of output file if it exists
 
-    -g, --ignore-metadata <IGNORE_METADATA_DELIMITER>
-            Ignore metadata after first given delimiter. Accepts delimiter character like ','.
-            Maximum of one character. Use 't' for tab and 's' for space. Treats anything before
-            first instance of delimiter as the "word". Only works with word removals, not word
-            modifications (like to lowercase)
+    -g, --ignore-ending-metadata <IGNORE_ENDING_METADATA_DELIMITER>
+            Ignore metadata after first appearance of given delimiter. Accepts delimiter character
+            like ','. Maximum of one character. Use 't' for tab and 's' for space. Treats anything
+            before first appearance of delimiter as the "word". Only works with word removals, not
+            word modifications (like to lowercase)
+
+    -G, --ignore-starting-metadata <IGNORE_STARTING_METADATA_DELIMITER>
+            Ignore metadata before first appearance of given delimiter. Accepts delimiter character
+            like ','. Maximum of one character. Use 't' for tab and 's' for space. Treats anything
+            after first appearance of delimiter as the "word". Only works with word removals, not
+            word modifications (like to lowercase)
 
     -h, --homophones <HOMOPHONES_LIST>
             Path(s) to file(s) containing homophone pairs. There must be one pair of homophones per
