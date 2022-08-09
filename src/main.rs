@@ -296,7 +296,7 @@ fn main() {
                 eprintln!("Error: {}", err_message);
                 process::exit(2);
             } else {
-                (parse_delimiter(before_delimiter), None)
+                (None, parse_delimiter(before_delimiter))
             }
         }
     };
