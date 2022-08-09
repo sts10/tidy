@@ -126,13 +126,13 @@ pub fn split_and_vectorize<'a>(string_to_split: &'a str, splitter: &str) -> Vec<
 pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     let mut tidied_list = vec![];
     for word in &req.list {
-        // haha, love this
+        // METADATA-IGNORING WORD REMOVALS
         // If user chose to ignore metadata, split word vs. metadata on the first comma
         // found.
         // We'll then do removals operations on the "word", ignoriong metadata.
         // Later, we'll re-add the metadata to the word.
 
-        // We need delimiter_to_use to have a broad scope so that we can use it
+        // We need delimiter to have a broad scope so that we can use it
         // when we re-add the metadata at the end. Default to comma, but can be changed
         // in match statement here.
         let (mut new_word, delimiter, metadata, metadata_position) =
@@ -173,13 +173,42 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
                 (None, None) => (word.to_string(), None, None, None),
             };
 
-        // Important to trim starting and ending whitespace first.
         new_word = new_word.trim_start().trim_end().to_string();
 
-        // First, remove words that should be removed
-        // Could switch to an Option?
-        // let new_word: Option<String> = Some(new_word);
+        // WORD MODIFICATIONS
+        // For logic reasons, it's crucial that Tidy perform these word
+        // modifications BEFORE it runs word removals.
+        // If user has chosen to Ignore Metadata, we're guranteed
+        // that all of these will be None, so we don't have to worry
+        // about metadata loss due to de-duplication caused by word modification.
+        new_word = match req.should_delete_before_first_delimiter {
+            Some(delimiter) => delete_before_first_char(&new_word, delimiter).to_string(),
+            None => new_word,
+        };
+        new_word = match req.should_delete_after_first_delimiter {
+            Some(delimiter) => delete_after_first_char(&new_word, delimiter).to_string(),
+            None => new_word,
+        };
+        if req.should_delete_integers {
+            new_word = delete_integers(new_word.to_string());
+        }
+        if req.should_delete_nonalphanumeric {
+            new_word = delete_nonalphanumeric(new_word.to_string());
+        }
+        if req.to_lowercase {
+            new_word = new_word.to_ascii_lowercase();
+        }
+        if req.should_straighten_quotes {
+            new_word = straighten_quotes(&new_word).to_string();
+        }
 
+        new_word = new_word.trim_start().trim_end().to_string();
+
+        // WORD REMOVALS
+        // Now that the words have been modified, we can move on to
+        // word removals.
+        // IF user has chosen to ignore any metadata, these should be the
+        // first edits that we do.
         if req.should_remove_nonascii {
             // https://doc.rust-lang.org/std/primitive.char.html#method.is_ascii
             if new_word.chars().any(|chr| !chr.is_ascii()) {
@@ -226,9 +255,6 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
             None => (),
         };
 
-        // trim whitespace
-        new_word = new_word.trim_start().trim_end().to_string();
-
         match req.minimum_length {
             Some(minimum_length) => {
                 if new_word.chars().count() < minimum_length {
@@ -266,39 +292,12 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
 
         // trim whitespace
         new_word = new_word.trim_start().trim_end().to_string();
-
-        // Now on to word MODIFICATIONS, rather than word removals
-        new_word = match req.should_delete_before_first_delimiter {
-            Some(delimiter) => delete_before_first_char(&new_word, delimiter).to_string(),
-            None => new_word,
-        };
-        new_word = match req.should_delete_after_first_delimiter {
-            Some(delimiter) => delete_after_first_char(&new_word, delimiter).to_string(),
-            None => new_word,
-        };
-        if req.should_delete_integers {
-            new_word = delete_integers(new_word.to_string());
-        }
-        if req.should_delete_nonalphanumeric {
-            new_word = delete_nonalphanumeric(new_word.to_string());
-        }
-        if req.to_lowercase {
-            new_word = new_word.to_ascii_lowercase();
-        }
-        if req.should_straighten_quotes {
-            new_word = straighten_quotes(&new_word).to_string();
-        }
-
-        // trim whitespace
-        new_word = new_word.trim_start().trim_end().to_string();
         // check if blank
-        // if new_word.is_some() && new_word != Some("") {
         if new_word != "" {
             tidied_list.push(new_word);
         }
     }
     // Now truncate list, if requested
-    // Maybe should move this up in the order though...
     tidied_list = match req.take_first {
         Some(amount_to_take) => {
             tidied_list.truncate(amount_to_take);
@@ -336,7 +335,6 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     } else {
         tidied_list
     };
-
     tidied_list = if req.should_remove_prefix_words {
         remove_prefix_words(dedup_without_sorting(&mut tidied_list))
     } else {
@@ -368,7 +366,7 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     };
     // Finally, sort and dedup list one more time
     // (probably unneccesary, since we've only cut
-    // words since that last time we sorted and de-duped.
+    // words since that last time we sorted and de-duped.)
     if req.sort_alphabetically {
         tidied_list.sort();
     }

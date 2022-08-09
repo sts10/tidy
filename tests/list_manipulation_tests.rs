@@ -455,6 +455,20 @@ mod list_manipulation_tests {
     }
 
     #[test]
+    fn can_remove_words_longer_than_a_specified_maximum_length_after_deleting_integers() {
+        let this_tidy_request = TidyRequest {
+            list: make_lists().1,
+            should_delete_integers: true,
+            maximum_length: Some(7),
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
+        assert!(new_list.contains(&"active".to_string()));
+        assert!(new_list.contains(&"acclaim".to_string()));
+        assert!(!new_list.contains(&"word with spacaes in it".to_string()));
+    }
+
+    #[test]
     fn can_gurantee_a_maximum_length_of_shared_prefix_for_autocomplete() {
         let this_tidy_request = TidyRequest {
             list: make_lists().0,
