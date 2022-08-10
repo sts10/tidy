@@ -110,6 +110,7 @@ pub fn display_list_information(
         // Numbers of characters required to definitely get to a unique
         // prefix
         eprintln!("Unique character prefix   : {}", longest_shared_prefix + 1);
+        eprintln!("McMillan Inequality       : {}", satisfies_mcmillan(&list));
     }
 }
 use rand::seq::SliceRandom;
@@ -315,6 +316,28 @@ pub fn efficiency_per_character(list: &[String]) -> f64 {
     let entropy_per_word = calc_entropy_per_word(list.len());
 
     entropy_per_word / mean_word_length
+}
+
+// https://www.youtube.com/watch?v=yHw1ka-4g0s
+pub fn satisfies_mcmillan(list: &[String]) -> bool {
+    let B = count_unqiue_characters(list);
+    let mut running_total: f64 = 0.0;
+    for word in list {
+        running_total = running_total + (1.0 / (B.pow(word.len().try_into().unwrap()) as f64));
+    }
+    running_total <= 1.0
+}
+
+fn count_unqiue_characters(list: &[String]) -> usize {
+    let mut characters = vec![];
+    for word in list {
+        for l in word.chars() {
+            characters.push(l);
+        }
+    }
+    characters.sort();
+    characters.dedup();
+    characters.len()
 }
 
 /// A simple helper function that gets the shortest word on
