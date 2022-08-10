@@ -1,11 +1,15 @@
 //! Display attributes and information about the generated word list
 
+pub mod uniquely_decodable;
+// use crate::check_decodability;
+use crate::display_information::uniquely_decodable::check_decodability;
+use crate::split_and_vectorize;
+
 /// This is a large and long function that prints all of the attributes of
 /// the generated (new) list.
 ///
 /// We just want to "display" this information, rather than print it to files
 /// or stdout, so we use `eprintln!`
-use crate::split_and_vectorize;
 pub fn display_list_information(
     list: &[String],
     level: u8,
@@ -58,10 +62,15 @@ pub fn display_list_information(
         longest_word
     );
     let free_of_prefix_words = !has_prefix_words(&list);
-    eprintln!("Free of prefix words      : {}", free_of_prefix_words);
+    eprintln!("Free of prefix words?     : {}", free_of_prefix_words);
 
     let free_of_suffix_words = !has_suffix_words(&list);
-    eprintln!("Free of suffix words      : {}", free_of_suffix_words);
+    eprintln!("Free of suffix words?     : {}", free_of_suffix_words);
+
+    // At least for now, this one is EXPENSIVE
+    if level >= 4 {
+        eprintln!("Uniquely decodable?       : {}", check_decodability(&list));
+    }
 
     let entropy_per_word = calc_entropy_per_word(list.len());
     eprintln!("Entropy per word          : {:.3} bits", entropy_per_word);
@@ -80,7 +89,7 @@ pub fn display_list_information(
     // entropy estimate against a simple brute force attack, under which
     // we assume each character adds 4.7 bits of entropy.
     eprintln!(
-        "Above brute force line    : {}",
+        "Above brute force line?   : {}",
         assumed_entropy_per_character <= 4.7
     );
 
@@ -90,7 +99,7 @@ pub fn display_list_information(
     // Thus, this is a more difficult line for a given list to pass above than
     // the "brute force" line described above.
     eprintln!(
-        "Above Shannon line        : {}",
+        "Above Shannon line?       : {}",
         assumed_entropy_per_character <= 2.62
     );
 
