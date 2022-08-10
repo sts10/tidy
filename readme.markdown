@@ -100,18 +100,20 @@ OPTIONS:
             Force overwrite of output file if it exists
 
     -g, --ignore-after <IGNORE_AFTER_DELIMITER>
-            Ignore metadata after the first instance of the specified delimiter until the end of
+            Ignore characters after the first instance of the specified delimiter until the end of
             line, treating anything before the delimiter as a word. Delimiter must be a single
-            character (e.g., ','). Use 't' for tab and 's' for space. Works with attribute analysis
-            and most word removal options, but not with word modifications (like to lowercase). May
-            not be used together with -d, -D or -G options
+            character (e.g., ','). Use 't' for tab and 's' for space. Helpful for ignoring metadata
+            like word frequencies. Works with attribute analysis and most word removal options, but
+            not with word modifications (like to lowercase). May not be used together with -d, -D or
+            -G options
 
     -G, --ignore-before <IGNORE_BEFORE_DELIMITER>
-            Ignore metadata before and including the first instance of the specified delimiter,
+            Ignore characters before and including the first instance of the specified delimiter,
             treating anything after the delimiter as a word. Delimiter must be a single character
-            (e.g., ','). Use 't' for tab and 's' for space. Works with attribute analysis and most
-            word removal options, but not with word modifications (like to lowercase). May not be
-            used together with -d, -D or -g options
+            (e.g., ','). Use 't' for tab and 's' for space. Helpful for ignoring metadata like word
+            frequencies. Works with attribute analysis and most word removal options, but not with
+            word modifications (like to lowercase). May not be used together with -d, -D or -g
+            options
 
     -h, --homophones <HOMOPHONES_LIST>
             Path(s) to file(s) containing homophone pairs. There must be one pair of homophones per
@@ -228,7 +230,7 @@ OPTIONS:
 
 -   `tidy -lA -m 3 -o new-list.txt inputted_word_list.txt` Similar to above, but the `-m 3` means new list won't have any words under 3 characters in length. Have Tidy also print some attributes about the new list to the terminal screen.
 
--   `tidy -t -o just_the_words.txt diceware_list.txt` If you've got [a diceware list with numbers and a tab before each word](https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt), the `-t` flag will delete everything up to and including the first tab in each line ("11133 abruptly" becomes "abruptly").
+-   `tidy -d t -o just_the_words.txt diceware_list.txt` If you've got [a diceware list with numbers and a tab before each word](https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt), the `-d t` flag will delete everything up to and including the first tab in each line ("11133 abruptly" becomes "abruptly").
 
 -   `tidy --dice 6 -o diceware_list.txt just_words.txt` Add corresponding dice roll numbers to a list with `--dice`. Can accept dice sides between 2 and 36. Each dice roll and word are separated by a tab.
 
@@ -236,7 +238,7 @@ OPTIONS:
 
 -   `tidy -P -x 4 --cut-to 6**5 --dice 6 --output diceware.txt 1password-2021.txt` Same as above, but use exponent notation to represent the `--cut-to` number, saving you some arithmetic.
 
--   `tidy -o d-and-d.txt -D 20 --cut-to 20**3 wordlist.txt` Create an 8,000-word list where each word corresponds to 3 rolls of a 20-sided die (`06-07-07	dragon`). See [EFF's fandom-inspired wordlists](https://www.eff.org/deeplinks/2018/08/dragon-con-diceware) for more.
+-   `tidy -o d-and-d.txt --dice 20 --cut-to 20**3 wordlist.txt` Create an 8,000-word list where each word corresponds to 3 rolls of a 20-sided die (`06-07-07	dragon`). See [EFF's fandom-inspired wordlists](https://www.eff.org/deeplinks/2018/08/dragon-con-diceware) for more.
 
 ## List attributes
 

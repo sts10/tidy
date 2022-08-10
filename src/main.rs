@@ -62,17 +62,19 @@ struct Args {
     #[clap(short = 's', long = "samples")]
     samples: bool,
 
-    /// Ignore metadata after the first instance of the specified delimiter until the end of line, treating
+    /// Ignore characters after the first instance of the specified delimiter until the end of line, treating
     /// anything before the delimiter as a word. Delimiter must be a single character (e.g., ','). Use 't'
-    /// for tab and 's' for space. Works with attribute analysis and most word removal options, but not
-    /// with word modifications (like to lowercase). May not be used together with -d, -D or -G options.
+    /// for tab and 's' for space. Helpful for ignoring metadata like word frequencies.
+    /// Works with attribute analysis and most word removal options, but not with word modifications
+    /// (like to lowercase). May not be used together with -d, -D or -G options.
     #[clap(short = 'g', long = "ignore-after")]
     ignore_after_delimiter: Option<char>,
 
-    /// Ignore metadata before and including the first instance of the specified delimiter, treating
+    /// Ignore characters before and including the first instance of the specified delimiter, treating
     /// anything after the delimiter as a word. Delimiter must be a single character (e.g., ','). Use 't'
-    /// for tab and 's' for space. Works with attribute analysis and most word removal options, but not
-    /// with word modifications (like to lowercase). May not be used together with -d, -D or -g options.
+    /// for tab and 's' for space. Helpful for ignoring metadata like word frequencies.
+    /// Works with attribute analysis and most word removal options, but not with word modifications
+    /// (like to lowercase). May not be used together with -d, -D or -g options.
     #[clap(short = 'G', long = "ignore-before")]
     ignore_before_delimiter: Option<char>,
 
