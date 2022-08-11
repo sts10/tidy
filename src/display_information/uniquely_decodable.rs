@@ -30,7 +30,7 @@ fn generate_cn(c: &HashSet<String>, n: usize) -> HashSet<String> {
         let mut cn = HashSet::new();
 
         // generate c_(n-1)
-        let cn_minus_1 = generate_cn(&c, n - 1);
+        let cn_minus_1 = generate_cn(c, n - 1);
         for w1 in c.iter() {
             for w2 in cn_minus_1.iter() {
                 if w1.len() > w2.len() && w1.starts_with(w2) {
