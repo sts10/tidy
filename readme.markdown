@@ -394,6 +394,7 @@ See [this repo](https://github.com/sts10/splitter) for more information.
 -   [Original "Reinhold" diceware list](https://theworld.com/%7Ereinhold/diceware.wordlist.asc) created by [Arnold Reinhold](https://theworld.com/~reinhold/). Though I recommend you use the EFF long list instead.
 -   Arnold Reinhold hosts [diceware lists in a variety of languages](https://theworld.com/~reinhold/diceware.html#Diceware%20in%20Other%20Languages|outline).
 -   [r/wordlists subreddit](https://www.reddit.com/r/wordlists/), which seems to have links to a few non-English word lists.
+-   [simple1024](https://github.com/pera/simple1024) is a word list with 1024 common English words, an alternative to EFF's short word lists.
 
 ### Shameless plug
 
