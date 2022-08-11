@@ -4,9 +4,6 @@
 /// I followed
 /// https://github.com/danhales/blog-sardinas-patterson/blob/master/index.ipynb
 /// very closely.
-///
-/// It is not very fast, likely because of the handful of `clone()` calls.
-/// We should try to minimize those to increase the speed of the calculations!
 use std::collections::HashSet;
 
 pub fn check_decodability(c: &[String]) -> bool {
@@ -14,7 +11,7 @@ pub fn check_decodability(c: &[String]) -> bool {
     // Since we always want this list to be unique, and we're
     // going to eventually calculate a disjoint boolean!
     let c = vec_to_hash(c);
-    sardinas_patterson_theorem(c.clone())
+    sardinas_patterson_theorem(c)
 }
 
 fn vec_to_hash(v: &[String]) -> HashSet<String> {
@@ -26,14 +23,14 @@ fn vec_to_hash(v: &[String]) -> HashSet<String> {
 }
 
 // Generate c for any number n
-fn generate_cn(c: HashSet<String>, n: usize) -> HashSet<String> {
+fn generate_cn(c: &HashSet<String>, n: usize) -> HashSet<String> {
     if n == 0 {
-        return c;
+        return c.to_owned();
     } else {
         let mut cn = HashSet::new();
 
         // generate c_(n-1)
-        let cn_minus_1 = generate_cn(c.clone(), n - 1);
+        let cn_minus_1 = generate_cn(&c, n - 1);
         for w1 in c.iter() {
             for w2 in cn_minus_1.iter() {
                 if w1.len() > w2.len() && w1.starts_with(w2) {
@@ -63,7 +60,7 @@ fn generate_c_infinity_with_a_halt_break(c: HashSet<String>) -> HashSet<String> 
     let mut cs = HashSet::new();
     let mut c_infinity = HashSet::new();
     let mut n = 1;
-    let mut cn = generate_cn(c.clone(), n);
+    let mut cn = generate_cn(&c, n);
 
     while cn.len() > 0 {
         if cn.is_subset(&cs) {
@@ -73,7 +70,7 @@ fn generate_c_infinity_with_a_halt_break(c: HashSet<String>) -> HashSet<String> 
             cs = cs.union(&cn).map(|e| e.to_string()).collect();
             c_infinity = c_infinity.union(&cn).map(|e| e.to_string()).collect();
             n += 1;
-            cn = generate_cn(c.clone(), n);
+            cn = generate_cn(&c, n);
         }
     }
     c_infinity
