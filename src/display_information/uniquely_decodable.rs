@@ -1,4 +1,11 @@
-// Followed https://github.com/danhales/blog-sardinas-patterson/blob/master/index.ipynb
+/// This is a (rather clumsily) implementation of the Sardinas-Patterson algorithm
+/// The goal is to check if a word list (`c`) is uniquely decodable.
+///
+/// I followed
+/// https://github.com/danhales/blog-sardinas-patterson/blob/master/index.ipynb
+/// very closely.
+/// It is not very fast, likely because of the handful of `clone()` calls.
+/// We should try to minimize those to increase the speed of the calculations!
 use std::collections::HashSet;
 
 pub fn check_decodability(c: &[String]) -> bool {

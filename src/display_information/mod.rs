@@ -119,7 +119,9 @@ pub fn display_list_information(
         // Numbers of characters required to definitely get to a unique
         // prefix
         eprintln!("Unique character prefix   : {}", longest_shared_prefix + 1);
-        eprintln!("McMillan Inequality       : {}", satisfies_mcmillan(&list));
+        if level >= 3 {
+            eprintln!("McMillan Inequality       : {}", satisfies_mcmillan(&list));
+        }
     }
 }
 use rand::seq::SliceRandom;
@@ -329,10 +331,11 @@ pub fn efficiency_per_character(list: &[String]) -> f64 {
 
 // https://www.youtube.com/watch?v=yHw1ka-4g0s
 pub fn satisfies_mcmillan(list: &[String]) -> bool {
-    let B = count_unqiue_characters(list);
+    let alphabet_size = count_unqiue_characters(list);
     let mut running_total: f64 = 0.0;
     for word in list {
-        running_total = running_total + (1.0 / (B.pow(word.len().try_into().unwrap()) as f64));
+        running_total =
+            running_total + (1.0 / (alphabet_size.pow(word.len().try_into().unwrap()) as f64));
     }
     running_total <= 1.0
 }
