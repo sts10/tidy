@@ -4,13 +4,15 @@
 /// I followed
 /// https://github.com/danhales/blog-sardinas-patterson/blob/master/index.ipynb
 /// very closely.
+///
 /// It is not very fast, likely because of the handful of `clone()` calls.
 /// We should try to minimize those to increase the speed of the calculations!
 use std::collections::HashSet;
 
 pub fn check_decodability(c: &[String]) -> bool {
-    // Right off the bat, convert inputted Slice
-    // to a HashSet
+    // Right off the bat, convert inputted Slice to a HashSet
+    // Since we always want this list to be unique, and we're
+    // going to eventually calculate a disjoint boolean!
     let c = vec_to_hash(c);
     sardinas_patterson_theorem(c.clone())
 }
@@ -23,7 +25,7 @@ fn vec_to_hash(v: &[String]) -> HashSet<String> {
     my_hash
 }
 
-// generate c for any number n
+// Generate c for any number n
 fn generate_cn(c: HashSet<String>, n: usize) -> HashSet<String> {
     if n == 0 {
         return c;
@@ -42,7 +44,7 @@ fn generate_cn(c: HashSet<String>, n: usize) -> HashSet<String> {
                 }
             }
         }
-        // Now the other way?
+        // Now the other way? Could we clean this up?
         for w1 in cn_minus_1.iter() {
             for w2 in c.iter() {
                 if w1.len() > w2.len() && w1.starts_with(w2) {
@@ -77,7 +79,7 @@ fn generate_c_infinity_with_a_halt_break(c: HashSet<String>) -> HashSet<String> 
     c_infinity
 }
 
-/// Returns true if c in uniquely decodable
+/// Returns true if c is uniquely decodable
 fn sardinas_patterson_theorem(c: HashSet<String>) -> bool {
     let c_infinity = generate_c_infinity_with_a_halt_break(c.clone());
     c.is_disjoint(&c_infinity)
