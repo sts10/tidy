@@ -3,6 +3,7 @@
 pub mod uniquely_decodable;
 // use crate::check_decodability;
 use crate::display_information::uniquely_decodable::check_decodability;
+use crate::parse_delimiter;
 use crate::split_and_vectorize;
 
 /// This is a large and long function that prints all of the attributes of
@@ -21,6 +22,7 @@ pub fn display_list_information(
         ignore_starting_metadata_delimiter,
     ) {
         (Some(delimiter), None) => {
+            let delimiter = parse_delimiter(delimiter).unwrap();
             let mut just_the_words = vec![];
             for word in list {
                 let split_vec = split_and_vectorize(word, &delimiter.to_string());
@@ -29,6 +31,7 @@ pub fn display_list_information(
             just_the_words
         }
         (None, Some(delimiter)) => {
+            let delimiter = parse_delimiter(delimiter).unwrap();
             let mut just_the_words = vec![];
             for word in list {
                 let split_vec = split_and_vectorize(word, &delimiter.to_string());
@@ -140,10 +143,16 @@ pub fn generate_samples(
                     ignore_ending_metadata_delimiter,
                     ignore_starting_metadata_delimiter,
                 ) {
-                    (Some(delimiter), None) => samples
-                        .push(split_and_vectorize(word, &delimiter.to_string())[0].to_string()),
-                    (None, Some(delimiter)) => samples
-                        .push(split_and_vectorize(word, &delimiter.to_string())[1].to_string()),
+                    (Some(delimiter), None) => {
+                        let delimiter = parse_delimiter(delimiter).unwrap();
+                        samples
+                            .push(split_and_vectorize(word, &delimiter.to_string())[0].to_string())
+                    }
+                    (None, Some(delimiter)) => {
+                        let delimiter = parse_delimiter(delimiter).unwrap();
+                        samples
+                            .push(split_and_vectorize(word, &delimiter.to_string())[1].to_string())
+                    }
                     (Some(_delimiter1), Some(_delimiter2)) => {
                         panic!("Can't have starting and ending delimiters")
                     }
