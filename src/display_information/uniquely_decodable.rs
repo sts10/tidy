@@ -80,7 +80,5 @@ fn generate_c_infinity_with_a_halt_break(c: HashSet<String>) -> HashSet<String> 
 /// Returns true if c in uniquely decodable
 fn sardinas_patterson_theorem(c: HashSet<String>) -> bool {
     let c_infinity = generate_c_infinity_with_a_halt_break(c.clone());
-    // let num = c.intersection(&c_infinity).collect::<&str>().len(); // budget_intersection_count(c, &c_infinity);
-    // return num == 0;
     c.is_disjoint(&c_infinity)
 }
