@@ -242,7 +242,7 @@ OPTIONS:
 
 ## List attributes
 
-Tidy can also calculate different attributes about a created list. `tidy -AAAts --dry-run eff_long_list.txt` prints:
+Tidy can also calculate different attributes about a created list. `tidy -AAAA -G t --dry-run eff_long_list.txt` prints:
 
 ```text
 Attributes of new list
@@ -251,12 +251,14 @@ List length               : 7776 words
 Mean word length          : 6.99 characters
 Length of shortest word   : 3 characters (aim)
 Length of longest word    : 9 characters (zoologist)
-Free of prefix words      : true
+Free of prefix words?     : true
+Free of suffix words?     : false
+Uniquely decodable?       : true
 Entropy per word          : 12.925 bits
 Efficiency per character  : 1.849 bits
 Assumed entropy per char  : 4.308 bits
-Above brute force line    : true
-Above Shannon line        : false
+Above brute force line?   : true
+Above Shannon line?       : false
 Shortest edit distance    : 1
 Mean edit distance        : 6.858
 Longest shared prefix     : 8
