@@ -123,7 +123,12 @@ pub fn display_list_information(
         // prefix
         eprintln!("Unique character prefix   : {}", longest_shared_prefix + 1);
         if level >= 3 {
-            eprintln!("McMillan Inequality       : {}", satisfies_mcmillan(&list));
+            let mcmillan = if satisfies_mcmillan(&list) {
+                "satisfied"
+            } else {
+                "not satisfied"
+            };
+            eprintln!("Kraft-McMillan inequality : {}", mcmillan);
         }
     }
 }
