@@ -128,6 +128,10 @@ OPTIONS:
     -I, --remove-integers
             Remove all words with integers in them from list
 
+    -K, --schlinkert-prune
+            Use Sardinas-Patterson algorithm to remove words to make list uniquely decodable.
+            Experimental!
+
     -l, --lowercase
             Lowercase all words on new list
 
