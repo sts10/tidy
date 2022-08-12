@@ -52,6 +52,34 @@ mod uniquely_decodable_tests {
     }
 
     #[test]
+    fn given_a_series_of_binary_codes_can_determine_which_are_uniquely_decodable() {
+        let list: Vec<String> = vec!["0", "10", "110", "111"]
+            .iter()
+            .map(|w| w.to_string())
+            .collect();
+        assert!(check_decodability(&list));
+
+        let list: Vec<String> = vec!["0", "10", "010", "101"]
+            .iter()
+            .map(|w| w.to_string())
+            .collect();
+        assert!(!check_decodability(&list));
+
+        let list: Vec<String> = vec!["0", "01", "011", "0111"]
+            .iter()
+            .map(|w| w.to_string())
+            .collect();
+        assert!(check_decodability(&list));
+
+        // '0, 1, 00, 11' is not an uniquely decodable code
+        let list: Vec<String> = vec!["0", "1", "00", "11"]
+            .iter()
+            .map(|w| w.to_string())
+            .collect();
+        assert!(!check_decodability(&list));
+    }
+
+    #[test]
     fn knows_that_a_fixed_length_code_is_uniquely_decodable() {
         let list: Vec<String> = vec![
             "buoy", "cote", "dads", "duel", "gale", "life", "lurk", "peer", "rain", "tong",
