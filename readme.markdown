@@ -31,17 +31,19 @@ Optionally, the tool can...
 -   make all characters lowercase (`-l`)
 -   set a minimum and maximum for word lengths
 -   handle words with integers and non-alphanumeric characters
--   delete all characters through first space (`-s`) or tab (`-t`)
--   take lists of words to reject or retain
+-   delete all characters before or after a delimiter (`-d`/`-D`)
+-   take lists of words to reject or allow
 -   remove homophones from a provided list of comma-separated pairs of homophones
--   enforce a minimum [edit distance](https://en.wikipedia.org/wiki/Edit_distance) between words (`-d`)
+-   enforce a minimum [edit distance](https://en.wikipedia.org/wiki/Edit_distance) between words
 -   remove prefix words (see below) (`-P`)
--   remove suffix words (`-U`)
+-   remove suffix words (`-S`)
 -   remove all words with non-alphabetic characters from new list
 -   straighten curly/smart quotes, i.e. replacing them with their "straight" equivalents (`-q`)
 -   guarantee a maximum shared prefix length (see below) (`-x`)
--   print corresponding dice rolls before words, separated by a tab. Dice can have 2 to 36 sides. (`-D`)
--   print information about the new list, such as entropy per word, to the terminal (`-A`, `-AA`, or `-AAA`, depending on how much information you want to be printed)
+-   print corresponding dice rolls before words, separated by a tab. Dice can have 2 to 36 sides. (`-dice`)
+-   print information about the new list, such as entropy per word, to the terminal (`-A`, `-AA`, `-AAA`, or `-AAAA` depending on how much information you want to printed)
+
+and more! 
 
 If you do NOT want Tidy to sort list alphabetically, you can use the `--no-sort` option.
 
