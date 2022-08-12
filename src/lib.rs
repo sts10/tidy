@@ -6,7 +6,9 @@ use std::io::BufReader;
 use std::path::PathBuf;
 pub mod display_information;
 pub mod edit_distance;
+pub mod sardinas_patterson_pruning;
 use crate::edit_distance::find_edit_distance;
+use crate::sardinas_patterson_pruning::get_sardinas_patterson_final_intersection;
 
 use memchr::memchr;
 
@@ -22,6 +24,7 @@ pub struct TidyRequest {
     pub should_straighten_quotes: bool,
     pub should_remove_prefix_words: bool,
     pub should_remove_suffix_words: bool,
+    pub should_schlinkert_prune: bool,
     pub should_remove_nonalphanumeric: bool,
     pub should_delete_nonalphanumeric: bool,
     pub should_remove_nonalphabetic: bool,
@@ -344,6 +347,11 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     } else {
         tidied_list
     };
+    tidied_list = if req.should_schlinkert_prune {
+        schlinkert_prune(&dedup_without_sorting(&mut tidied_list))
+    } else {
+        tidied_list
+    };
     tidied_list = match req.maximum_shared_prefix_length {
         Some(maximum_shared_prefix_length) => {
             guarantee_maximum_prefix_length(&tidied_list, maximum_shared_prefix_length)
@@ -474,6 +482,13 @@ fn guarantee_maximum_prefix_length(
         new_word_list.push(t.1.to_string());
     }
     new_word_list
+}
+
+fn schlinkert_prune(list: &[String]) -> Vec<String> {
+    let offenders_to_remove = get_sardinas_patterson_final_intersection(&list);
+    let mut new_list = list.to_owned();
+    new_list.retain(|x| !offenders_to_remove.contains(x));
+    new_list
 }
 
 /// Given a word and a `usize` of `length`, this function returns

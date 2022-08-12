@@ -100,6 +100,11 @@ struct Args {
     #[clap(short = 'S', long = "remove-suffix")]
     remove_suffix_words: bool,
 
+    /// Use Sardinas-Patterson algorithm to remove words to make list
+    /// uniquely decodable. Experimental!
+    #[clap(short = 'K', long = "schlinkert-prune")]
+    schlinkert_prune: bool,
+
     /// Remove all words with non-alphanumeric characters from new list. Words with diacritics will
     /// remain
     #[clap(short = 'N', long = "remove-nonalphanumeric")]
@@ -261,6 +266,7 @@ fn main() {
                 || opt.straighten_quotes
                 || opt.remove_prefix_words
                 || opt.remove_suffix_words
+                || opt.schlinkert_prune
                 || opt.delete_nonalphanumeric
                 || opt.delete_integers
                 || opt.delete_before_delimiter.is_some()
@@ -284,6 +290,7 @@ fn main() {
                 || opt.straighten_quotes
                 || opt.remove_prefix_words
                 || opt.remove_suffix_words
+                || opt.schlinkert_prune
                 || opt.delete_nonalphanumeric
                 || opt.delete_integers
                 || opt.delete_after_delimiter.is_some()
@@ -332,6 +339,7 @@ fn main() {
         should_straighten_quotes: opt.straighten_quotes,
         should_remove_prefix_words: opt.remove_prefix_words,
         should_remove_suffix_words: opt.remove_suffix_words,
+        should_schlinkert_prune: opt.schlinkert_prune,
         should_remove_integers: opt.remove_integers,
         should_delete_integers: opt.delete_integers,
         should_remove_nonalphanumeric: opt.remove_nonalphanumeric,
