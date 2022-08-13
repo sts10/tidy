@@ -417,25 +417,25 @@ See [this repo](https://github.com/sts10/splitter) for more information.
 
 ## Appendix: Where can I find some large word lists?
 
--   The [Electronic Frontier Foundation](https://www.eff.org/) has published [a few word lists for creating diceware passphrases](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases). I'm pretty sure password managers KeePassXC and BitWarden use [the EFF long list](https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt). Since there's a tab between the dice numbers and each word, Tidy can delete the dice numbers easily with something like `tidy -t -o clean_eff.txt eff_large_wordlist.txt` or using the `-i` flag.
-    -   The EFF also has some [fandom-inspired lists](https://www.eff.org/deeplinks/2018/08/dragon-con-diceware) that Tidy can clean up with the `-s` flag.
+-   The [Electronic Frontier Foundation](https://www.eff.org/) has published [a few word lists for creating diceware passphrases](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases). I'm pretty sure password manager BitWarden uses [the EFF long list](https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt). [KeePassXC](https://keepassxc.org/) uses [the EFF long list with some minor modifications](https://github.com/keepassxreboot/keepassxc/blob/develop/share/wordlists/eff_large.wordlist). Since there's a tab between the dice numbers and each word, Tidy can delete the dice numbers easily with something like `tidy -D t -o clean_eff.txt eff_large_wordlist.txt` or using the `-i` flag.
+    -   The EFF also has some [fandom-inspired lists](https://www.eff.org/deeplinks/2018/08/dragon-con-diceware) that Tidy can clean up with the `-D s` option.
 -   I'm [pretty sure](https://twitter.com/1Password/status/1462885816569577480) this is [1Password](https://1password.com/)'s [word list](https://1password.com/txt/agwordlist.txt), as of 2021.
     -   [1Password](https://1password.com/) also published a slightly different [word list](https://github.com/agilebits/crackme/blob/master/doc/AgileWords.txt) in 2018.
 -   [SecureDrop](https://github.com/freedomofpress/securedrop/) has separate lists of [adjectives](https://github.com/freedomofpress/securedrop/blob/develop/securedrop/dictionaries/adjectives.txt) and [nouns](https://github.com/freedomofpress/securedrop/blob/develop/securedrop/dictionaries/nouns.txt).
--   [Bitcoin BIPS-0039](https://github.com/bitcoin/bips/tree/master/bip-0039) (2,048 words) (h/t [atoponce](https://www.reddit.com/r/Passwords/comments/sqrymt/comment/hwnfb94/?utm_source=reddit&utm_medium=web2x&context=3))
--   [Monero's word list](https://github.com/monero-project/monero/blob/master/src/mnemonics/english.h) (1,626 words) (h/t [atoponce](https://www.reddit.com/r/Passwords/comments/sqrymt/comment/hwnfb94/?utm_source=reddit&utm_medium=web2x&context=3))
+-   [Bitcoin BIPS-0039](https://github.com/bitcoin/bips/tree/master/bip-0039) (2,048 words) (h/t [atoponce](https://www.reddit.com/r/Passwords/comments/sqrymt/comment/hwnfb94/))
+-   [Monero's word list](https://github.com/monero-project/monero/blob/master/src/mnemonics/english.h) (1,626 words) (h/t [atoponce](https://www.reddit.com/r/Passwords/comments/sqrymt/comment/hwnfb94/))
 -   [Mnemonicode](https://github.com/schollz/mnemonicode/blob/master/word_list.go) is another word list optimized for pronunciation. I believe [croc](https://github.com/schollz/croc), another file transferring tool, uses it.
 -   [Magic Wormhole](https://github.com/magic-wormhole/magic-wormhole/), a tool for transferring files, uses [a version of the PGP Word List](https://github.com/magic-wormhole/magic-wormhole/blob/master/src/wormhole/_wordlist.py), which specifically tries to use pairs of words that are phonetically distinct.
 -   A collection of a few [Public Domain Word Lists](https://github.com/MichaelWehar/Public-Domain-Word-Lists)
 -  [ulif's "diceware"](https://github.com/ulif/diceware) seems to have collected [a few word lists](https://github.com/ulif/diceware/tree/master/diceware/wordlists) in its Github repo, along with [a separate page that explains each of the lists](https://github.com/ulif/diceware/blob/master/docs/wordlists.rst).
--   [dmuth's "diceware" program](https://github.com/dmuth/diceware) has a [collection of lists](https://github.com/dmuth/diceware/tree/master/wordlist) (h/t [atoponce](https://www.reddit.com/r/Passwords/comments/sqrymt/comment/hwnfb94/?utm_source=reddit&utm_medium=web2x&context=3))
--   [Niceware list](https://github.com/diracdeltas/niceware/blob/master/lib/wordlist.js) (~65,000 words) (there's also [a Rust port of niceware](https://github.com/healeycodes/niceware)).
+-   [dmuth's "diceware" program](https://github.com/dmuth/diceware) has a [collection of lists](https://github.com/dmuth/diceware/tree/master/wordlist) (h/t [atoponce](https://www.reddit.com/r/Passwords/comments/sqrymt/comment/hwnfb94/))
+-   [Niceware list](https://github.com/diracdeltas/niceware/blob/master/lib/wordlist.js) (~65,000 words)<!-- (there's also [a Rust port of niceware](https://github.com/healeycodes/niceware)).-->
 -   [Lists used by a program called webpassgen](https://github.com/atoponce/webpassgen/tree/master/lists)
--   [Original "Reinhold" diceware list](https://theworld.com/%7Ereinhold/diceware.wordlist.asc) created by [Arnold Reinhold](https://theworld.com/~reinhold/). Though I recommend you use the EFF long list instead.
+-   [Original "Reinhold" diceware list](https://theworld.com/%7Ereinhold/diceware.wordlist.asc) created by [Arnold Reinhold](https://theworld.com/~reinhold/). Though it has some issues.
 -   Arnold Reinhold hosts [diceware lists in a variety of languages](https://theworld.com/~reinhold/diceware.html#Diceware%20in%20Other%20Languages|outline).
 -   [r/wordlists subreddit](https://www.reddit.com/r/wordlists/), which seems to have links to a few non-English word lists.
 -   [simple1024](https://github.com/pera/simple1024) is a word list with 1024 common English words, an alternative to EFF's short word lists.
 
 ### Shameless plug
 
--   I've created [a few word lists](https://github.com/sts10/generated-wordlists) using Tidy and [Google Books Ngram data](https://github.com/sts10/common_word_list_maker).
+-   I've created [a few word lists](https://github.com/sts10/generated-wordlists) using Tidy.
