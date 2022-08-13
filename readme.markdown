@@ -396,8 +396,9 @@ Where _S_ is the length of the shortest word on the list and _M_ is max list len
 | 3                    | 232             |
 | 4                    | 1428            |
 | 5                    | 8779            |
+| 6                    | 53974           |
 
-Pretty strict!
+As you can see, the Shannon line is quite a bit more "strict" than the brute force line.
 
 ## Language limitations
 
