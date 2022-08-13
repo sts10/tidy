@@ -369,13 +369,13 @@ Formula:
 
 Where _S_ is the length of the shortest word on the list, 26 is the number of letters in the English alphabet, and _M_ is max list length: 2<sup>_S_ * log<sub>2</sub>(26)</sup> = _M_
 
-(or `2**(S*4.7) == max_word_list_length`)
+(or in Python: `max_word_list_length = 2**(S*4.7)`)
 
 | shortest word length | max list length |
 |----------------------|-----------------|
 | 2                    | 675             |
 | 3                    | 17559           |
-| 4                    | 45419           |
+| 4                    | 456419          |
 | 5                    | 11863283        |
 
 ### An even stricter "line"
@@ -388,7 +388,7 @@ Formula:
 
 Where _S_ is the length of the shortest word on the list and _M_ is max list length: 2<sup>_S_ * 2.62</sup> = _M_
 
-(or `2**(S*2.62) == max_word_list_length`)
+(or in Python: `max_word_list_length = 2**(S*2.62)`)
 
 | shortest word length | max list length |
 |----------------------|-----------------|
@@ -397,13 +397,15 @@ Where _S_ is the length of the shortest word on the list and _M_ is max list len
 | 4                    | 1428            |
 | 5                    | 8779            |
 
+Pretty strict!
+
 ## Language limitations
 
 As a native English speaker, I wrote this program with lists of English (US) words in mind. Unfortunately, I haven't tested it with other languages. If you have ideas for how to make it more usable for other languages, please open an Issue or submit a Pull Request.
 
 ## What's up with the memchr dependency?
 
-Tidy's function for removing characters through the first space or tab uses a library called [memchr](https://docs.rs/memchr/2.3.4/memchr/), which "provides heavily optimized routines for searching bytes." The optimization gained from using this crate is far from noticeable or necessary for most uses of Tidy -- using Rust's built-in `find` is not much slower -- but I figured the extra speed was worth the dependency in this case.
+Tidy's function for removing characters on either side of a given delimiter uses a library called [memchr](https://docs.rs/memchr/2.3.4/memchr/), which "provides heavily optimized routines for searching bytes." The optimization gained from using this crate is far from noticeable or necessary for most uses of Tidy -- using Rust's built-in `find` is not much slower -- but I figured the extra speed was worth the dependency in this case.
 
 See [this repo](https://github.com/sts10/splitter) for more information.
 
@@ -411,7 +413,7 @@ See [this repo](https://github.com/sts10/splitter) for more information.
 
 -   [X] Add option to remove suffix words 
 -   [X] Add option to remove words that have characters from certain character sets, for example non-ASCII characters
--   [ ] Investigate making the list variable as [FxHashSet](https://docs.rs/fxhash/0.2.1/fxhash/type.FxHashSet.html)<String> rather than a `Vec<String>` to potentially boost performance, as is done in [csafe](https://github.com/sts10/csafe/blob/main/src/lib.rs). Will probably need to write some benchmarks with Criterion to measure potential performance gains.
+-   [ ] Investigate making the list variable as [FxHashSet](https://docs.rs/fxhash/0.2.1/fxhash/type.FxHashSet.html)<String> rather than a `Vec<String>` to potentially boost performance. Will probably need to write some benchmarks with Criterion to measure potential performance gains.
 
 ## Appendix: Where can I find some large word lists?
 
