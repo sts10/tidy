@@ -713,19 +713,32 @@ pub fn print_as_dice(n: usize, base: u8, list_length: usize, use_letters: bool) 
         // If base is a common dice size (between 4 and 8), we'll add
         // one to each digit (i.e. no longer zero-indexed), to make it
         // easier to compare to actual rolled dice
-        4..=8 => padded_n
+        4..=9 => padded_n
             .chars()
             .map(|ch| (ch.to_string().parse::<usize>().unwrap() + 1).to_string())
             .collect::<String>(),
-        // If base is over base 9, we'll print each digit as zero-indexed,
-        // but we'll add a hyphen _between_ digits to make it easier to read.
-        9..=36 => padded_n
-            .chars()
-            .map(|ch| format_high_dice_roll(ch, use_letters) + "-")
-            .collect::<String>() //[0..padded_n.chars().count() * 2 - 1]
-            .trim_end_matches('-')
-            .trim()
-            .to_string(),
+        // If base is base 10 or higher, we'll print each digit as zero-indexed.
+        // And we'll either add a hyphen _between_ digits or use letters for digits over 10
+        // to make it easier to read.
+        10..=36 => {
+            if use_letters {
+                padded_n
+                    .chars()
+                    .map(|ch| format_high_dice_roll(ch, use_letters).to_uppercase())
+                    .collect::<String>()
+                    .trim_end_matches('-')
+                    .trim()
+                    .to_string()
+            } else {
+                padded_n
+                    .chars()
+                    .map(|ch| format_high_dice_roll(ch, use_letters) + "-")
+                    .collect::<String>()
+                    .trim_end_matches('-')
+                    .trim()
+                    .to_string()
+            }
+        }
         _ => panic!("Amount of dice sides received is too high"),
     }
 }

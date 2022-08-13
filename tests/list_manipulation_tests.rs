@@ -564,6 +564,6 @@ mod list_manipulation_tests {
     #[test]
     fn can_print_dice_rolls_of_base_20() {
         assert_eq!(print_as_dice(1000, 20, 8000, false), "03-11-01".to_string());
-        assert_eq!(print_as_dice(1000, 20, 8000, true), "2-a-0".to_string());
+        assert_eq!(print_as_dice(1000, 20, 8000, true), "2A0".to_string());
     }
 }
