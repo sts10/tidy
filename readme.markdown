@@ -302,9 +302,10 @@ In both Tidy's code and documentation, "remove" means that a word will be remove
 
 Add `--open` flag to open docs after generation. They're printed to `./target/doc/tidy/index.html`.
 
-## A blog post
+## Blog posts related to this project
 
-You can read more about the 0.2 version of this project [here](https://sts10.github.io/2021/12/09/tidy-0-2-0.html).
+* [Read more about the 0.2 version of this project](https://sts10.github.io/2021/12/09/tidy-0-2-0.html)
+* [Read about uniquely decodable codes and "Schlinkert pruning"](https://sts10.github.io/2022/08/12/efficiently-pruning-until-uniquely-decodable.html)
 
 ## Working with homophones
 
