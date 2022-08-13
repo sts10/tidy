@@ -306,6 +306,7 @@ Add `--open` flag to open docs after generation. They're printed to `./target/do
 
 * [Read more about the 0.2 version of this project](https://sts10.github.io/2021/12/09/tidy-0-2-0.html)
 * [Read about uniquely decodable codes and "Schlinkert pruning"](https://sts10.github.io/2022/08/12/efficiently-pruning-until-uniquely-decodable.html)
+* [Read about initial inspiration for the project](https://sts10.github.io/2020/09/30/making-a-word-list.html)
 
 ## Working with homophones
 
