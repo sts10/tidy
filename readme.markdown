@@ -285,20 +285,20 @@ fastness september boasting unbroken battalion sweep
 
 ## On verbs used
 
-In both Tidy's code and documentation, "remove" means that a word will be removed (e.g. words with integers will be removed from the list), while "delete" means that a word will only be modified (e.g. integers removed from words). Uppercase flags remove words, while lowercase flags delete specified characters. All delete calls occur before any remove call.
+In both Tidy's code and documentation, "remove" means that a word will be removed (e.g. words with integers will be removed from the list), while "delete" means that a word will only be modified (e.g. integers removed from words). Uppercase flags remove words, while lowercase flags delete specified characters. All delete calls and word modifications (like "to lowercase") occur _before_ any remove call.
 
 ## Installation
 
 1. [Install Rust](https://www.rust-lang.org/tools/install) if you haven't already
 2. Run: `cargo install --git https://github.com/sts10/tidy --branch main`
 
-## Run all tests
+You should then be able to run `tidy --help`.
 
-`cargo test`
+## For Tidy developers
 
-## Generate docs
+Run all code tests: `cargo test`
 
-`cargo doc --document-private-items --no-deps`
+Generate docs: `cargo doc --document-private-items --no-deps`
 
 Add `--open` flag to open docs after generation. They're printed to `./target/doc/tidy/index.html`.
 
@@ -345,9 +345,9 @@ Use the attributes flag twice (`-AA`) to get information about shared prefix len
 
 ## What is "Efficiency per character" and "Assumed entropy per char" and what's the difference?
 
-If we take the entropy per word from a list (`log2(list_length)`) and divide it by the length of the **average**-length word on the list, we get a value we might call "efficiency per character". This just means that, on average, you get X bits per character typed. 
+If we take the entropy per word from a list (log<sub>2</sub>(list_length)) and divide it by the length of the **average**-length word on the list, we get a value we might call "efficiency per character". This just means that, on average, you get X bits per character typed. 
 
-If we take the entropy per word from a list (`log2(list_length)`) and divide it by the length of the **shortest** word on the list, we get a value we might call "assumed entropy per char" (or character).
+If we take the entropy per word from a list (log<sub>2</sub>(list_length)) and divide it by the length of the **shortest** word on the list, we get a value we might call "assumed entropy per char" (or character).
 
 For example, if we're looking at the 7,776-word EFF long list, we'd assume an entropy of 12.925 bits per word. The average word length is 7.0, so the efficiency is 1.8 bits per character. (I got this definition of efficiency from [an EFF blog post about their list](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases).) The list has 82 three-letter words on it, so we'd divide 12.925 by 3 and get an "assumed entropy per character" of about 4.31 bits per character.
 
@@ -415,16 +415,18 @@ See [this repo](https://github.com/sts10/splitter) for more information.
 -   [X] Add option to remove words that have characters from certain character sets, for example non-ASCII characters
 -   [ ] Investigate making the list variable as [FxHashSet](https://docs.rs/fxhash/0.2.1/fxhash/type.FxHashSet.html)<String> rather than a `Vec<String>` to potentially boost performance. Will probably need to write some benchmarks with Criterion to measure potential performance gains.
 
-## Appendix: Where can I find some large word lists?
+## Appendix: Where can I find some word lists?
 
--   The [Electronic Frontier Foundation](https://www.eff.org/) has published [a few word lists for creating diceware passphrases](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases). I'm pretty sure password manager BitWarden uses [the EFF long list](https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt). [KeePassXC](https://keepassxc.org/) uses [the EFF long list with some minor modifications](https://github.com/keepassxreboot/keepassxc/blob/develop/share/wordlists/eff_large.wordlist). Since there's a tab between the dice numbers and each word, Tidy can delete the dice numbers easily with something like `tidy -D t -o clean_eff.txt eff_large_wordlist.txt` or using the `-i` flag.
-    -   The EFF also has some [fandom-inspired lists](https://www.eff.org/deeplinks/2018/08/dragon-con-diceware) that Tidy can clean up with the `-D s` option.
--   I'm [pretty sure](https://twitter.com/1Password/status/1462885816569577480) this is [1Password](https://1password.com/)'s [word list](https://1password.com/txt/agwordlist.txt), as of 2021.
-    -   [1Password](https://1password.com/) also published a slightly different [word list](https://github.com/agilebits/crackme/blob/master/doc/AgileWords.txt) in 2018.
--   [SecureDrop](https://github.com/freedomofpress/securedrop/) has separate lists of [adjectives](https://github.com/freedomofpress/securedrop/blob/develop/securedrop/dictionaries/adjectives.txt) and [nouns](https://github.com/freedomofpress/securedrop/blob/develop/securedrop/dictionaries/nouns.txt).
+-   The [Electronic Frontier Foundation](https://www.eff.org/) has published [a few word lists for creating diceware passphrases](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases). 
+    -   I'm pretty sure password manager BitWarden uses [the EFF long list](https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt). 
+    -   [KeePassXC](https://keepassxc.org/) uses [the EFF long list with some minor modifications](https://github.com/keepassxreboot/keepassxc/blob/develop/share/wordlists/eff_large.wordlist). Since there's a tab between the dice numbers and each word, Tidy can delete the dice numbers easily with something like `tidy -D t -o clean_eff.txt eff_large_wordlist.txt` or using the `-i` flag.
+    -   The EFF also has some [fandom-inspired lists](https://www.eff.org/deeplinks/2018/08/dragon-con-diceware). They use a space between dice numbers and words, so Tidy can clean up with the `-D s` option.
+-   I'm [pretty sure](https://twitter.com/1Password/status/1462885816569577480) this is [1Password](https://1password.com/)'s [word list](https://1password.com/txt/agwordlist.txt) as of 2021.
+    -   [1Password](https://1password.com/) published a slightly different [word list](https://github.com/agilebits/crackme/blob/master/doc/AgileWords.txt) in 2018.
+-   [SecureDrop](https://github.com/freedomofpress/securedrop/) has a few lists, including one of [adjectives](https://github.com/freedomofpress/securedrop/blob/develop/securedrop/dictionaries/adjectives.txt) and one of [nouns](https://github.com/freedomofpress/securedrop/blob/develop/securedrop/dictionaries/nouns.txt).
 -   [Bitcoin BIPS-0039](https://github.com/bitcoin/bips/tree/master/bip-0039) (2,048 words) (h/t [atoponce](https://www.reddit.com/r/Passwords/comments/sqrymt/comment/hwnfb94/))
 -   [Monero's word list](https://github.com/monero-project/monero/blob/master/src/mnemonics/english.h) (1,626 words) (h/t [atoponce](https://www.reddit.com/r/Passwords/comments/sqrymt/comment/hwnfb94/))
--   [Mnemonicode](https://github.com/schollz/mnemonicode/blob/master/word_list.go) is another word list optimized for pronunciation. I believe [croc](https://github.com/schollz/croc), another file transferring tool, uses it.
+-   [Mnemonicode](https://github.com/schollz/mnemonicode/blob/master/word_list.go) is another word list optimized for pronunciation. I believe [croc](https://github.com/schollz/croc), a file transferring tool, uses it.
 -   [Magic Wormhole](https://github.com/magic-wormhole/magic-wormhole/), a tool for transferring files, uses [a version of the PGP Word List](https://github.com/magic-wormhole/magic-wormhole/blob/master/src/wormhole/_wordlist.py), which specifically tries to use pairs of words that are phonetically distinct.
 -   A collection of a few [Public Domain Word Lists](https://github.com/MichaelWehar/Public-Domain-Word-Lists)
 -  [ulif's "diceware"](https://github.com/ulif/diceware) seems to have collected [a few word lists](https://github.com/ulif/diceware/tree/master/diceware/wordlists) in its Github repo, along with [a separate page that explains each of the lists](https://github.com/ulif/diceware/blob/master/docs/wordlists.rst).
@@ -432,7 +434,7 @@ See [this repo](https://github.com/sts10/splitter) for more information.
 -   [Niceware list](https://github.com/diracdeltas/niceware/blob/master/lib/wordlist.js) (~65,000 words)<!-- (there's also [a Rust port of niceware](https://github.com/healeycodes/niceware)).-->
 -   [Lists used by a program called webpassgen](https://github.com/atoponce/webpassgen/tree/master/lists)
 -   [Original "Reinhold" diceware list](https://theworld.com/%7Ereinhold/diceware.wordlist.asc) created by [Arnold Reinhold](https://theworld.com/~reinhold/). Though it has some issues.
--   Arnold Reinhold hosts [diceware lists in a variety of languages](https://theworld.com/~reinhold/diceware.html#Diceware%20in%20Other%20Languages|outline).
+    -   Arnold Reinhold hosts [diceware lists in a variety of languages](https://theworld.com/~reinhold/diceware.html#Diceware%20in%20Other%20Languages|outline).
 -   [r/wordlists subreddit](https://www.reddit.com/r/wordlists/), which seems to have links to a few non-English word lists.
 -   [simple1024](https://github.com/pera/simple1024) is a word list with 1024 common English words, an alternative to EFF's short word lists.
 
