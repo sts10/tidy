@@ -363,9 +363,39 @@ As an example, let's say we had a 10,000-word list that contained the one-charac
 
 To see if a given generated list falls above or below this line, use the `-A`/`--attributes` flag.
 
-### An even more strict "line"
+#### Maximum word list lengths to clear the Brute Force Line
+
+Formula: 
+
+Where _S_ is the length of the shortest word on the list, 26 is the number of letters in the English alphabet, and _M_ is max list length: 2<sup>_S_ * log<sub>2</sub>(26)</sup> = _M_
+
+(or `2**(S*4.7) == max_word_list_length`)
+
+| shortest word length | max list length |
+|----------------------|-----------------|
+| 2                    | 675             |
+| 3                    | 17559           |
+| 4                    | 45419           |
+| 5                    | 11863283        |
+
+### An even stricter "line"
 
 If we go by [a 1951 Claude Shannon paper](https://www.princeton.edu/~wbialek/rome/refs/shannon_51.pdf), each letter in English actually only gives 2.62 bits of entropy. Users can see if their generated word list falls above this (stricter) line -- which I've dubbed the "Shannon line" -- by using the `-A`/`--attributes` flag.
+
+#### Maximum word list lengths to clear the Shannon Line
+
+Formula: 
+
+Where _S_ is the length of the shortest word on the list and _M_ is max list length: 2<sup>_S_ * 2.62</sup> = _M_
+
+(or `2**(S*2.62) == max_word_list_length`)
+
+| shortest word length | max list length |
+|----------------------|-----------------|
+| 2                    | 37              |
+| 3                    | 232             |
+| 4                    | 1428            |
+| 5                    | 8779            |
 
 ## Language limitations
 

@@ -320,7 +320,7 @@ fn has_suffix_words(list: &[String]) -> bool {
 /// a brute-force attack in exactly that situation. To do so,
 /// we calculate a value I'm calling "assumed entropy per character".
 ///
-/// If this value is above `log2(26)` or about `4.7` bits, there's a chance
+/// If this value is above `log2(26)` or 4.7 bits, there's a chance
 /// that we'd _over_-estimate the entropy of passphrases created
 /// using the word list.
 pub fn assumed_entropy_per_character(list: &[String]) -> f64 {
