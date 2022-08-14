@@ -24,8 +24,8 @@ mod list_manipulation_tests {
                 "  wizard  ",
                 "ardoR",
                 "tea",
-                "   ",
                 "11225	active",
+                "   ",
                 "11152	acclaim",
                 "its456",
                 "11156	word	tabs",
@@ -128,7 +128,7 @@ mod list_manipulation_tests {
             ..Default::default()
         };
         let new_list = tidy_list(this_tidy_request);
-        println!("List length now {}", new_list.len());
+        println!("List length now {}: {:?}", new_list.len(), new_list);
         assert_eq!(new_list.len(), 4);
         assert_ne!(new_list.len(), 3);
         assert_ne!(new_list.len(), 15);

@@ -127,8 +127,25 @@ pub fn split_and_vectorize<'a>(string_to_split: &'a str, splitter: &str) -> Vec<
 /// and performs whatever functions the user has requesteed to
 /// perform on the list.
 pub fn tidy_list(req: TidyRequest) -> Vec<String> {
+    let mut list_to_tidy = req.list.clone();
+    list_to_tidy = match req.take_first {
+        Some(amount_to_take) => {
+            list_to_tidy.truncate(amount_to_take);
+            list_to_tidy
+        }
+        None => list_to_tidy,
+    };
+    list_to_tidy = match req.take_rand {
+        Some(amount_to_take) => {
+            let mut rng = thread_rng();
+            list_to_tidy.shuffle(&mut rng);
+            list_to_tidy.truncate(amount_to_take);
+            list_to_tidy
+        }
+        None => list_to_tidy,
+    };
     let mut tidied_list = vec![];
-    for word in &req.list {
+    for word in &list_to_tidy {
         // METADATA-IGNORING WORD REMOVALS
         // If user chose to ignore metadata, split word vs. metadata on the first comma
         // found.
@@ -305,22 +322,6 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         }
     }
     // Now truncate list, if requested
-    tidied_list = match req.take_first {
-        Some(amount_to_take) => {
-            tidied_list.truncate(amount_to_take);
-            tidied_list
-        }
-        None => tidied_list,
-    };
-    tidied_list = match req.take_rand {
-        Some(amount_to_take) => {
-            let mut rng = thread_rng();
-            tidied_list.shuffle(&mut rng);
-            tidied_list.truncate(amount_to_take);
-            tidied_list
-        }
-        None => tidied_list,
-    };
     // Some operations are just a bit too complex for
     // me to figure out how to do on a per-word basis
     // at this time. Maybe something to revisit in the
