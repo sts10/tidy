@@ -424,6 +424,7 @@ See [this repo](https://github.com/sts10/splitter) for more information.
     -   The EFF also has some [fandom-inspired lists](https://www.eff.org/deeplinks/2018/08/dragon-con-diceware). They use a space between dice numbers and words, so Tidy can clean up with the `-D s` option.
 -   I'm [pretty sure](https://twitter.com/1Password/status/1462885816569577480) this is [1Password](https://1password.com/)'s [word list](https://1password.com/txt/agwordlist.txt) as of 2021.
     -   [1Password](https://1password.com/) published a slightly different [word list](https://github.com/agilebits/crackme/blob/master/doc/AgileWords.txt) in 2018.
+-   If you're using Linux or MacOS, you've likely got some long lists on your computer. Check `/usr/share/dict/words` or `/usr/share/dict/american-english`.
 -   [SecureDrop](https://github.com/freedomofpress/securedrop/) has a few lists, including one of [adjectives](https://github.com/freedomofpress/securedrop/blob/develop/securedrop/dictionaries/adjectives.txt) and one of [nouns](https://github.com/freedomofpress/securedrop/blob/develop/securedrop/dictionaries/nouns.txt).
 -   [Bitcoin BIPS-0039](https://github.com/bitcoin/bips/tree/master/bip-0039) (2,048 words) (h/t [atoponce](https://www.reddit.com/r/Passwords/comments/sqrymt/comment/hwnfb94/))
 -   [Monero's word list](https://github.com/monero-project/monero/blob/master/src/mnemonics/english.h) (1,626 words) (h/t [atoponce](https://www.reddit.com/r/Passwords/comments/sqrymt/comment/hwnfb94/))
