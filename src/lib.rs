@@ -127,6 +127,7 @@ pub fn split_and_vectorize<'a>(string_to_split: &'a str, splitter: &str) -> Vec<
 /// and performs whatever functions the user has requesteed to
 /// perform on the list.
 pub fn tidy_list(req: TidyRequest) -> Vec<String> {
+    // First, we need to do the two truncations
     let mut list_to_tidy = req.list.clone();
     list_to_tidy = match req.take_first {
         Some(amount_to_take) => {
@@ -145,6 +146,7 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         None => list_to_tidy,
     };
     let mut tidied_list = vec![];
+    // Now we go word-by-word
     for word in &list_to_tidy {
         // METADATA-IGNORING WORD REMOVALS
         // If user chose to ignore metadata, split word vs. metadata on the first comma
@@ -330,8 +332,14 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         Some(homophones_list) => remove_homophones(tidied_list, homophones_list),
         None => tidied_list,
     };
-    // I think this is a good order for these next 3 operations,
+    // I think this is a good order for these next few operations,
     // but I'm not super confident
+    tidied_list = match req.maximum_shared_prefix_length {
+        Some(maximum_shared_prefix_length) => {
+            guarantee_maximum_prefix_length(&tidied_list, maximum_shared_prefix_length)
+        }
+        None => tidied_list,
+    };
     tidied_list = match req.minimum_edit_distance {
         Some(minimum_edit_distance) => {
             enfore_minimum_edit_distance(tidied_list, minimum_edit_distance)
@@ -352,12 +360,6 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         schlinkert_prune(&dedup_without_sorting(&mut tidied_list))
     } else {
         tidied_list
-    };
-    tidied_list = match req.maximum_shared_prefix_length {
-        Some(maximum_shared_prefix_length) => {
-            guarantee_maximum_prefix_length(&tidied_list, maximum_shared_prefix_length)
-        }
-        None => tidied_list,
     };
 
     // Sort and dedup here
