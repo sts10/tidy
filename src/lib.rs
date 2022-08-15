@@ -799,3 +799,35 @@ pub fn parse_delimiter(delimiter: char) -> Option<char> {
         return Some(delimiter);
     };
 }
+
+pub fn get_new_starting_point_guess(
+    previous_starting_point: usize,
+    this_list_length: usize,
+    length_to_widdle_to: usize,
+) -> usize {
+    let mut starting_point = previous_starting_point;
+    if this_list_length > length_to_widdle_to {
+        // We're too high!
+        let difference = this_list_length - length_to_widdle_to;
+        eprintln!("Difference is {}", difference);
+        let multiplier = starting_point as f64 / length_to_widdle_to as f64;
+        eprintln!("Multiplier would be {}", multiplier);
+        let change = (difference as f64 * multiplier).floor() as usize;
+        eprintln!("Going to subtract {} to starting point", change);
+        starting_point = starting_point - change;
+    } else {
+        // We're too low!
+        let difference = length_to_widdle_to - this_list_length;
+        eprintln!("Difference is {}", difference);
+        let multiplier = starting_point as f64 / length_to_widdle_to as f64;
+        eprintln!("Multiplier would be {}", multiplier);
+        eprintln!(
+            "difference * multiplier == {}",
+            difference as f64 * multiplier
+        );
+        let change = (difference as f64 * multiplier).floor() as usize;
+        eprintln!("Going to add {} to starting point", change);
+        starting_point = starting_point + change;
+    }
+    starting_point
+}

@@ -162,6 +162,11 @@ struct Args {
     #[clap(long = "take-rand")]
     take_rand: Option<usize>,
 
+    /// Widdle list down to an exact length. Takes the exact length and
+    /// a rough "starting point", as integers separated by a comma
+    #[clap(short = 'W', long = "widdle-to")]
+    widdle_to: Option<String>,
+
     /// Just before printing generated list, cut list down
     /// to a set number of words. Can accept expressions in the
     /// form of base**exponent (helpful for generating diceware lists).
@@ -248,6 +253,12 @@ fn main() {
             return;
         }
     }
+
+    // Check for invalid widdle_to/cut_to request
+    if opt.widdle_to.is_some() && opt.cut_to.is_some() {
+        eprintln!("Can not specify BOTH a 'cut to' and 'widdle to' option. Please only use one of these two.");
+        return;
+    }
     // Warn about limits of the ignore option
     let (ignore_after_delimiter, ignore_before_delimiter) = match (
         opt.ignore_after_delimiter,
@@ -331,49 +342,117 @@ fn main() {
             return;
         }
     }
-    let this_tidy_request = TidyRequest {
-        list: make_vec_from_filenames(&opt.inputted_word_list),
-        take_first: opt.take_first,
-        take_rand: opt.take_rand,
-        sort_alphabetically: !opt.no_alpha_sort,
-        ignore_after_delimiter: ignore_after_delimiter,
-        ignore_before_delimiter: ignore_before_delimiter,
-        to_lowercase: opt.to_lowercase,
-        should_straighten_quotes: opt.straighten_quotes,
-        should_remove_prefix_words: opt.remove_prefix_words,
-        should_remove_suffix_words: opt.remove_suffix_words,
-        should_schlinkert_prune: opt.schlinkert_prune,
-        should_remove_integers: opt.remove_integers,
-        should_delete_integers: opt.delete_integers,
-        should_remove_nonalphanumeric: opt.remove_nonalphanumeric,
-        should_delete_nonalphanumeric: opt.delete_nonalphanumeric,
-        should_remove_nonalphabetic: opt.remove_nonalphabetic,
-        should_remove_non_latin_alphabetic: opt.remove_non_latin_alphabetic,
-        should_remove_nonascii: opt.remove_nonascii,
-        should_delete_after_first_delimiter: delete_after_delimiter,
-        should_delete_before_first_delimiter: delete_before_delimiter,
+    let tidied_list = match opt.widdle_to {
+        Some(widdle_to_string) => {
+            let length_to_widdle_to =
+                eval_cut_length(split_and_vectorize(&widdle_to_string, ",")[0]);
 
-        // If given more than one file of reject words, combine them
-        // right here.
-        reject_list: opt
-            .reject_list
-            .map(|list_of_files| make_vec_from_filenames(&list_of_files)),
-        // Likewise with approved word lists
-        approved_list: opt
-            .approved_list
-            .map(|list_of_files| make_vec_from_filenames(&list_of_files)),
-        // And homophones
-        homophones_list: opt
-            .homophones_list
-            .map(|list_of_files| read_homophones_list_from_filenames(&list_of_files)),
-        minimum_length: opt.minimum_length,
-        maximum_length: opt.maximum_length,
-        maximum_shared_prefix_length: opt.maximum_shared_prefix_length,
-        minimum_edit_distance: opt.minimum_edit_distance,
-        cut_to: opt.cut_to,
+            let mut starting_point = split_and_vectorize(&widdle_to_string, ",")[1]
+                .parse::<usize>()
+                .unwrap();
+
+            let mut this_list_length = 0;
+            let mut this_tidied_list = vec![];
+            while this_list_length != length_to_widdle_to {
+                eprintln!("Starting point is now {}", starting_point);
+                this_tidied_list = tidy_list(TidyRequest {
+                    list: make_vec_from_filenames(&opt.inputted_word_list),
+                    take_first: Some(starting_point),
+                    take_rand: opt.take_rand,
+                    sort_alphabetically: !opt.no_alpha_sort,
+                    ignore_after_delimiter: ignore_after_delimiter,
+                    ignore_before_delimiter: ignore_before_delimiter,
+                    to_lowercase: opt.to_lowercase,
+                    should_straighten_quotes: opt.straighten_quotes,
+                    should_remove_prefix_words: opt.remove_prefix_words,
+                    should_remove_suffix_words: opt.remove_suffix_words,
+                    should_schlinkert_prune: opt.schlinkert_prune,
+                    should_remove_integers: opt.remove_integers,
+                    should_delete_integers: opt.delete_integers,
+                    should_remove_nonalphanumeric: opt.remove_nonalphanumeric,
+                    should_delete_nonalphanumeric: opt.delete_nonalphanumeric,
+                    should_remove_nonalphabetic: opt.remove_nonalphabetic,
+                    should_remove_non_latin_alphabetic: opt.remove_non_latin_alphabetic,
+                    should_remove_nonascii: opt.remove_nonascii,
+                    should_delete_after_first_delimiter: delete_after_delimiter,
+                    should_delete_before_first_delimiter: delete_before_delimiter,
+                    reject_list: opt
+                        .reject_list
+                        .as_ref()
+                        .map(|list_of_files| make_vec_from_filenames(&list_of_files)),
+                    approved_list: opt
+                        .approved_list
+                        .as_ref()
+                        .map(|list_of_files| make_vec_from_filenames(&list_of_files)),
+                    // And homophones
+                    homophones_list: opt
+                        .homophones_list
+                        .as_ref()
+                        .map(|list_of_files| read_homophones_list_from_filenames(&list_of_files)),
+                    minimum_length: opt.minimum_length,
+                    maximum_length: opt.maximum_length,
+                    maximum_shared_prefix_length: opt.maximum_shared_prefix_length,
+                    minimum_edit_distance: opt.minimum_edit_distance,
+                    cut_to: opt.cut_to,
+                });
+
+                this_list_length = this_tidied_list.len();
+                eprintln!("This list attempt is {}", this_list_length);
+                starting_point = get_new_starting_point_guess(
+                    starting_point,
+                    this_list_length,
+                    length_to_widdle_to,
+                );
+            }
+            // out of the loop
+            this_tidied_list
+        }
+        None => {
+            let this_tidy_request = TidyRequest {
+                list: make_vec_from_filenames(&opt.inputted_word_list),
+                take_first: opt.take_first,
+                take_rand: opt.take_rand,
+                sort_alphabetically: !opt.no_alpha_sort,
+                ignore_after_delimiter: ignore_after_delimiter,
+                ignore_before_delimiter: ignore_before_delimiter,
+                to_lowercase: opt.to_lowercase,
+                should_straighten_quotes: opt.straighten_quotes,
+                should_remove_prefix_words: opt.remove_prefix_words,
+                should_remove_suffix_words: opt.remove_suffix_words,
+                should_schlinkert_prune: opt.schlinkert_prune,
+                should_remove_integers: opt.remove_integers,
+                should_delete_integers: opt.delete_integers,
+                should_remove_nonalphanumeric: opt.remove_nonalphanumeric,
+                should_delete_nonalphanumeric: opt.delete_nonalphanumeric,
+                should_remove_nonalphabetic: opt.remove_nonalphabetic,
+                should_remove_non_latin_alphabetic: opt.remove_non_latin_alphabetic,
+                should_remove_nonascii: opt.remove_nonascii,
+                should_delete_after_first_delimiter: delete_after_delimiter,
+                should_delete_before_first_delimiter: delete_before_delimiter,
+
+                // If given more than one file of reject words, combine them
+                // right here.
+                reject_list: opt
+                    .reject_list
+                    .map(|list_of_files| make_vec_from_filenames(&list_of_files)),
+                // Likewise with approved word lists
+                approved_list: opt
+                    .approved_list
+                    .map(|list_of_files| make_vec_from_filenames(&list_of_files)),
+                // And homophones
+                homophones_list: opt
+                    .homophones_list
+                    .map(|list_of_files| read_homophones_list_from_filenames(&list_of_files)),
+                minimum_length: opt.minimum_length,
+                maximum_length: opt.maximum_length,
+                maximum_shared_prefix_length: opt.maximum_shared_prefix_length,
+                minimum_edit_distance: opt.minimum_edit_distance,
+                cut_to: opt.cut_to,
+            };
+
+            tidy_list(this_tidy_request)
+        }
     };
-
-    let tidied_list = tidy_list(this_tidy_request);
 
     if !opt.dry_run {
         eprintln!("Printing new list...");
