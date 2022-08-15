@@ -714,23 +714,10 @@ pub fn print_as_dice(n: usize, base: u8, list_length: usize, use_letters: bool) 
             // Values of 0 and 1 should have been caught earlier,
             // so we'll panic! if we have them here
             0 | 1 => panic!("Too few dice sides entered"),
-            // If base is 2 or 3, just print as-is, zero-indexed.
-            2 | 3 => padded_n,
-            // If base is a common dice size (between 4 and 8), we'll add
-            // one to each digit (i.e. no longer zero-indexed), to make it
-            // easier to compare to actual rolled dice
-            4..=9 => padded_n
-                .chars()
-                .map(|ch| (ch.to_string().parse::<usize>().unwrap()).to_string())
-                .collect::<String>(),
-            // If base is base 10 or higher, we'll print each digit as zero-indexed.
-            // And we'll either add a hyphen _between_ digits or use letters for digits over 10
-            // to make it easier to read.
-            10..=36 => padded_n
+            2..=36 => padded_n
                 .chars()
                 .map(|ch| ch.to_string().to_uppercase())
                 .collect::<String>()
-                .trim_end_matches('-')
                 .trim()
                 .to_string(),
             _ => panic!("Amount of dice sides received is too high"),
@@ -756,6 +743,7 @@ pub fn print_as_dice(n: usize, base: u8, list_length: usize, use_letters: bool) 
     }
 }
 
+/// Convert 0-z inputted character to a 1-indexed, padded string ("01" to "36")
 fn char_to_digit(ch: char) -> String {
     match ch {
         '0' => "01",
