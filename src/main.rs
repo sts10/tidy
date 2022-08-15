@@ -9,6 +9,7 @@ pub mod display_information;
 use crate::dice::print_as_dice;
 use crate::display_information::display_list_information;
 use crate::display_information::generate_samples;
+use crate::file_readers::*;
 
 /// Parse user's input to the `cut_to` option, either directly as a `usize`,
 /// or, if they entered Python exponent notation (base**exponent), which
