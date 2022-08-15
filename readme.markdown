@@ -188,10 +188,11 @@ OPTIONS:
     -S, --remove-suffix
             Remove suffix words from new list
 
-        --sides-as-letters
-            When printing dice roll next to word in output, use letters to represent numbers higher
-            than 10. Default is `false`, which will print double-digit numbers when necessary (e.g.
-            18-03-08)
+        --sides-as-base
+            When printing dice roll next to word in output, print according to their base.
+            Effectively this means that letters will be used to represent numbers higher than 10.
+            This option also 0-indexs all dice values. This setting defaults to `false`, which will
+            print double-digit numbers when necessary (e.g. 18-03-08)
 
         --take-first <TAKE_FIRST>
             Only take first N words from inputted word list. If two or more word lists are inputted,

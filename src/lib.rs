@@ -707,90 +707,96 @@ pub fn print_as_dice(n: usize, base: u8, list_length: usize, use_letters: bool) 
 
     // Print the dice rolls in slightly different ways,
     // depending on the value of the base.
-    match base {
-        // Values of 0 and 1 should have been caught earlier,
-        // so we'll panic! if we have them here
-        0 | 1 => panic!("Too few dice sides entered"),
-        // If base is 2 or 3, just print as-is, zero-indexed.
-        2 | 3 => padded_n,
-        // If base is a common dice size (between 4 and 8), we'll add
-        // one to each digit (i.e. no longer zero-indexed), to make it
-        // easier to compare to actual rolled dice
-        4..=9 => padded_n
-            .chars()
-            .map(|ch| (ch.to_string().parse::<usize>().unwrap() + 1).to_string())
-            .collect::<String>(),
-        // If base is base 10 or higher, we'll print each digit as zero-indexed.
-        // And we'll either add a hyphen _between_ digits or use letters for digits over 10
-        // to make it easier to read.
-        10..=36 => {
-            if use_letters {
-                padded_n
-                    .chars()
-                    .map(|ch| format_high_dice_roll(ch, use_letters).to_uppercase())
-                    .collect::<String>()
-                    .trim_end_matches('-')
-                    .trim()
-                    .to_string()
-            } else {
-                padded_n
-                    .chars()
-                    .map(|ch| format_high_dice_roll(ch, use_letters) + "-")
-                    .collect::<String>()
-                    .trim_end_matches('-')
-                    .trim()
-                    .to_string()
-            }
+    if use_letters {
+        // We'll use zero-indexed values if sides_as_letters is
+        // selected
+        match base {
+            // Values of 0 and 1 should have been caught earlier,
+            // so we'll panic! if we have them here
+            0 | 1 => panic!("Too few dice sides entered"),
+            // If base is 2 or 3, just print as-is, zero-indexed.
+            2 | 3 => padded_n,
+            // If base is a common dice size (between 4 and 8), we'll add
+            // one to each digit (i.e. no longer zero-indexed), to make it
+            // easier to compare to actual rolled dice
+            4..=9 => padded_n
+                .chars()
+                .map(|ch| (ch.to_string().parse::<usize>().unwrap()).to_string())
+                .collect::<String>(),
+            // If base is base 10 or higher, we'll print each digit as zero-indexed.
+            // And we'll either add a hyphen _between_ digits or use letters for digits over 10
+            // to make it easier to read.
+            10..=36 => padded_n
+                .chars()
+                .map(|ch| ch.to_string().to_uppercase())
+                .collect::<String>()
+                .trim_end_matches('-')
+                .trim()
+                .to_string(),
+            _ => panic!("Amount of dice sides received is too high"),
         }
-        _ => panic!("Amount of dice sides received is too high"),
+    } else {
+        // We'll use 1-indexed values if sides_as_letters is NOT
+        // selected
+        match base {
+            0 | 1 => panic!("Too few dice sides entered"),
+            2..=9 => padded_n
+                .chars()
+                .map(|ch| (ch.to_string().parse::<usize>().unwrap() + 1).to_string())
+                .collect::<String>(),
+            10..=36 => padded_n
+                .chars()
+                .map(|ch| char_to_digit(ch) + "-")
+                .collect::<String>()
+                .trim_end_matches('-')
+                .trim()
+                .to_string(),
+            _ => panic!("Amount of dice sides received is too high"),
+        }
     }
 }
 
-fn format_high_dice_roll(ch: char, use_letters: bool) -> String {
-    if !use_letters {
-        match ch {
-            '0' => "01",
-            '1' => "02",
-            '2' => "03",
-            '3' => "04",
-            '4' => "05",
-            '5' => "06",
-            '6' => "07",
-            '7' => "08",
-            '8' => "09",
-            '9' => "10",
-            'a' => "11",
-            'b' => "12",
-            'c' => "13",
-            'd' => "14",
-            'e' => "15",
-            'f' => "16",
-            'g' => "17",
-            'h' => "18",
-            'i' => "19",
-            'j' => "20",
-            'k' => "21",
-            'l' => "22",
-            'm' => "23",
-            'n' => "24",
-            'o' => "25",
-            'p' => "26",
-            'q' => "27",
-            'r' => "28",
-            's' => "29",
-            't' => "30",
-            'u' => "31",
-            'v' => "32",
-            'w' => "33",
-            'x' => "34",
-            'y' => "35",
-            'z' => "36",
-            _ => panic!("Unable to convert this dice number from a letter to a number."),
-        }
-        .to_string()
-    } else {
-        ch.to_string()
+fn char_to_digit(ch: char) -> String {
+    match ch {
+        '0' => "01",
+        '1' => "02",
+        '2' => "03",
+        '3' => "04",
+        '4' => "05",
+        '5' => "06",
+        '6' => "07",
+        '7' => "08",
+        '8' => "09",
+        '9' => "10",
+        'a' => "11",
+        'b' => "12",
+        'c' => "13",
+        'd' => "14",
+        'e' => "15",
+        'f' => "16",
+        'g' => "17",
+        'h' => "18",
+        'i' => "19",
+        'j' => "20",
+        'k' => "21",
+        'l' => "22",
+        'm' => "23",
+        'n' => "24",
+        'o' => "25",
+        'p' => "26",
+        'q' => "27",
+        'r' => "28",
+        's' => "29",
+        't' => "30",
+        'u' => "31",
+        'v' => "32",
+        'w' => "33",
+        'x' => "34",
+        'y' => "35",
+        'z' => "36",
+        _ => panic!("Unable to convert this dice number from a letter to a number."),
     }
+    .to_string()
 }
 
 /// Little helper function that allows users to write out whitespace

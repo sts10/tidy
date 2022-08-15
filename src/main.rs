@@ -210,11 +210,14 @@ struct Args {
     #[clap(long = "dice")]
     dice_sides: Option<u8>,
 
-    /// When printing dice roll next to word in output, use letters to represent
-    /// numbers higher than 10. Default is `false`, which will
-    /// print double-digit numbers when necessary (e.g. 18-03-08).
-    #[clap(long = "sides-as-letters")]
-    print_high_dice_sides_as_letters: bool,
+    /// When printing dice roll next to word in output, print according to
+    /// their base. Effectively this means that letters will be used to
+    /// represent numbers higher than 10. This option also 0-indexs all
+    /// dice values.
+    /// This setting defaults to `false`, which will print double-digit
+    /// numbers when necessary (e.g. 18-03-08).
+    #[clap(long = "sides-as-base")]
+    print_dice_sides_as_their_base: bool,
 
     /// Path for outputted list file. If none given, generated word list
     /// will be printed to terminal.
@@ -275,7 +278,7 @@ fn main() {
                 || opt.maximum_shared_prefix_length.is_some()
                 || opt.homophones_list.is_some()
                 || opt.dice_sides.is_some()
-                || opt.print_high_dice_sides_as_letters
+                || opt.print_dice_sides_as_their_base
             {
                 let err_message = "--ignore-after option does not work with one of the other options you selected. Please change options. Exiting";
                 eprintln!("Error: {}", err_message);
@@ -299,7 +302,7 @@ fn main() {
                 || opt.maximum_shared_prefix_length.is_some()
                 || opt.homophones_list.is_some()
                 || opt.dice_sides.is_some()
-                || opt.print_high_dice_sides_as_letters
+                || opt.print_dice_sides_as_their_base
             {
                 let err_message = "--ignore-before option does not work with one of the other options you selected. Please change options. Exiting";
                 eprintln!("Error: {}", err_message);
@@ -388,7 +391,7 @@ fn main() {
                                 i,
                                 dice_sides,
                                 tidied_list.len(),
-                                opt.print_high_dice_sides_as_letters
+                                opt.print_dice_sides_as_their_base
                             ),
                         )
                         .expect("Unable to write dice roll to file");
@@ -408,7 +411,7 @@ fn main() {
                                 i,
                                 dice_sides,
                                 tidied_list.len(),
-                                opt.print_high_dice_sides_as_letters
+                                opt.print_dice_sides_as_their_base
                             )
                         );
                     }

@@ -555,11 +555,8 @@ mod list_manipulation_tests {
     }
     #[test]
     fn can_print_dice_rolls_of_base_2() {
-        assert_eq!(
-            print_as_dice(1, 2, 7776, false),
-            "0000000000001".to_string()
-        );
-        assert_eq!(print_as_dice(127, 2, 128, false), "1111111".to_string());
+        assert_eq!(print_as_dice(1, 2, 7776, true), "0000000000001".to_string());
+        assert_eq!(print_as_dice(127, 2, 128, true), "1111111".to_string());
     }
     #[test]
     fn can_print_dice_rolls_of_base_20() {
