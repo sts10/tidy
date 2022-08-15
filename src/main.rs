@@ -6,10 +6,12 @@ use std::path::PathBuf;
 use std::process;
 use tidy::*;
 pub mod display_information;
+pub mod input_validations;
 use crate::dice::print_as_dice;
 use crate::display_information::display_list_information;
 use crate::display_information::generate_samples;
 use crate::file_readers::*;
+use crate::input_validations::*;
 
 /// Parse user's input to the `cut_to` option, either directly as a `usize`,
 /// or, if they entered Python exponent notation (base**exponent), which
@@ -256,23 +258,15 @@ fn main() {
         eprintln!("Received args: {:?}", opt);
     }
 
-    // Validate dice_sides
-    if let Some(dice_sides) = opt.dice_sides {
-        if !(2 <= dice_sides && dice_sides <= 36) {
-            eprintln!("Error: Specified number of dice sides must be between 2 and 36.");
-            process::exit(2);
-        }
+    if !valid_dice_sides(opt.dice_sides) {
+        eprintln!("Error: Specified number of dice sides must be between 2 and 36.");
+        process::exit(2);
     }
 
-    // Check for invalid widdle_to requests
-    if opt.widdle_to.is_some() && opt.cut_to.is_some() {
-        eprintln!("Error: Can not specify BOTH a 'cut to' and 'widdle to' option. Please only use one of these two.");
+    if !valid_list_truncation_options(&opt.widdle_to, opt.cut_to, opt.take_first, opt.take_rand) {
         process::exit(2);
     }
-    if opt.widdle_to.is_some() && (opt.take_first.is_some() || opt.take_rand.is_some()) {
-        eprintln!("Error: Can not specify BOTH a 'widdle to' amount and a 'take first' or 'take rand' amount. Please only specify a widdle-to amount or a take amount.");
-        process::exit(2);
-    }
+
     // Warn about the (many!) current limits of the ignore option
     let (ignore_after_delimiter, ignore_before_delimiter) = match (
         opt.ignore_after_delimiter,
