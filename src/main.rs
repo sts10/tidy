@@ -166,7 +166,7 @@ struct Args {
     #[clap(long = "take-rand")]
     take_rand: Option<usize>,
 
-    /// Widdle list exactly to a specified length, only taking minimum number of words
+    /// Whittle list exactly to a specified length, only taking minimum number of words
     /// from the beginning of inputted list(s).
     /// If the outputted list is not exactly the specified length, it will try again by taking a
     /// different amount of words form input list(s). As a result, this using this option may take a moment.
@@ -174,10 +174,10 @@ struct Args {
     /// Can accept expressions in the form of base**exponent (helpful for generating diceware lists).
     ///
     /// Optionally can also take and a rough "starting point", after a comma.
-    /// For example, --widdle-to 7776,15000 would start by taking the first
+    /// For example, --whittle-to 7776,15000 would start by taking the first
     /// 15,000 words from the inputted list(s), then keep iterating from there.
-    #[clap(short = 'W', long = "widdle-to")]
-    widdle_to: Option<String>,
+    #[clap(short = 'W', long = "whittle-to")]
+    whittle_to: Option<String>,
 
     /// Just before printing generated list, cut list down
     /// to a set number of words. Can accept expressions in the
@@ -263,7 +263,7 @@ fn main() {
         process::exit(2);
     }
 
-    if !valid_list_truncation_options(&opt.widdle_to, opt.cut_to, opt.take_first, opt.take_rand) {
+    if !valid_list_truncation_options(&opt.whittle_to, opt.cut_to, opt.take_first, opt.take_rand) {
         process::exit(2);
     }
 
@@ -349,33 +349,33 @@ fn main() {
             return;
         }
     }
-    let tidied_list = match opt.widdle_to {
-        Some(widdle_to_string) => {
-            // Some widdle_to String has been provided, which we need to do a lot of work for
-            // First, parse length_to_widdle_to
-            let length_to_widdle_to =
-                eval_cut_length(split_and_vectorize(&widdle_to_string, ",")[0]);
+    let tidied_list = match opt.whittle_to {
+        Some(whittle_to_string) => {
+            // Some whittle_to String has been provided, which we need to do a lot of work for
+            // First, parse length_to_whittle_to
+            let length_to_whittle_to =
+                eval_cut_length(split_and_vectorize(&whittle_to_string, ",")[0]);
             // Determine initial starting point
-            let mut starting_point = if split_and_vectorize(&widdle_to_string, ",").len() == 2 {
+            let mut starting_point = if split_and_vectorize(&whittle_to_string, ",").len() == 2 {
                 // If user gave us one, use that.
-                split_and_vectorize(&widdle_to_string, ",")[1]
+                split_and_vectorize(&whittle_to_string, ",")[1]
                     .parse::<usize>()
-                    .unwrap_or((length_to_widdle_to as f64 * 1.4) as usize)
+                    .unwrap_or((length_to_whittle_to as f64 * 1.4) as usize)
             } else {
-                // If not, start with length_to_widdle_to*1.4 as a decent opening guess.
+                // If not, start with length_to_whittle_to*1.4 as a decent opening guess.
                 // Effectively this assumes we'll cut about 30% of words in most
                 // Tidy runs.
-                (length_to_widdle_to as f64 * 1.4) as usize
+                (length_to_whittle_to as f64 * 1.4) as usize
             };
             // Give user a heads up that we're working on it.
             eprintln!(
-                "Widdling list to {} words. This may take a moment.",
-                length_to_widdle_to
+                "Whittling list to {} words. This may take a moment.",
+                length_to_whittle_to
             );
 
             let mut this_list_length = 0;
             let mut this_tidied_list = vec![];
-            while this_list_length != length_to_widdle_to {
+            while this_list_length != length_to_whittle_to {
                 this_tidied_list = tidy_list(TidyRequest {
                     list: make_vec_from_filenames(&opt.inputted_word_list),
                     take_first: Some(starting_point),
@@ -420,11 +420,11 @@ fn main() {
                 starting_point = get_new_starting_point_guess(
                     starting_point,
                     this_list_length,
-                    length_to_widdle_to,
+                    length_to_whittle_to,
                 );
                 if opt.debug {
                     eprintln!(
-                        "Widdled list to {}. Will try again, taking {} words.",
+                        "whittled list to {}. Will try again, taking {} words.",
                         this_list_length, starting_point
                     );
                 }
@@ -434,7 +434,7 @@ fn main() {
             this_tidied_list
         }
         None => {
-            // `widdle_to` option not specified, so proceed as normal,
+            // `whittle_to` option not specified, so proceed as normal,
             // sening all parameters in TidyRequest
             let this_tidy_request = TidyRequest {
                 list: make_vec_from_filenames(&opt.inputted_word_list),

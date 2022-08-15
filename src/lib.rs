@@ -331,23 +331,23 @@ pub fn parse_delimiter(delimiter: char) -> Option<char> {
     }
 }
 
-/// Used for the to_widdle option
+/// Used for the to_whittle option
 pub fn get_new_starting_point_guess(
     previous_starting_point: usize,
     this_list_length: usize,
-    length_to_widdle_to: usize,
+    length_to_whittle_to: usize,
 ) -> usize {
     let mut starting_point = previous_starting_point;
-    if this_list_length > length_to_widdle_to {
+    if this_list_length > length_to_whittle_to {
         // We're too high!
-        let difference = this_list_length - length_to_widdle_to;
-        let multiplier = starting_point as f64 / length_to_widdle_to as f64;
+        let difference = this_list_length - length_to_whittle_to;
+        let multiplier = starting_point as f64 / length_to_whittle_to as f64;
         let change = (difference as f64 * multiplier).floor() as usize;
         starting_point -= change;
     } else {
         // We're too low!
-        let difference = length_to_widdle_to - this_list_length;
-        let multiplier = starting_point as f64 / length_to_widdle_to as f64;
+        let difference = length_to_whittle_to - this_list_length;
+        let multiplier = starting_point as f64 / length_to_whittle_to as f64;
         let change = (difference as f64 * multiplier).floor() as usize;
         starting_point += change;
     }

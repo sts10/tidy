@@ -206,8 +206,8 @@ OPTIONS:
     -V, --version
             Print version information
 
-    -W, --widdle-to <WIDDLE_TO>
-            Widdle list exactly to a specified length, only taking minimum number of words from the
+    -W, --whittle-to <WHITTLE_TO>
+            Whittle list exactly to a specified length, only taking minimum number of words from the
             beginning of inputted list(s). If the outputted list is not exactly the specified
             length, it will try again by taking a different amount of words form input list(s). As a
             result, this using this option may take a moment. Useful for working with lists that are
@@ -215,7 +215,7 @@ OPTIONS:
             base**exponent (helpful for generating diceware lists).
             
             Optionally can also take and a rough "starting point", after a comma. For example,
-            --widdle-to 7776,15000 would start by taking the first 15,000 words from the inputted
+            --whittle-to 7776,15000 would start by taking the first 15,000 words from the inputted
             list(s), then keep iterating from there.
 
     -x, --shared-prefix-length <MAXIMUM_SHARED_PREFIX_LENGTH>
@@ -258,7 +258,7 @@ OPTIONS:
 
 -   `tidy -o d-and-d.txt --dice 20 --cut-to 20**3 wordlist.txt` Create an 8,000-word list where each word corresponds to 3 rolls of a 20-sided die (`06-07-07	dragon`). `--cut-to` randomly truncates the resulting list to the specified amount -- can accept integers (`8000`) or informal exponent notation (`20**3`). See [EFF's fandom-inspired wordlists](https://www.eff.org/deeplinks/2018/08/dragon-con-diceware) for more.
 
--   `tidy -g s --widdle-to 7776 -PlL -m 3 -M 15 --dice 6 -o diceware.txt ~/Downloads/enwiki-20190320-words-frequency-sorted.txt` Carefully make a 7,776-word list by only taking the words needed from the top of `~/Downloads/enwiki-20190320-words-frequency-sorted.txt` file. Assumes this file is sorted by word frequencies, with a frequency count after the word, separated by a space ([example](https://github.com/IlyaSemenov/wikipedia-word-frequency/blob/master/results/enwiki-20190320-words-frequency.txt): `located 1039008`). Since we only want to use the most common words, we'll use Tidy's `--widde-to` option to only take exactly how many words we need. Note that this may take longer that usual Tidy executions, since Tidy will likely need to make multiple attempts to make a list that's exactly the requested length.
+-   `tidy -g s --whittle-to 7776 -PlL -m 3 -M 15 --dice 6 -o diceware.txt ~/Downloads/enwiki-20190320-words-frequency-sorted.txt` Carefully make a 7,776-word list by only taking the words needed from the top of `~/Downloads/enwiki-20190320-words-frequency-sorted.txt` file. Assumes this file is sorted by word frequencies, with a frequency count after the word, separated by a space ([example](https://github.com/IlyaSemenov/wikipedia-word-frequency/blob/master/results/enwiki-20190320-words-frequency.txt): `located 1039008`). Since we only want to use the most common words, we'll use Tidy's `--widde-to` option to only take exactly how many words we need. Note that this may take longer that usual Tidy executions, since Tidy will likely need to make multiple attempts to make a list that's exactly the requested length.
 
 
 ## List attributes
