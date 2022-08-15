@@ -205,17 +205,17 @@ struct Args {
     #[clap(short = 'h', long = "homophones", parse(from_os_str))]
     homophones_list: Option<Vec<PathBuf>>,
 
-    /// Print dice roll next to word in output. Set number of sides
+    /// Print dice roll before word in output. Set number of sides
     /// of dice. Must be between 2 and 36. Use 6 for normal dice.
     #[clap(long = "dice")]
     dice_sides: Option<u8>,
 
-    /// When printing dice roll next to word in output, print according to
-    /// their base. Effectively this means that letters will be used to
-    /// represent numbers higher than 10. This option also 0-indexs all
-    /// dice values.
-    /// This setting defaults to `false`, which will print double-digit
-    /// numbers when necessary (e.g. 18-03-08).
+    /// When printing dice roll before word in output, print dice values
+    /// according to the base selected through --dice option. Effectively
+    /// this means that letters will be used to represent numbers higher
+    /// than 10. Note that this option also 0-indexes the dice values.
+    /// This setting defaults to `false`, which will 1-indexed dice values,
+    /// and use double-digit numbers when necessary (e.g. 18-03-08).
     #[clap(long = "sides-as-base")]
     print_dice_sides_as_their_base: bool,
 

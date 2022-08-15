@@ -88,7 +88,7 @@ OPTIONS:
             Debug mode
 
         --dice <DICE_SIDES>
-            Print dice roll next to word in output. Set number of sides of dice. Must be between 2
+            Print dice roll before word in output. Set number of sides of dice. Must be between 2
             and 36. Use 6 for normal dice
 
         --dry-run
@@ -189,10 +189,11 @@ OPTIONS:
             Remove suffix words from new list
 
         --sides-as-base
-            When printing dice roll next to word in output, print according to their base.
-            Effectively this means that letters will be used to represent numbers higher than 10.
-            This option also 0-indexs all dice values. This setting defaults to `false`, which will
-            print double-digit numbers when necessary (e.g. 18-03-08)
+            When printing dice roll before word in output, print dice values according to the base
+            selected through --dice option. Effectively this means that letters will be used to
+            represent numbers higher than 10. Note that this option also 0-indexes the dice values.
+            This setting defaults to `false`, which will 1-indexed dice values, and use double-digit
+            numbers when necessary (e.g. 18-03-08)
 
         --take-first <TAKE_FIRST>
             Only take first N words from inputted word list. If two or more word lists are inputted,
