@@ -162,8 +162,14 @@ struct Args {
     #[clap(long = "take-rand")]
     take_rand: Option<usize>,
 
-    /// Widdle list down to an exact length. Takes the exact length and
-    /// a rough "starting point", as integers separated by a comma
+    /// Widdle list down to a given length, only taking minimum number of words
+    /// from the beginning of inputted list(s).
+    /// Optionally can also take and a rough "starting point", after a comma.
+    /// For example, --widdle-to 7776,15000 would start by taking the first
+    /// 15,000 words from the inputted list(s), then see the length of
+    /// the outputted length would be, given other parameters. If the outputted
+    /// list is not exactly 7,776 words long, it will try again by taking a
+    /// different amount of words form input list(s).
     #[clap(short = 'W', long = "widdle-to")]
     widdle_to: Option<String>,
 
@@ -249,23 +255,26 @@ fn main() {
     // Validate dice_sides
     if let Some(dice_sides) = opt.dice_sides {
         if !(2 <= dice_sides && dice_sides <= 36) {
-            eprintln!("Specified number of dice sides must be between 2 and 36.");
-            return;
+            eprintln!("Error: Specified number of dice sides must be between 2 and 36.");
+            process::exit(2);
         }
     }
 
-    // Check for invalid widdle_to/cut_to request
+    // Check for invalid widdle_to requests
     if opt.widdle_to.is_some() && opt.cut_to.is_some() {
-        eprintln!("Can not specify BOTH a 'cut to' and 'widdle to' option. Please only use one of these two.");
-        return;
+        eprintln!("Error: Can not specify BOTH a 'cut to' and 'widdle to' option. Please only use one of these two.");
+        process::exit(2);
     }
-    // Warn about limits of the ignore option
+    if opt.widdle_to.is_some() && (opt.take_first.is_some() || opt.take_rand.is_some()) {
+        eprintln!("Error: Can not specify BOTH a 'widdle to' amount and a 'take first' or 'take rand' amount. Please only specify a widdle-to amount or a take amount.");
+        process::exit(2);
+    }
+    // Warn about the (many!) current limits of the ignore option
     let (ignore_after_delimiter, ignore_before_delimiter) = match (
         opt.ignore_after_delimiter,
         opt.ignore_before_delimiter,
     ) {
-        // If given both a from_delimiter and through_delimiter
-        // Error out nicely.
+        // If given both a from_delimiter and through_delimiter, error out nicely.
         (Some(_after_delimiter), Some(_before_delimiter)) => {
             let err_message = "Can't ignore metadata on both sides.";
             eprintln!("Error: {}", err_message);
@@ -346,19 +355,30 @@ fn main() {
         Some(widdle_to_string) => {
             let length_to_widdle_to =
                 eval_cut_length(split_and_vectorize(&widdle_to_string, ",")[0]);
-
-            let mut starting_point = split_and_vectorize(&widdle_to_string, ",")[1]
-                .parse::<usize>()
-                .unwrap();
+            // Determine initial starting point
+            let mut starting_point = if split_and_vectorize(&widdle_to_string, ",").len() == 2 {
+                // If user gave us one, use that.
+                split_and_vectorize(&widdle_to_string, ",")[1]
+                    .parse::<usize>()
+                    .unwrap_or((length_to_widdle_to as f64 * 1.4) as usize)
+            } else {
+                // If not, start with length_to_widdle_to*1.4 as a decent opening guess.
+                // Effectively this assumes we'll cut about 30% of words in most
+                // Tidy runs.
+                (length_to_widdle_to as f64 * 1.4) as usize
+            };
+            eprintln!(
+                "Widdling list to {} words. This may take a moment.",
+                length_to_widdle_to
+            );
 
             let mut this_list_length = 0;
             let mut this_tidied_list = vec![];
             while this_list_length != length_to_widdle_to {
-                eprintln!("Starting point is now {}", starting_point);
                 this_tidied_list = tidy_list(TidyRequest {
                     list: make_vec_from_filenames(&opt.inputted_word_list),
                     take_first: Some(starting_point),
-                    take_rand: opt.take_rand,
+                    take_rand: None, // Ignore this option in this context (widdling)
                     sort_alphabetically: !opt.no_alpha_sort,
                     ignore_after_delimiter: ignore_after_delimiter,
                     ignore_before_delimiter: ignore_before_delimiter,
@@ -384,7 +404,6 @@ fn main() {
                         .approved_list
                         .as_ref()
                         .map(|list_of_files| make_vec_from_filenames(&list_of_files)),
-                    // And homophones
                     homophones_list: opt
                         .homophones_list
                         .as_ref()
@@ -393,16 +412,21 @@ fn main() {
                     maximum_length: opt.maximum_length,
                     maximum_shared_prefix_length: opt.maximum_shared_prefix_length,
                     minimum_edit_distance: opt.minimum_edit_distance,
-                    cut_to: opt.cut_to,
+                    cut_to: None, // Ignore this option in this context (widdling)
                 });
 
                 this_list_length = this_tidied_list.len();
-                eprintln!("This list attempt is {}", this_list_length);
                 starting_point = get_new_starting_point_guess(
                     starting_point,
                     this_list_length,
                     length_to_widdle_to,
                 );
+                if opt.debug {
+                    eprintln!(
+                        "Widdled list to {}. Will try again, taking {} words.",
+                        this_list_length, starting_point
+                    );
+                }
             }
             // out of the loop
             this_tidied_list
