@@ -353,6 +353,8 @@ fn main() {
     }
     let tidied_list = match opt.widdle_to {
         Some(widdle_to_string) => {
+            // Some widdle_to String has been provided, which we need to do a lot of work for
+            // First, parse length_to_widdle_to
             let length_to_widdle_to =
                 eval_cut_length(split_and_vectorize(&widdle_to_string, ",")[0]);
             // Determine initial starting point
@@ -367,6 +369,7 @@ fn main() {
                 // Tidy runs.
                 (length_to_widdle_to as f64 * 1.4) as usize
             };
+            // Give user a heads up that we're working on it.
             eprintln!(
                 "Widdling list to {} words. This may take a moment.",
                 length_to_widdle_to
@@ -428,10 +431,13 @@ fn main() {
                     );
                 }
             }
-            // out of the loop
+            // Out of the loop, which means the list is the user-specified
+            // length. return this verison of the list.
             this_tidied_list
         }
         None => {
+            // `widdle_to` option not specified, so proceed as normal,
+            // sening all parameters in TidyRequest
             let this_tidy_request = TidyRequest {
                 list: make_vec_from_filenames(&opt.inputted_word_list),
                 take_first: opt.take_first,
@@ -478,6 +484,7 @@ fn main() {
         }
     };
 
+    // Next, we figure out what to print where
     if !opt.dry_run {
         eprintln!("Printing new list...");
         match opt.output {
@@ -504,7 +511,7 @@ fn main() {
                 }
             }
             // If no output file destination, print resulting list, word by word,
-            // to println (which goes to stdout, allowing for use of > on command like)
+            // to println (which goes to stdout, allowing use of > on command line)
             None => {
                 for (i, word) in tidied_list.iter().enumerate() {
                     if let Some(dice_sides) = opt.dice_sides {
