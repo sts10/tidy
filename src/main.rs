@@ -6,6 +6,7 @@ use std::path::PathBuf;
 use std::process;
 use tidy::*;
 pub mod display_information;
+use crate::dice::print_as_dice;
 use crate::display_information::display_list_information;
 use crate::display_information::generate_samples;
 

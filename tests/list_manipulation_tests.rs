@@ -1,4 +1,5 @@
 mod list_manipulation_tests {
+    use tidy::dice::print_as_dice; // not exactly sure why I need this here...
     use tidy::*;
 
     fn make_lists() -> (Vec<String>, Vec<String>, Vec<String>) {
