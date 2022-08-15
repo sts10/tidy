@@ -300,9 +300,7 @@ You should then be able to run `tidy --help`.
 
 Run all code tests: `cargo test`
 
-Generate docs: `cargo doc --document-private-items --no-deps`
-
-Add `--open` flag to open docs after generation. They're printed to `./target/doc/tidy/index.html`.
+Generate docs: `cargo doc --document-private-items --no-deps`. Add `--open` flag to open docs after generation. They're printed to `./target/doc/tidy/index.html`.
 
 ## Blog posts related to this project
 
@@ -325,8 +323,6 @@ Given a pair of homophones, like "sun" and "son":
 1. To ensure you don't have BOTH homophones in your generated list, you'd run `tidy` with a flag like `-h ../homophones/homophone-lists/homophones-large-as-pairs.txt` ([link](https://github.com/sts10/homophones/blob/main/homophone-lists/homophones-large-as-pairs.txt)). This will let either "sun" or "son" on your list but NOT both.
 2. To ensure you have NEITHER of the words in the homophone pair on your generated word list, you'd use the reject words flags: `-r ../homophones/homophone-lists/cleaned-as-singles.txt` ([link](https://github.com/sts10/homophones/blob/main/homophone-lists/cleaned-as-singles.txt)). This will remove _both_ "sun" and "son" from your generated list before its outputted.
 
-Note that Tidy currently can only accept one list of reject words. If you have two or more, you could combine and de-duplicate them with Tidy first!
-
 ## What are prefix words (a.k.a. prefix codes)?
 
 A word list that doesn't has any prefix words (also known as "[prefix codes](https://en.wikipedia.org/wiki/Prefix_code)") can better guarantee more consistent entropy when combining words from the list randomly and without punctuation between the words.
@@ -336,6 +332,8 @@ As a brief example, if a list has "boy", "hood", and "boyhood" on it, users who 
 You can read more about this issue [here](https://github.com/ulif/diceware#prefix-code).
 
 ## On maximum shared prefix length
+
+Tidy allows users to set a maximum shared prefix length.
 
 Setting this value to say, 4, means that knowing the first 4 characters of any word on the generated list is sufficient to know which word it is. As an example, we'd know that if a word starts with "radi", we know it must be the word "radius" (if "radical" had been on the list, it Tidy would have removed it).
 
@@ -347,11 +345,11 @@ Use the attributes flag twice (`-AA`) to get information about shared prefix len
 
 ## What is "Efficiency per character" and "Assumed entropy per char" and what's the difference?
 
-If we take the entropy per word from a list (log<sub>2</sub>(list_length)) and divide it by the length of the **average**-length word on the list, we get a value we might call "efficiency per character". This just means that, on average, you get X bits per character typed. 
+If we take the entropy per word from a list (log<sub>2</sub>(list_length)) and divide it by the length of the **average**-length word on the list, we get a value we might call "efficiency per character". This just means that, on average, you get _E_ bits per character typed. 
 
 If we take the entropy per word from a list (log<sub>2</sub>(list_length)) and divide it by the length of the **shortest** word on the list, we get a value we might call "assumed entropy per char" (or character).
 
-For example, if we're looking at the 7,776-word EFF long list, we'd assume an entropy of 12.925 bits per word. The average word length is 7.0, so the efficiency is 1.8 bits per character. (I got this definition of efficiency from [an EFF blog post about their list](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases).) The list has 82 three-letter words on it, so we'd divide 12.925 by 3 and get an "assumed entropy per character" of about 4.31 bits per character.
+For example, if we're looking at the EFF long list, we see that its' 7,776-words long, so we'd assume an entropy of 12.925 bits per word. The average word length is 7.0, so the efficiency is 1.8 bits per character. (I got this definition of "efficiency" from [an EFF blog post about their list](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases).) The shortest word on the list is three letters long, so we'd divide 12.925 by 3 and get an "assumed entropy per character" of about 4.31 bits per character.
 
 I contend that this second value in particular may be useful when we ask what the shortest word on a good word list should be. There may be an established method for determining what this minimum word length should be, but if there is I don't know about it yet. Here's the math I've worked out on my own.
 
