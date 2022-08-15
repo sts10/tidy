@@ -191,7 +191,7 @@ OPTIONS:
         --sides-as-base
             When printing dice roll before word in output, print dice values according to the base
             selected through --dice option. Effectively this means that letters will be used to
-            represent numbers higher than 10. Note that this option also 0-indexes the dice values.
+            represent numbers higher than 9. Note that this option also 0-indexes the dice values.
             This setting defaults to `false`, which will 1-indexed dice values, and use double-digit
             numbers when necessary (e.g. 18-03-08)
 
