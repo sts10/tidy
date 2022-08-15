@@ -122,14 +122,14 @@ pub fn display_list_information(
         // Numbers of characters required to definitely get to a unique
         // prefix
         eprintln!("Unique character prefix   : {}", longest_shared_prefix + 1);
-        if level >= 3 {
-            let mcmillan = if satisfies_mcmillan(&list) {
-                "satisfied"
-            } else {
-                "not satisfied"
-            };
-            eprintln!("Kraft-McMillan inequality : {}", mcmillan);
-        }
+    }
+    if level >= 5 {
+        let mcmillan = if satisfies_mcmillan(&list) {
+            "satisfied"
+        } else {
+            "not satisfied"
+        };
+        eprintln!("Kraft-McMillan inequality : {}", mcmillan);
     }
 }
 use rand::seq::SliceRandom;
