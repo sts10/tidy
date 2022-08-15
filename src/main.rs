@@ -162,14 +162,16 @@ struct Args {
     #[clap(long = "take-rand")]
     take_rand: Option<usize>,
 
-    /// Widdle list down to a given length, only taking minimum number of words
+    /// Widdle list exactly to a specified length, only taking minimum number of words
     /// from the beginning of inputted list(s).
+    /// If the outputted list is not exactly the specified length, it will try again by taking a
+    /// different amount of words form input list(s). As a result, this using this option may take a moment.
+    /// Useful for working with lists that are sorted by word frequency or some other metadata.
+    /// Can accept expressions in the form of base**exponent (helpful for generating diceware lists).
+    ///
     /// Optionally can also take and a rough "starting point", after a comma.
     /// For example, --widdle-to 7776,15000 would start by taking the first
-    /// 15,000 words from the inputted list(s), then see the length of
-    /// the outputted length would be, given other parameters. If the outputted
-    /// list is not exactly 7,776 words long, it will try again by taking a
-    /// different amount of words form input list(s).
+    /// 15,000 words from the inputted list(s), then keep iterating from there.
     #[clap(short = 'W', long = "widdle-to")]
     widdle_to: Option<String>,
 

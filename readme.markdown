@@ -54,9 +54,9 @@ USAGE:
     tidy [OPTIONS] <Inputted Word Lists>...
 
 ARGS:
-    <Inputted Word Lists>...    Word list input files. Can be more than one, in which case
-                                they'll be combined and de-duplicated. Requires at least one
-                                file
+    <Inputted Word Lists>...
+            Word list input files. Can be more than one, in which case they'll be combined and de-
+            duplicated. Requires at least one file
 
 OPTIONS:
     -a, --approve <APPROVED_LIST>
@@ -207,12 +207,16 @@ OPTIONS:
             Print version information
 
     -W, --widdle-to <WIDDLE_TO>
-            Widdle list down to a given length, only taking minimum number of words from the
-            beginning of inputted list(s). Optionally can also take and a rough "starting point",
-            after a comma. For example, --widdle-to 7776,15000 would start by taking the first
-            15,000 words from the inputted list(s), then see the length of the outputted length
-            would be, given other parameters. If the outputted list is not exactly 7,776 words long,
-            it will try again by taking a different amount of words form input list(s)
+            Widdle list exactly to a specified length, only taking minimum number of words from the
+            beginning of inputted list(s). If the outputted list is not exactly the specified
+            length, it will try again by taking a different amount of words form input list(s). As a
+            result, this using this option may take a moment. Useful for working with lists that are
+            sorted by word frequency or some other metadata. Can accept expressions in the form of
+            base**exponent (helpful for generating diceware lists).
+            
+            Optionally can also take and a rough "starting point", after a comma. For example,
+            --widdle-to 7776,15000 would start by taking the first 15,000 words from the inputted
+            list(s), then keep iterating from there.
 
     -x, --shared-prefix-length <MAXIMUM_SHARED_PREFIX_LENGTH>
             Set number of leading characters to get to a unique prefix, which can aid auto-complete
