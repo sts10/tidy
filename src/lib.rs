@@ -44,6 +44,12 @@ pub struct TidyRequest {
     pub cut_to: Option<usize>,
 }
 
+#[derive(PartialEq)]
+enum MetadataPosition {
+    Start,
+    End,
+}
+
 /// Takes a slice of `PathBuf`s representing the word list(s)
 /// that the user has inputted to the program. Then iterates
 /// through each file and addes each line to Vec<String>. (Blank
@@ -172,7 +178,7 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
                             split_vec[0].to_string(),
                             Some(delimiter),
                             Some(split_vec[1]),
-                            Some("end"), // this should be an enum!
+                            Some(MetadataPosition::End),
                         )
                     }
                 }
@@ -187,7 +193,7 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
                             split_vec[1].to_string(),
                             Some(delimiter),
                             Some(split_vec[0]),
-                            Some("start"),
+                            Some(MetadataPosition::Start),
                         )
                     }
                 }
@@ -305,9 +311,9 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         if new_word != "" {
             match metadata {
                 Some(metadata) => {
-                    if metadata_position == Some("end") {
+                    if metadata_position == Some(MetadataPosition::End) {
                         new_word = new_word + &delimiter.unwrap().to_string() + metadata;
-                    } else if metadata_position == Some("start") {
+                    } else if metadata_position == Some(MetadataPosition::Start) {
                         new_word =
                             metadata.to_owned() + &delimiter.unwrap().to_string() + &new_word;
                     }
