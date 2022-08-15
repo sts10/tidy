@@ -385,8 +385,8 @@ fn main() {
                     take_first: Some(starting_point),
                     take_rand: None, // Ignore this option in this context (widdling)
                     sort_alphabetically: !opt.no_alpha_sort,
-                    ignore_after_delimiter: ignore_after_delimiter,
-                    ignore_before_delimiter: ignore_before_delimiter,
+                    ignore_after_delimiter,
+                    ignore_before_delimiter,
                     to_lowercase: opt.to_lowercase,
                     should_straighten_quotes: opt.straighten_quotes,
                     should_remove_prefix_words: opt.remove_prefix_words,
@@ -404,15 +404,15 @@ fn main() {
                     reject_list: opt
                         .reject_list
                         .as_ref()
-                        .map(|list_of_files| make_vec_from_filenames(&list_of_files)),
+                        .map(|list_of_files| make_vec_from_filenames(list_of_files)),
                     approved_list: opt
                         .approved_list
                         .as_ref()
-                        .map(|list_of_files| make_vec_from_filenames(&list_of_files)),
+                        .map(|list_of_files| make_vec_from_filenames(list_of_files)),
                     homophones_list: opt
                         .homophones_list
                         .as_ref()
-                        .map(|list_of_files| read_homophones_list_from_filenames(&list_of_files)),
+                        .map(|list_of_files| read_homophones_list_from_filenames(list_of_files)),
                     minimum_length: opt.minimum_length,
                     maximum_length: opt.maximum_length,
                     maximum_shared_prefix_length: opt.maximum_shared_prefix_length,
@@ -445,8 +445,8 @@ fn main() {
                 take_first: opt.take_first,
                 take_rand: opt.take_rand,
                 sort_alphabetically: !opt.no_alpha_sort,
-                ignore_after_delimiter: ignore_after_delimiter,
-                ignore_before_delimiter: ignore_before_delimiter,
+                ignore_after_delimiter,
+                ignore_before_delimiter,
                 to_lowercase: opt.to_lowercase,
                 should_straighten_quotes: opt.straighten_quotes,
                 should_remove_prefix_words: opt.remove_prefix_words,

@@ -248,25 +248,19 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
                 // new_word = None
             }
         }
-        if req.should_remove_nonalphanumeric {
-            if new_word.chars().any(|c| !c.is_alphanumeric()) {
-                new_word = "".to_string();
-            }
+        if req.should_remove_nonalphanumeric && new_word.chars().any(|c| !c.is_alphanumeric()) {
+            new_word = "".to_string();
         }
-        if req.should_remove_nonalphabetic {
-            if new_word.chars().any(|c| !c.is_alphabetic()) {
-                new_word = "".to_string();
-            }
+        if req.should_remove_nonalphabetic && new_word.chars().any(|c| !c.is_alphabetic()) {
+            new_word = "".to_string();
         }
-        if req.should_remove_non_latin_alphabetic {
-            if new_word.chars().any(|chr| !is_latin_alphabetic(chr as u16)) {
-                new_word = "".to_string();
-            }
+        if req.should_remove_non_latin_alphabetic
+            && new_word.chars().any(|chr| !is_latin_alphabetic(chr as u16))
+        {
+            new_word = "".to_string();
         }
-        if req.should_remove_integers {
-            if new_word.chars().any(|c| c.is_numeric()) {
-                new_word = "".to_string();
-            }
+        if req.should_remove_integers && new_word.chars().any(|c| c.is_numeric()) {
+            new_word = "".to_string();
         }
 
         match req.reject_list {
@@ -494,7 +488,7 @@ fn guarantee_maximum_prefix_length(
 }
 
 fn schlinkert_prune(list: &[String]) -> Vec<String> {
-    let offenders_to_remove = get_sardinas_patterson_final_intersection(&list);
+    let offenders_to_remove = get_sardinas_patterson_final_intersection(list);
     let mut new_list = list.to_owned();
     new_list.retain(|x| !offenders_to_remove.contains(x));
     new_list
@@ -609,7 +603,8 @@ fn enfore_minimum_edit_distance(list: Vec<String>, minimum_edit_distance: usize)
     let minimum_edit_distance: u32 = minimum_edit_distance.try_into().unwrap();
     let mut list_to_read = list.to_vec();
     // Sort short words first to prefer them
-    list_to_read.sort_by(|a, b| a.chars().count().cmp(&b.chars().count()));
+    // list_to_read.sort_by(|a, b| a.chars().count().cmp(&b.chars().count()));
+    list_to_read.sort_by_key(|a| a.chars().count());
 
     let mut new_list = list.to_vec();
     new_list.retain(|potential_too_close_word| {
@@ -798,12 +793,12 @@ fn char_to_digit(ch: char) -> String {
 /// characters literally.
 pub fn parse_delimiter(delimiter: char) -> Option<char> {
     if delimiter == 's' {
-        return Some(' ');
+        Some(' ')
     } else if delimiter == 't' {
-        return Some('\t');
+        Some('\t')
     } else {
-        return Some(delimiter);
-    };
+        Some(delimiter)
+    }
 }
 
 /// Used for the to_widdle option
@@ -818,13 +813,13 @@ pub fn get_new_starting_point_guess(
         let difference = this_list_length - length_to_widdle_to;
         let multiplier = starting_point as f64 / length_to_widdle_to as f64;
         let change = (difference as f64 * multiplier).floor() as usize;
-        starting_point = starting_point - change;
+        starting_point -= change;
     } else {
         // We're too low!
         let difference = length_to_widdle_to - this_list_length;
         let multiplier = starting_point as f64 / length_to_widdle_to as f64;
         let change = (difference as f64 * multiplier).floor() as usize;
-        starting_point = starting_point + change;
+        starting_point += change;
     }
     starting_point
 }

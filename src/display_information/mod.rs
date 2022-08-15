@@ -348,8 +348,7 @@ pub fn satisfies_mcmillan(list: &[String]) -> bool {
     let alphabet_size = count_unqiue_characters(list);
     let mut running_total: f64 = 0.0;
     for word in list {
-        running_total =
-            running_total + (1.0 / (alphabet_size.pow(word.len().try_into().unwrap()) as f64));
+        running_total += 1.0 / (alphabet_size.pow(word.len().try_into().unwrap()) as f64);
     }
     running_total <= 1.0
 }
