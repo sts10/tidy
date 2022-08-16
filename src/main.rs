@@ -189,7 +189,7 @@ struct Args {
     /// Just before printing generated list, cut list down
     /// to a set number of words. Can accept expressions in the
     /// form of base**exponent (helpful for generating diceware lists).
-    /// Cuts are done from beginning of list. Recommend you use with --no-sort option
+    /// Words are selected from the beginning of processed list, and before it is sorted alphabetically.
     #[clap(long = "print-first", parse(from_str = eval_list_length))]
     print_first: Option<usize>,
 

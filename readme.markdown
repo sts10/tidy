@@ -164,8 +164,9 @@ OPTIONS:
 
         --print-first <PRINT_FIRST>
             Just before printing generated list, cut list down to a set number of words. Can accept
-            expressions in the form of base**exponent (helpful for generating diceware lists). Cuts
-            are done from beginning of list. Recommend you use with --no-sort option
+            expressions in the form of base**exponent (helpful for generating diceware lists). Words
+            are selected from the beginning of processed list, and before it is sorted
+            alphabetically
 
         --print-rand <PRINT_RAND>
             Just before printing generated list, cut list down to a set number of words. Can accept
