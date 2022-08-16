@@ -402,18 +402,20 @@ fn main() {
                 length_to_whittle_to
             );
 
+            let inputted_word_list = make_vec_from_filenames(
+                &opt.inputted_word_list,
+                opt.skip_rows_start,
+                opt.skip_rows_end,
+            );
+
             let mut this_list_length = 0;
             let mut this_tidied_list = vec![];
             while this_list_length != length_to_whittle_to {
                 this_tidied_list =
                     tidy_list(TidyRequest {
-                        list: make_vec_from_filenames(
-                            &opt.inputted_word_list,
-                            opt.skip_rows_start,
-                            opt.skip_rows_end,
-                        ),
+                        list: inputted_word_list.clone(),
                         take_first: Some(starting_point),
-                        take_rand: None, // Ignore this option in this context (widdling)
+                        take_rand: None, // Ignore this option in this context (whittling)
                         sort_alphabetically: !opt.no_alpha_sort,
                         ignore_after_delimiter,
                         ignore_before_delimiter,
@@ -444,8 +446,8 @@ fn main() {
                         maximum_length: opt.maximum_length,
                         maximum_shared_prefix_length: opt.maximum_shared_prefix_length,
                         minimum_edit_distance: opt.minimum_edit_distance,
-                        print_rand: None, // Ignore this option in this context (widdling)
-                        print_first: None, // Ignore this option in this context (widdling)
+                        print_rand: None, // Ignore this option in this context (whittling)
+                        print_first: None, // Ignore this option in this context (whittling)
                     });
 
                 this_list_length = this_tidied_list.len();
@@ -454,6 +456,16 @@ fn main() {
                     this_list_length,
                     length_to_whittle_to,
                 );
+                // Check if we're now asking for too many words from the original
+                // inputted_word_list (which would be a problem!)
+                if starting_point > inputted_word_list.len() {
+                    eprintln!(
+                        "ERROR: Cannot make a list of {} words from the inputted list(s), given the selected options. Please try again, either by changing options or inputting more words.",
+                        length_to_whittle_to
+                    );
+                    process::exit(2);
+                }
+
                 if opt.debug {
                     eprintln!(
                         "whittled list to {}. Will try again, taking {} words.",
