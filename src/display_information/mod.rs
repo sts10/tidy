@@ -93,10 +93,10 @@ pub fn display_list_information(
     // we assume each character adds roughly 4.7 bits of entropy.
     eprintln!(
         "Above brute force line?   : {}",
-        // I'd rather use 26_f64.log2() here,
-        // but Rust's rounding isn't great in this case, so we're
-        // hard-coding a prefer approximation
-        assumed_entropy_per_character <= 4.700439718141093
+        // I _think_ this is the most precise way of calculating the
+        // maximum entropy per character allowed by the brute force line
+        // for an assumed alphabet of 26 characters.
+        assumed_entropy_per_character <= 26_f64.log2()
     );
 
     // In 1951, Claude Shannon estimated that English words only have
@@ -175,12 +175,14 @@ pub fn generate_samples(
 }
 
 /// Calculate the entropy per word of a word list, given its size.
-/// Entropy is meausred in bits, hence use of constant `2`.
+/// We want this entropy value measured in bits, hence the use
+/// of log2()
 ///
 /// Returns `f64` because this value to return (bits of entropy per
 /// word) will most likely not be a whole number (which is fine!)
 pub fn calc_entropy_per_word(list_size: usize) -> f64 {
-    (list_size as f64).ln() / (2_f64.ln() as f64)
+    // (list_size as f64).ln() / (2_f64.ln() as f64)
+    (list_size as f64).log2()
 }
 
 use crate::edit_distance::find_edit_distance;

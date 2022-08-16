@@ -5,8 +5,8 @@ mod list_information_tests {
     #[test]
     fn can_calculate_entropy_per_word_of_generated_list() {
         assert_eq!(calc_entropy_per_word(7_776), 12.92481250360578);
-        assert_eq!(calc_entropy_per_word(16_103), 13.97504186800953);
-        assert_eq!(calc_entropy_per_word(18_318), 14.160974374927937);
+        assert_eq!(calc_entropy_per_word(16_103), 13.975041868009528);
+        assert_eq!(calc_entropy_per_word(18_318), 14.160974374927935);
     }
 
     #[test]
