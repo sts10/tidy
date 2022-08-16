@@ -379,16 +379,16 @@ To see if a given generated list falls above or below this line, use the `-A`/`-
 
 Formula: 
 
-Where _S_ is the length of the shortest word on the list, 26 is the number of letters in the English alphabet, and _M_ is max list length: 2<sup>_S_ * log<sub>2</sub>(26)</sup> = _M_
+Where _S_ is the length of the shortest word on the list, 26 is the number of letters in the English alphabet, and _M_ is max list length: _M_ = 2<sup>_S_ * log<sub>2</sub>(26)</sup>. Conveniently, [this simplifies rather nicely](https://github.com/sts10/tidy/issues/9#issuecomment-1216003299) to _M_ = 26<sup>_S_</sup>.
 
-(or in Python: `max_word_list_length = 2**(S*4.7)`)
+(or in Python: `max_word_list_length = 26**shortest_word_length`)
 
 | shortest word length | max list length |
 |----------------------|-----------------|
-| 2                    | 675             |
-| 3                    | 17559           |
-| 4                    | 456419          |
-| 5                    | 11863283        |
+| 2                    | 676             |
+| 3                    | 17576           |
+| 4                    | 456976          |
+| 5                    | 11881376        |
 
 ### An even stricter "line"
 
@@ -400,7 +400,7 @@ Formula:
 
 Where _S_ is the length of the shortest word on the list and _M_ is max list length: 2<sup>_S_ * 2.62</sup> = _M_
 
-(or in Python: `max_word_list_length = 2**(S*2.62)`)
+(or in Python: `max_word_list_length = 2**(shortest_word_length*2.62)`)
 
 | shortest word length | max list length |
 |----------------------|-----------------|

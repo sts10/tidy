@@ -93,7 +93,7 @@ pub fn display_list_information(
     // we assume each character adds 4.7 bits of entropy.
     eprintln!(
         "Above brute force line?   : {}",
-        assumed_entropy_per_character <= 4.7
+        assumed_entropy_per_character <= 4.700439718141093
     );
 
     // In 1951, Claude Shannon estimated that English words only have
