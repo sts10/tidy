@@ -182,12 +182,6 @@ OPTIONS:
     -r, --reject <REJECT_LIST>
             Path(s) for optional list of words to reject. Can accept multiple files
 
-        --read-line-end <READ_LINE_END>
-            Stop reading inputted text files at inputted line number
-
-        --read-line-start <READ_LINE_START>
-            Start reading inputted text files at inputted line number
-
         --remove-nonalphabetic
             Remove all words with non-alphabetic characters from new list. Words with diacritcis and
             other non-Latin characters will remain
@@ -205,6 +199,14 @@ OPTIONS:
             represent numbers higher than 9. Note that this option also 0-indexes the dice values.
             This setting defaults to `false`, which will 1-indexed dice values, and use double-digit
             numbers when necessary (e.g. 18-03-08)
+
+        --skip-rows-end <SKIP_ROWS_END>
+            Skip last number of lines from inputted files. Useful for dealing with footers like from
+            PGP signatures
+
+        --skip-rows-start <SKIP_ROWS_START>
+            Skip first number of lines from inputted files. Useful for dealing with headers like
+            from PGP signatures
 
         --take-first <TAKE_FIRST>
             Only take first N words from inputted word list. If two or more word lists are inputted,
