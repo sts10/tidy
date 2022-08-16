@@ -413,15 +413,15 @@ Formula:
 
 Where _S_ is the length of the shortest word on the list and _M_ is max list length: 2<sup>_S_ * 2.6</sup> = _M_
 
-(or in Python: `max_word_list_length = 2**(shortest_word_length*2.6)`)
+(or in Python: `max_word_list_length = 2**(shortest_word_length*2.6)`, which, to preserve correct number of significant digits, should be `max_word_list_length = 6.1**shortest_word_length`)
 
 | shortest word length | max list length |
 |----------------------|-----------------|
-| 2                    | 36              |
-| 3                    | 222             |
-| 4                    | 1351            |
-| 5                    | 8192            |
-| 6                    | 49667           |
+| 2                    | 37              |
+| 3                    | 226             |
+| 4                    | 1384            |
+| 5                    | 8445            |
+| 6                    | 51520           |
 
 As you can see, the Shannon line is quite a bit more "strict" than the brute force line.
 

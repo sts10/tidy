@@ -52,13 +52,19 @@ pub fn display_list_information(
         "Mean word length          : {:.2} characters",
         mean_word_length(&list)
     );
-    let shortest_word = list.iter().min_by(|a, b| a.len().cmp(&b.len())).unwrap();
+    let shortest_word = list
+        .iter()
+        .min_by(|a, b| a.chars().count().cmp(&b.chars().count()))
+        .unwrap();
     eprintln!(
         "Length of shortest word   : {} characters ({})",
         shortest_word.chars().count(),
         shortest_word
     );
-    let longest_word = list.iter().max_by(|a, b| a.len().cmp(&b.len())).unwrap();
+    let longest_word = list
+        .iter()
+        .max_by(|a, b| a.chars().count().cmp(&b.chars().count()))
+        .unwrap();
     eprintln!(
         "Length of longest word    : {} characters ({})",
         longest_word.chars().count(),
@@ -89,24 +95,27 @@ pub fn display_list_information(
     // If user gets a passphrase consisting entirely of shortest words,
     // it's theoretically possible that we could OVERESTIMATE entropy
     // per word. We can deterimine if we've done this by comparing out
-    // entropy estimate against a simple brute force attack, under which
-    // we assume each character adds roughly 4.7 bits of entropy.
+    // entropy estimate against a simple brute force attack of all lowercase
+    // English letters, under which we assume each character adds roughly 4.7 bits of entropy.
+    // Note that this slightly obscure method of calculation ensures that floating-point arithmetic is
+    // not used, thus ensuring a higher level of accuracy.
+    let g: i32 = 26; // roughly: assumed alphabet length
+    let shortest_word_length = get_shortest_word_length(&list) as u32;
+    let list_length = list.len() as i32;
     eprintln!(
         "Above brute force line?   : {}",
-        // I _think_ this is the most precise way of calculating the
-        // maximum entropy per character allowed by the brute force line
-        // for an assumed alphabet of 26 characters.
-        assumed_entropy_per_character <= 26_f64.log2()
+        list_length <= g.pow(shortest_word_length)
     );
 
     // In 1951, Claude Shannon estimated that English words only have
-    // about 2.6 bits of entropy per character, rather than 4.7 bits per character.
+    // about 2.6 bits of entropy per character, rather than (roughly) 4.7 bits per character.
     // https://www.princeton.edu/~wbialek/rome/refs/shannon_51.pdf
     // Thus, this is a more difficult line for a given list to pass above than
     // the "brute force" line described above.
+    let g: f64 = 6.1; // 2**2.6 is 6.1 when we maintain correct number of significant digits.
     eprintln!(
         "Above Shannon line?       : {}",
-        assumed_entropy_per_character <= 2.6
+        list_length as f64 <= g.powf(shortest_word_length.into())
     );
 
     if level >= 2 {
@@ -180,15 +189,14 @@ pub fn generate_samples(
 ///
 /// Returns `f64` because this value to return (bits of entropy per
 /// word) will most likely not be a whole number (which is fine!)
-pub fn calc_entropy_per_word(list_size: usize) -> f64 {
-    // (list_size as f64).ln() / (2_f64.ln() as f64)
-    (list_size as f64).log2()
+pub fn calc_entropy_per_word(list_length: usize) -> f64 {
+    (list_length as f64).log2()
 }
 
 use crate::edit_distance::find_edit_distance;
-/// Calculate the shortest edit distance between
-/// any two words on the list.
+/// Calculate the shortest edit distance between any two words on the list.
 fn find_shortest_edit_distance(list: &[String]) -> usize {
+    // This use of max_value is smelly, but not sure I know how to do it better.
     let mut shortest_edit_distance = u32::max_value();
     // I think I can cheat and only go through half of the list here
     for word1 in list[0..(list.len() / 2)].iter() {
@@ -200,7 +208,7 @@ fn find_shortest_edit_distance(list: &[String]) -> usize {
                 }
                 // If we're found an edit distance of 1, we know that'll be the
                 // shortest possible (since Tidy removes duplicates by default, so
-                // a shortest_edit_distance of 0 is NOT possbile)
+                // a shortest_edit_distance of 0 is NOT possible)
                 if shortest_edit_distance == 1 {
                     return 1;
                 }
@@ -353,7 +361,7 @@ pub fn satisfies_mcmillan(list: &[String]) -> bool {
     let alphabet_size = count_unqiue_characters(list);
     let mut running_total: f64 = 0.0;
     for word in list {
-        running_total += 1.0 / (alphabet_size.pow(word.len().try_into().unwrap()) as f64);
+        running_total += 1.0 / (alphabet_size.pow(word.chars().count().try_into().unwrap()) as f64);
     }
     running_total <= 1.0
 }
@@ -374,13 +382,11 @@ fn count_unqiue_characters(list: &[String]) -> usize {
 /// a list. Uses `.chars().count()` rather than `len()` to
 /// handle non-English characters.
 pub fn get_shortest_word_length(list: &[String]) -> usize {
-    let mut shortest_word_length: usize = usize::max_value();
-    for word in list {
-        if word.chars().count() < shortest_word_length {
-            shortest_word_length = word.chars().count();
-        }
-    }
-    shortest_word_length
+    list.iter()
+        .min_by(|a, b| a.chars().count().cmp(&b.chars().count()))
+        .unwrap()
+        .chars()
+        .count() as usize
 }
 
 /// Calculates mean (or average) word length of given word
