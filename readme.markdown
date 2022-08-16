@@ -392,23 +392,23 @@ Where _S_ is the length of the shortest word on the list, 26 is the number of le
 
 ### An even stricter "line"
 
-If we go by [a 1951 Claude Shannon paper](https://www.princeton.edu/~wbialek/rome/refs/shannon_51.pdf), each letter in English actually only gives 2.62 bits of entropy. Users can see if their generated word list falls above this (stricter) line -- which I've dubbed the "Shannon line" -- by using the `-A`/`--attributes` flag.
+If we go by [a 1951 Claude Shannon paper](https://www.princeton.edu/~wbialek/rome/refs/shannon_51.pdf), each letter in English actually only gives 2.6 bits of entropy. Users can see if their generated word list falls above this (stricter) line -- which I've dubbed the "Shannon line" -- by using the `-A`/`--attributes` flag.
 
 #### Maximum word list lengths to clear the Shannon Line
 
 Formula: 
 
-Where _S_ is the length of the shortest word on the list and _M_ is max list length: 2<sup>_S_ * 2.62</sup> = _M_
+Where _S_ is the length of the shortest word on the list and _M_ is max list length: 2<sup>_S_ * 2.6</sup> = _M_
 
-(or in Python: `max_word_list_length = 2**(shortest_word_length*2.62)`)
+(or in Python: `max_word_list_length = 2**(shortest_word_length*2.6)`)
 
 | shortest word length | max list length |
 |----------------------|-----------------|
-| 2                    | 37              |
-| 3                    | 232             |
-| 4                    | 1428            |
-| 5                    | 8779            |
-| 6                    | 53974           |
+| 2                    | 36              |
+| 3                    | 222             |
+| 4                    | 1351            |
+| 5                    | 8192            |
+| 6                    | 49667           |
 
 As you can see, the Shannon line is quite a bit more "strict" than the brute force line.
 

@@ -90,20 +90,23 @@ pub fn display_list_information(
     // it's theoretically possible that we could OVERESTIMATE entropy
     // per word. We can deterimine if we've done this by comparing out
     // entropy estimate against a simple brute force attack, under which
-    // we assume each character adds 4.7 bits of entropy.
+    // we assume each character adds roughly 4.7 bits of entropy.
     eprintln!(
         "Above brute force line?   : {}",
+        // I'd rather use 26_f64.log2() here,
+        // but Rust's rounding isn't great in this case, so we're
+        // hard-coding a prefer approximation
         assumed_entropy_per_character <= 4.700439718141093
     );
 
     // In 1951, Claude Shannon estimated that English words only have
-    // about 2.62 bits of entropy per character, rather than 4.7 bits per character.
+    // about 2.6 bits of entropy per character, rather than 4.7 bits per character.
     // https://www.princeton.edu/~wbialek/rome/refs/shannon_51.pdf
     // Thus, this is a more difficult line for a given list to pass above than
     // the "brute force" line described above.
     eprintln!(
         "Above Shannon line?       : {}",
-        assumed_entropy_per_character <= 2.62
+        assumed_entropy_per_character <= 2.6
     );
 
     if level >= 2 {
