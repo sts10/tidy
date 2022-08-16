@@ -66,11 +66,6 @@ OPTIONS:
             Print attributes about new list to terminal. Can be used more than once to print more
             attributes. Some attributes may take a nontrivial amount of time to calculate
 
-    -c, --cut-to <CUT_TO>
-            Just before printing generated list, cut list down to a set number of words. Can accept
-            expressions in the form of base**exponent (helpful for generating diceware lists). Cuts
-            are done randomly
-
     -C, --remove-nonascii
             Remove all words that have any non-ASCII characters from new list
 
@@ -167,6 +162,16 @@ OPTIONS:
     -P, --remove-prefix
             Remove prefix words from new list
 
+        --print-first <PRINT_FIRST>
+            Just before printing generated list, cut list down to a set number of words. Can accept
+            expressions in the form of base**exponent (helpful for generating diceware lists). Cuts
+            are done from beginning of list. Recommend you use with --no-sort option
+
+        --print-rand <PRINT_RAND>
+            Just before printing generated list, cut list down to a set number of words. Can accept
+            expressions in the form of base**exponent (helpful for generating diceware lists). Cuts
+            are done randomly
+
     -q, --straighten
             Replace “smart” quotation marks, both “double” and ‘single’, with their "straight"
             versions
@@ -254,9 +259,9 @@ OPTIONS:
 
 -   `tidy --dice 6 -o diceware_list.txt just_words.txt` Add corresponding dice roll numbers to a list with `--dice`. Can accept dice sides between 2 and 36. Each dice roll and word are separated by a tab.
 
--   `tidy -P -x 4 --cut-to 7776 --dice 6 --output diceware.txt 1password-2021.txt` Make a 7,776-word list from a [1Password (~18k) word list](https://1password.com/txt/agwordlist.txt), removing prefix words and guaranteeing 4 characters can auto-complete any word. Lastly, add corresponding 6-sided dice role for each word.
+-   `tidy -P -x 4 --print-rand 7776 --dice 6 --output diceware.txt 1password-2021.txt` Make a 7,776-word list from a [1Password (~18k) word list](https://1password.com/txt/agwordlist.txt), removing prefix words and guaranteeing 4 characters can auto-complete any word. Lastly, add corresponding 6-sided dice role for each word.
 
--   `tidy -o d-and-d.txt --dice 20 --cut-to 20**3 wordlist.txt` Create an 8,000-word list where each word corresponds to 3 rolls of a 20-sided die (`06-07-07	dragon`). `--cut-to` randomly truncates the resulting list to the specified amount -- can accept integers (`8000`) or informal exponent notation (`20**3`). See [EFF's fandom-inspired wordlists](https://www.eff.org/deeplinks/2018/08/dragon-con-diceware) for more.
+-   `tidy -o d-and-d.txt --dice 20 --print-rand 20**3 wordlist.txt` Create an 8,000-word list where each word corresponds to 3 rolls of a 20-sided die (`06-07-07	dragon`). `--print-rand` randomly truncates the resulting list to the specified amount -- can accept integers (`8000`) or informal exponent notation (`20**3`). See [EFF's fandom-inspired wordlists](https://www.eff.org/deeplinks/2018/08/dragon-con-diceware) for more.
 
 -   `tidy -d s --whittle-to 7776 -PlL -m 3 -M 12 --dice 6 -o wiki-diceware.txt ~/Downloads/enwiki-20190320-words-frequency-sorted.txt` Carefully make a 7,776-word list by only taking the words needed from the top of `~/Downloads/enwiki-20190320-words-frequency-sorted.txt` [file](https://github.com/IlyaSemenov/wikipedia-word-frequency/blob/master/results/enwiki-20190320-words-frequency.txt). Assumes this file is sorted by word frequencies, with a frequency count after the word, separated by a space (example line: `located 1039008`). Since we only want to use the most common words, we'll use Tidy's `--whittle-to` option to only take exactly how many words we need to construct a list of 7,776 words. Note that this may take longer that usual Tidy executions, since Tidy will very likely need to make multiple attempts to make a list that's exactly the requested length. [More info on whittle](https://github.com/sts10/tidy/issues/15#issuecomment-1215907335).
 
