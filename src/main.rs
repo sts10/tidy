@@ -279,6 +279,13 @@ fn main() {
         process::exit(2);
     }
 
+    if opt.print_rand.is_some()
+        && opt.whittle_to.is_none()
+        && (opt.remove_prefix_words || opt.remove_suffix_words || opt.schlinkert_prune)
+        && !opt.quiet
+    {
+        eprintln!("RECOMMENDATION: Consider using --whittle-to rather than --print-rand if you're removing prefix words, removing suffix words, and/or doing a Schlinkert prune.\n");
+    }
     // Warn about the (many!) current limits of the ignore option
     let (ignore_after_delimiter, ignore_before_delimiter) = match (
         opt.ignore_after_delimiter,
