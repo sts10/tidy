@@ -214,13 +214,15 @@ struct Args {
     #[clap(short = 'x', long = "shared-prefix-length")]
     maximum_shared_prefix_length: Option<usize>,
 
-    /// Start reading inputted text files at inputted line number
-    #[clap(long = "read-line-start")]
-    read_line_start: Option<usize>,
+    /// Skip first number of lines from inputted files. Useful for dealing with headers like from
+    /// PGP signatures
+    #[clap(long = "skip-rows-start")]
+    skip_rows_start: Option<usize>,
 
-    /// Stop reading inputted text files at inputted line number
-    #[clap(long = "read-line-end")]
-    read_line_end: Option<usize>,
+    /// Skip last number of lines from inputted files. Useful for dealing with footers like from
+    /// PGP signatures.
+    #[clap(long = "skip-rows-end")]
+    skip_rows_end: Option<usize>,
 
     /// Path(s) for optional list of words to reject. Can accept multiple
     /// files.
@@ -407,8 +409,8 @@ fn main() {
                     tidy_list(TidyRequest {
                         list: make_vec_from_filenames(
                             &opt.inputted_word_list,
-                            opt.read_line_start,
-                            opt.read_line_end,
+                            opt.skip_rows_start,
+                            opt.skip_rows_end,
                         ),
                         take_first: Some(starting_point),
                         take_rand: None, // Ignore this option in this context (widdling)
@@ -469,8 +471,8 @@ fn main() {
             let this_tidy_request = TidyRequest {
                 list: make_vec_from_filenames(
                     &opt.inputted_word_list,
-                    opt.read_line_start,
-                    opt.read_line_end,
+                    opt.skip_rows_start,
+                    opt.skip_rows_end,
                 ),
                 take_first: opt.take_first,
                 take_rand: opt.take_rand,

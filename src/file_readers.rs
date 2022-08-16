@@ -9,8 +9,8 @@ use std::path::PathBuf;
 /// lines and duplicate links will be handled elsewhere.)
 pub fn make_vec_from_filenames(
     filenames: &[PathBuf],
-    read_line_start: Option<usize>,
-    read_line_end: Option<usize>,
+    skip_rows_start: Option<usize>,
+    skip_rows_end: Option<usize>,
 ) -> Vec<String> {
     let mut word_list: Vec<String> = [].to_vec();
     for filename in filenames {
@@ -19,7 +19,7 @@ pub fn make_vec_from_filenames(
             Err(e) => panic!("Error opening file {:?}: {}", filename, e),
         };
         let file = BufReader::new(&f);
-        let mut line_number = 0;
+        let mut raw_lines = vec![];
         for line in file.lines() {
             let l = match line {
                 Ok(l) => l,
@@ -31,26 +31,32 @@ pub fn make_vec_from_filenames(
                     continue;
                 }
             };
-            match (read_line_start, read_line_end) {
-                (Some(read_line_start), Some(read_line_end)) => {
-                    if line_number >= read_line_start && line_number < read_line_end {
-                        word_list.push(l);
-                    }
-                }
-                (Some(read_line_start), None) => {
-                    if line_number >= read_line_start {
-                        word_list.push(l);
-                    }
-                }
-                (None, Some(read_line_end)) => {
-                    // not sure if this should be < or <=
-                    if line_number < read_line_end {
-                        word_list.push(l);
-                    }
-                }
-                (None, None) => word_list.push(l),
-            }
+            raw_lines.push(l);
+        }
+        let number_of_lines_in_file = raw_lines.len();
 
+        let mut line_number = 0;
+        for line in raw_lines {
+            match (skip_rows_start, skip_rows_end) {
+                (Some(skip_rows_start), Some(skip_rows_end)) => {
+                    if line_number > skip_rows_start
+                        && line_number < number_of_lines_in_file - skip_rows_end
+                    {
+                        word_list.push(line);
+                    }
+                }
+                (Some(skip_rows_start), None) => {
+                    if line_number > skip_rows_start {
+                        word_list.push(line);
+                    }
+                }
+                (None, Some(skip_rows_end)) => {
+                    if line_number < number_of_lines_in_file - skip_rows_end {
+                        word_list.push(line);
+                    }
+                }
+                (None, None) => word_list.push(line),
+            }
             line_number += 1;
         }
     }
