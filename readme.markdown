@@ -256,7 +256,7 @@ OPTIONS:
 
 -   `tidy -AA -I -o new_list.txt inputted_word_list.txt` Adding `-AA` prints some information about the created list to the terminal.
 
--   `tidy -l -o new_list.txt -r bad_words.txt inputted_word_list.txt` Similar to above, but ensures that none of the words in the bad_words.txt file make it on to the final list that is printed to new_list.txt. The reject list is case sensitive, so you may want to run it through tidy using the -l flag before using it. (You can find [a list of bad words here](https://code.google.com/archive/p/badwordslist/downloads).)
+-   `tidy -l -o new_list.txt -r profane_words.txt inputted_word_list.txt` Similar to above, but ensures that none of the words in the profane_words.txt file make it on to the final list that is printed to new_list.txt. The reject list is case sensitive, so you may want to run it through tidy using the -l flag before using it. (You can find [a list of profane words here](https://code.google.com/archive/p/badwordslist/downloads).)
 
 -   `tidy -l -o new_list.txt -a approved_words.txt inputted_word_list.txt` Similar to above, but ensures that only words in the approved_words.txt file make it on to the final list that is printed to new_list.txt. The approved list is case sensitive. (On Mac and some Linux distributions, `/usr/share/dict/words` should contain a list of words for spellcheck purposes.)
 
