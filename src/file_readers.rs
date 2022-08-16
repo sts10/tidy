@@ -7,7 +7,11 @@ use std::path::PathBuf;
 /// that the user has inputted to the program. Then iterates
 /// through each file and addes each line to Vec<String>. (Blank
 /// lines and duplicate links will be handled elsewhere.)
-pub fn make_vec_from_filenames(filenames: &[PathBuf]) -> Vec<String> {
+pub fn make_vec_from_filenames(
+    filenames: &[PathBuf],
+    read_line_start: Option<usize>,
+    read_line_end: Option<usize>,
+) -> Vec<String> {
     let mut word_list: Vec<String> = [].to_vec();
     for filename in filenames {
         let f = match File::open(filename) {
@@ -15,6 +19,7 @@ pub fn make_vec_from_filenames(filenames: &[PathBuf]) -> Vec<String> {
             Err(e) => panic!("Error opening file {:?}: {}", filename, e),
         };
         let file = BufReader::new(&f);
+        let mut line_number = 0;
         for line in file.lines() {
             let l = match line {
                 Ok(l) => l,
@@ -26,7 +31,27 @@ pub fn make_vec_from_filenames(filenames: &[PathBuf]) -> Vec<String> {
                     continue;
                 }
             };
-            word_list.push(l);
+            match (read_line_start, read_line_end) {
+                (Some(read_line_start), Some(read_line_end)) => {
+                    if line_number >= read_line_start && line_number < read_line_end {
+                        word_list.push(l);
+                    }
+                }
+                (Some(read_line_start), None) => {
+                    if line_number >= read_line_start {
+                        word_list.push(l);
+                    }
+                }
+                (None, Some(read_line_end)) => {
+                    // not sure if this should be < or <=
+                    if line_number < read_line_end {
+                        word_list.push(l);
+                    }
+                }
+                (None, None) => word_list.push(l),
+            }
+
+            line_number += 1;
         }
     }
     word_list

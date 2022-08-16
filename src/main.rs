@@ -214,6 +214,14 @@ struct Args {
     #[clap(short = 'x', long = "shared-prefix-length")]
     maximum_shared_prefix_length: Option<usize>,
 
+    /// Start reading inputted text files starting at inputted line number
+    #[clap(long = "read-line-start")]
+    read_line_start: Option<usize>,
+
+    /// Stop reading inputted text files starting at inputted line number
+    #[clap(long = "read-line-end")]
+    read_line_end: Option<usize>,
+
     /// Path(s) for optional list of words to reject. Can accept multiple
     /// files.
     #[clap(short = 'r', long = "reject", parse(from_os_str))]
@@ -395,46 +403,48 @@ fn main() {
             let mut this_list_length = 0;
             let mut this_tidied_list = vec![];
             while this_list_length != length_to_whittle_to {
-                this_tidied_list = tidy_list(TidyRequest {
-                    list: make_vec_from_filenames(&opt.inputted_word_list),
-                    take_first: Some(starting_point),
-                    take_rand: None, // Ignore this option in this context (widdling)
-                    sort_alphabetically: !opt.no_alpha_sort,
-                    ignore_after_delimiter,
-                    ignore_before_delimiter,
-                    to_lowercase: opt.to_lowercase,
-                    should_straighten_quotes: opt.straighten_quotes,
-                    should_remove_prefix_words: opt.remove_prefix_words,
-                    should_remove_suffix_words: opt.remove_suffix_words,
-                    should_schlinkert_prune: opt.schlinkert_prune,
-                    should_remove_integers: opt.remove_integers,
-                    should_delete_integers: opt.delete_integers,
-                    should_remove_nonalphanumeric: opt.remove_nonalphanumeric,
-                    should_delete_nonalphanumeric: opt.delete_nonalphanumeric,
-                    should_remove_nonalphabetic: opt.remove_nonalphabetic,
-                    should_remove_non_latin_alphabetic: opt.remove_non_latin_alphabetic,
-                    should_remove_nonascii: opt.remove_nonascii,
-                    should_delete_after_first_delimiter: delete_after_delimiter,
-                    should_delete_before_first_delimiter: delete_before_delimiter,
-                    reject_list: opt
-                        .reject_list
-                        .as_ref()
-                        .map(|list_of_files| make_vec_from_filenames(list_of_files)),
-                    approved_list: opt
-                        .approved_list
-                        .as_ref()
-                        .map(|list_of_files| make_vec_from_filenames(list_of_files)),
-                    homophones_list: opt
-                        .homophones_list
-                        .as_ref()
-                        .map(|list_of_files| read_homophones_list_from_filenames(list_of_files)),
-                    minimum_length: opt.minimum_length,
-                    maximum_length: opt.maximum_length,
-                    maximum_shared_prefix_length: opt.maximum_shared_prefix_length,
-                    minimum_edit_distance: opt.minimum_edit_distance,
-                    print_rand: None, // Ignore this option in this context (widdling)
-                    print_first: None, // Ignore this option in this context (widdling)
-                });
+                this_tidied_list =
+                    tidy_list(TidyRequest {
+                        list: make_vec_from_filenames(
+                            &opt.inputted_word_list,
+                            opt.read_line_start,
+                            opt.read_line_end,
+                        ),
+                        take_first: Some(starting_point),
+                        take_rand: None, // Ignore this option in this context (widdling)
+                        sort_alphabetically: !opt.no_alpha_sort,
+                        ignore_after_delimiter,
+                        ignore_before_delimiter,
+                        to_lowercase: opt.to_lowercase,
+                        should_straighten_quotes: opt.straighten_quotes,
+                        should_remove_prefix_words: opt.remove_prefix_words,
+                        should_remove_suffix_words: opt.remove_suffix_words,
+                        should_schlinkert_prune: opt.schlinkert_prune,
+                        should_remove_integers: opt.remove_integers,
+                        should_delete_integers: opt.delete_integers,
+                        should_remove_nonalphanumeric: opt.remove_nonalphanumeric,
+                        should_delete_nonalphanumeric: opt.delete_nonalphanumeric,
+                        should_remove_nonalphabetic: opt.remove_nonalphabetic,
+                        should_remove_non_latin_alphabetic: opt.remove_non_latin_alphabetic,
+                        should_remove_nonascii: opt.remove_nonascii,
+                        should_delete_after_first_delimiter: delete_after_delimiter,
+                        should_delete_before_first_delimiter: delete_before_delimiter,
+                        reject_list: opt.reject_list.as_ref().map(|list_of_files| {
+                            make_vec_from_filenames(list_of_files, None, None)
+                        }),
+                        approved_list: opt.approved_list.as_ref().map(|list_of_files| {
+                            make_vec_from_filenames(list_of_files, None, None)
+                        }),
+                        homophones_list: opt.homophones_list.as_ref().map(|list_of_files| {
+                            read_homophones_list_from_filenames(list_of_files)
+                        }),
+                        minimum_length: opt.minimum_length,
+                        maximum_length: opt.maximum_length,
+                        maximum_shared_prefix_length: opt.maximum_shared_prefix_length,
+                        minimum_edit_distance: opt.minimum_edit_distance,
+                        print_rand: None, // Ignore this option in this context (widdling)
+                        print_first: None, // Ignore this option in this context (widdling)
+                    });
 
                 this_list_length = this_tidied_list.len();
                 starting_point = get_new_starting_point_guess(
@@ -457,7 +467,11 @@ fn main() {
             // `whittle_to` option not specified, so proceed as normal,
             // sening all parameters in TidyRequest
             let this_tidy_request = TidyRequest {
-                list: make_vec_from_filenames(&opt.inputted_word_list),
+                list: make_vec_from_filenames(
+                    &opt.inputted_word_list,
+                    opt.read_line_start,
+                    opt.read_line_end,
+                ),
                 take_first: opt.take_first,
                 take_rand: opt.take_rand,
                 sort_alphabetically: !opt.no_alpha_sort,
@@ -482,11 +496,11 @@ fn main() {
                 // right here.
                 reject_list: opt
                     .reject_list
-                    .map(|list_of_files| make_vec_from_filenames(&list_of_files)),
+                    .map(|list_of_files| make_vec_from_filenames(&list_of_files, None, None)),
                 // Likewise with approved word lists
                 approved_list: opt
                     .approved_list
-                    .map(|list_of_files| make_vec_from_filenames(&list_of_files)),
+                    .map(|list_of_files| make_vec_from_filenames(&list_of_files, None, None)),
                 // And homophones
                 homophones_list: opt
                     .homophones_list
