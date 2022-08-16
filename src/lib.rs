@@ -37,7 +37,8 @@ pub struct TidyRequest {
     pub maximum_length: Option<usize>,
     pub maximum_shared_prefix_length: Option<usize>,
     pub minimum_edit_distance: Option<usize>,
-    pub cut_to: Option<usize>,
+    pub print_rand: Option<usize>,
+    pub print_first: Option<usize>,
 }
 
 #[derive(PartialEq)]
@@ -298,8 +299,17 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     tidied_list = dedup_without_sorting(&mut tidied_list);
 
     // User can cut words from nearly finished list.
-    // Does so randomly.
-    tidied_list = match req.cut_to {
+    // Can do so from beginning of the nerarly finished
+    // list
+    tidied_list = match req.print_first {
+        Some(amount_to_cut) => {
+            tidied_list.truncate(amount_to_cut);
+            tidied_list
+        }
+        None => tidied_list,
+    };
+    // And/or can do so randomly
+    tidied_list = match req.print_rand {
         Some(amount_to_cut) => {
             let mut rng = thread_rng();
             tidied_list.shuffle(&mut rng);

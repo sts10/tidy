@@ -13,26 +13,26 @@ use crate::display_information::generate_samples;
 use crate::file_readers::*;
 use crate::input_validations::*;
 
-/// Parse user's input to the `cut_to` option, either directly as a `usize`,
+/// Parse user's input to a handful of options, either directly as a `usize`,
 /// or, if they entered Python exponent notation (base**exponent), which
 /// we'll need to evaluate as an exponent. Either way, return a `usize`
 /// or `expect`/`panic!`.
 ///  
 /// This is useful when making lists fit to a specific amount of dice and
 /// dice sides. (As an example, five rolls of a six-sided dice would be: 6**5).
-fn eval_cut_length(input: &str) -> usize {
+fn eval_list_length(input: &str) -> usize {
     match input.split("**").collect::<Vec<&str>>().as_slice() {
         [] => panic!("Please specify a number."),
         [num_string] => num_string
             .parse::<usize>()
-            .expect("Unable to parse cut-to! Enter a number or a base**exponent"),
+            .expect("Unable to parse print-rand! Enter a number or a base**exponent"),
         [base_string, exponent_string] => {
             let base: usize = base_string
                 .parse::<usize>()
-                .expect("Unable to parse base of cut-to!");
+                .expect("Unable to parse base of print-rand!");
             let exponent: u32 = exponent_string
                 .parse::<u32>()
-                .expect("Unable to parse exponent of cut-to!");
+                .expect("Unable to parse exponent of print-rand!");
             base.pow(exponent)
         }
         _ => panic!("You can only specify one exponent! Use format: base**exponent"),
@@ -183,8 +183,15 @@ struct Args {
     /// to a set number of words. Can accept expressions in the
     /// form of base**exponent (helpful for generating diceware lists).
     /// Cuts are done randomly.
-    #[clap(short = 'c', long = "cut-to", parse(from_str = eval_cut_length))]
-    cut_to: Option<usize>,
+    #[clap(long = "print-rand", parse(from_str = eval_list_length))]
+    print_rand: Option<usize>,
+
+    /// Just before printing generated list, cut list down
+    /// to a set number of words. Can accept expressions in the
+    /// form of base**exponent (helpful for generating diceware lists).
+    /// Cuts are done from beginning of list. Recommend you use with --no-sort option
+    #[clap(long = "print-first", parse(from_str = eval_list_length))]
+    print_first: Option<usize>,
 
     /// Set minimum word length
     #[clap(short = 'm', long = "minimum-word-length")]
@@ -263,7 +270,12 @@ fn main() {
         process::exit(2);
     }
 
-    if !valid_list_truncation_options(&opt.whittle_to, opt.cut_to, opt.take_first, opt.take_rand) {
+    if !valid_list_truncation_options(
+        &opt.whittle_to,
+        opt.print_rand,
+        opt.take_first,
+        opt.take_rand,
+    ) {
         process::exit(2);
     }
 
@@ -354,7 +366,7 @@ fn main() {
             // Some whittle_to String has been provided, which we need to do a lot of work for
             // First, parse length_to_whittle_to
             let length_to_whittle_to =
-                eval_cut_length(split_and_vectorize(&whittle_to_string, ",")[0]);
+                eval_list_length(split_and_vectorize(&whittle_to_string, ",")[0]);
             // Determine initial starting point
             let mut starting_point = if split_and_vectorize(&whittle_to_string, ",").len() == 2 {
                 // If user gave us one, use that.
@@ -413,7 +425,8 @@ fn main() {
                     maximum_length: opt.maximum_length,
                     maximum_shared_prefix_length: opt.maximum_shared_prefix_length,
                     minimum_edit_distance: opt.minimum_edit_distance,
-                    cut_to: None, // Ignore this option in this context (widdling)
+                    print_rand: None, // Ignore this option in this context (widdling)
+                    print_first: None, // Ignore this option in this context (widdling)
                 });
 
                 this_list_length = this_tidied_list.len();
@@ -475,7 +488,8 @@ fn main() {
                 maximum_length: opt.maximum_length,
                 maximum_shared_prefix_length: opt.maximum_shared_prefix_length,
                 minimum_edit_distance: opt.minimum_edit_distance,
-                cut_to: opt.cut_to,
+                print_rand: opt.print_rand,
+                print_first: opt.print_first,
             };
 
             tidy_list(this_tidy_request)
@@ -565,22 +579,22 @@ fn main() {
 mod tests {
     use super::*;
     #[test]
-    fn can_parse_cut_to() {
-        assert_eq!(eval_cut_length("7776"), 7776);
-        assert_eq!(eval_cut_length("6**5"), 7776);
-        assert_eq!(eval_cut_length("10000"), 10000);
-        assert_eq!(eval_cut_length("10**2"), 100);
+    fn can_parse_print_rand() {
+        assert_eq!(eval_list_length("7776"), 7776);
+        assert_eq!(eval_list_length("6**5"), 7776);
+        assert_eq!(eval_list_length("10000"), 10000);
+        assert_eq!(eval_list_length("10**2"), 100);
     }
 
     #[test]
     #[should_panic]
-    fn panics_when_noninteger_is_inputted_to_cut_to() {
-        eval_cut_length("four");
+    fn panics_when_noninteger_is_inputted_to_print_rand() {
+        eval_list_length("four");
     }
 
     #[test]
     #[should_panic]
-    fn panics_when_too_many_exponents_inputted_to_cut_to() {
-        eval_cut_length("2**4**3");
+    fn panics_when_too_many_exponents_inputted_to_print_rand() {
+        eval_list_length("2**4**3");
     }
 }
