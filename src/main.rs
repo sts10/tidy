@@ -289,12 +289,19 @@ fn main() {
         process::exit(2);
     }
 
-    if opt.print_rand.is_some()
+    // Determine if this is a niche case in which whittle_to would be a smarter choice
+    // than (either) print_first or print_rand.
+    if (opt.print_first.is_some() || opt.print_rand.is_some())
         && opt.whittle_to.is_none()
         && (opt.remove_prefix_words || opt.remove_suffix_words || opt.schlinkert_prune)
         && !opt.quiet
     {
-        eprintln!("RECOMMENDATION: Consider using --whittle-to rather than --print-rand if you're removing prefix words, removing suffix words, and/or doing a Schlinkert prune.\n");
+        if opt.print_first.is_some() {
+            eprintln!("RECOMMENDATION: Consider using --whittle-to rather than --print-first if you're removing prefix words, removing suffix words, and/or doing a Schlinkert prune.\n");
+        }
+        if opt.print_rand.is_some() {
+            eprintln!("RECOMMENDATION: Consider using --whittle-to rather than --print-rand if you're removing prefix words, removing suffix words, and/or doing a Schlinkert prune.\n");
+        }
     }
     // Warn about the (many!) current limits of the ignore option
     let (ignore_after_delimiter, ignore_before_delimiter) = match (
