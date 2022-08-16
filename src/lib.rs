@@ -292,15 +292,12 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         tidied_list
     };
 
-    // Sort and dedup here
-    if req.sort_alphabetically {
-        tidied_list.sort();
-    }
+    // Remove duplicate words
     tidied_list = dedup_without_sorting(&mut tidied_list);
 
-    // User can cut words from nearly finished list.
-    // Can do so from beginning of the nerarly finished
-    // list
+    // User can choose to print a limited number of  words from nearly finished (but still
+    // unsorted) list.
+    // Can do so from the beginning of the nearly finished list...
     tidied_list = match req.print_first {
         Some(amount_to_cut) => {
             tidied_list.truncate(amount_to_cut);
@@ -318,12 +315,11 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         }
         None => tidied_list,
     };
-    // Finally, sort and dedup list one more time
-    // (probably unneccesary, since we've only cut
-    // words since that last time we sorted and de-duped.)
+    // Finally, sort list alphabetically, if the user didn't override this default behavior
     if req.sort_alphabetically {
         tidied_list.sort();
     }
+    // And remove duplicates one more time
     tidied_list = dedup_without_sorting(&mut tidied_list);
     tidied_list
 }
