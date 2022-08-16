@@ -214,11 +214,11 @@ struct Args {
     #[clap(short = 'x', long = "shared-prefix-length")]
     maximum_shared_prefix_length: Option<usize>,
 
-    /// Start reading inputted text files starting at inputted line number
+    /// Start reading inputted text files at inputted line number
     #[clap(long = "read-line-start")]
     read_line_start: Option<usize>,
 
-    /// Stop reading inputted text files starting at inputted line number
+    /// Stop reading inputted text files at inputted line number
     #[clap(long = "read-line-end")]
     read_line_end: Option<usize>,
 

@@ -182,6 +182,12 @@ OPTIONS:
     -r, --reject <REJECT_LIST>
             Path(s) for optional list of words to reject. Can accept multiple files
 
+        --read-line-end <READ_LINE_END>
+            Stop reading inputted text files at inputted line number
+
+        --read-line-start <READ_LINE_START>
+            Start reading inputted text files at inputted line number
+
         --remove-nonalphabetic
             Remove all words with non-alphabetic characters from new list. Words with diacritcis and
             other non-Latin characters will remain
