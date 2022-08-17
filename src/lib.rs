@@ -348,7 +348,11 @@ pub fn get_new_starting_point_guess(
         // We're too high!
         let difference = this_list_length - length_to_whittle_to;
         let multiplier = starting_point as f64 / length_to_whittle_to as f64;
-        let change = (difference as f64 * multiplier).floor() as usize;
+        let mut change = (difference as f64 * multiplier).floor() as usize;
+        // Edge case we need to catch to avoid an infinite loop
+        if change == 0 {
+            change = 1;
+        }
         starting_point -= change;
     } else {
         // We're too low!
