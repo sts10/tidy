@@ -162,7 +162,8 @@ struct Args {
 
     /// Only take a random N number of words from inputted word list.
     /// If two or more word lists are inputted, it will
-    /// combine arbitrarily and then take a random N words.
+    /// combine arbitrarily and then take a random N words. If you're looking to cut a list exactly
+    /// to a specified size, consider print-rand or whittle-to options.
     #[clap(long = "take-rand")]
     take_rand: Option<usize>,
 
@@ -297,10 +298,10 @@ fn main() {
         && !opt.quiet
     {
         if opt.print_first.is_some() {
-            eprintln!("RECOMMENDATION: Consider using --whittle-to rather than --print-first if you're removing prefix words, removing suffix words, and/or doing a Schlinkert prune.\n");
+            eprintln!("RECOMMENDATION: If your input list is sorted by desirability (e.g. word frequency), consider using --whittle-to rather than --print-first if you're removing prefix words, removing suffix words, and/or doing a Schlinkert prune.\n");
         }
         if opt.print_rand.is_some() {
-            eprintln!("RECOMMENDATION: Consider using --whittle-to rather than --print-rand if you're removing prefix words, removing suffix words, and/or doing a Schlinkert prune.\n");
+            eprintln!("RECOMMENDATION: If your input list is sorted by desirability (e.g. word frequency), consider using --whittle-to rather than --print-rand if you're removing prefix words, removing suffix words, and/or doing a Schlinkert prune.\n");
         }
     }
     // Warn about the (many!) current limits of the ignore option

@@ -215,7 +215,9 @@ OPTIONS:
 
         --take-rand <TAKE_RAND>
             Only take a random N number of words from inputted word list. If two or more word lists
-            are inputted, it will combine arbitrarily and then take a random N words
+            are inputted, it will combine arbitrarily and then take a random N words. If you're
+            looking to cut a list exactly to a specified size, consider print-rand or whittle-to
+            options
 
     -V, --version
             Print version information
