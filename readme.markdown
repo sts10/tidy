@@ -226,9 +226,15 @@ OPTIONS:
             Whittle list exactly to a specified length, only taking minimum number of words from the
             beginning of inputted list(s). If the outputted list is not exactly the specified
             length, it will try again by taking a different amount of words form input list(s). As a
-            result, this using this option may take a moment. Useful for working with lists that are
-            sorted by word frequency or some other metadata. Can accept expressions in the form of
-            base**exponent (helpful for generating diceware lists).
+            result, this using this option may cause Tidy to take a moment to produce the finished
+            list. Can accept expressions in the form of base**exponent (helpful for generating
+            diceware lists).
+            
+            This option should generally only be used if the following conditions are met:
+            
+            (a) the inputted word list is sorted by desirability (e.g. ordered by word frequency);
+            (b) the user is either removing prefix words, removing suffix words, and/or doing a
+            Schlinkert prune; (c) the user needs the resulting list to be an exact length.
             
             Optionally can also take and a rough "starting point", after a comma. For example,
             --whittle-to 7776,15000 would start by taking the first 15,000 words from the inputted
@@ -358,6 +364,14 @@ A word list that doesn't has any prefix words (also known as "[prefix codes](htt
 As a brief example, if a list has "boy", "hood", and "boyhood" on it, users who specified they wanted two words worth of randomness (entropy) might end up with "boyhood", which an attacker guessing single words would try. Removing prefix words -- in this case "boy" -- prevents this possibility from occurring. Mandating that words have a punctuation mark, like a hyphen, between them (`boy-hood`) also solves this potential issue.
 
 You can read more about this issue [here](https://github.com/ulif/diceware#prefix-code).
+
+## Whittling
+
+Tidy offers an option `--whittle-to`. This option should **only** be used in specific situations -- users generally should prefer `--print-rand` or `--print-first` options. The situation where whittling gives an advantage over the `print` options is when the following conditions are met: 
+(a) the inputted word list is sorted by desirability (e.g. ordered by word frequency) and
+(b) the user is either removing prefix words (`-P`), removing suffix words (`-S`), and/or doing a Schlinkert prune (`-K`). 
+
+To see why whittling is best for this particular situation, see [this document](https://gist.github.com/sts10/25e75d39acdeeafddad943d4d32684ff).
 
 ## On maximum shared prefix length
 

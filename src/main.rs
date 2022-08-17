@@ -170,9 +170,15 @@ struct Args {
     /// Whittle list exactly to a specified length, only taking minimum number of words
     /// from the beginning of inputted list(s).
     /// If the outputted list is not exactly the specified length, it will try again by taking a
-    /// different amount of words form input list(s). As a result, this using this option may take a moment.
-    /// Useful for working with lists that are sorted by word frequency or some other metadata.
+    /// different amount of words form input list(s). As a result, this using this option may cause
+    /// Tidy to take a moment to produce the finished list.
     /// Can accept expressions in the form of base**exponent (helpful for generating diceware lists).
+    ///
+    /// This option should generally only be used if the following conditions are met:
+    ///
+    /// (a) the inputted word list is sorted by desirability (e.g. ordered by word frequency);
+    /// (b) the user is either removing prefix words, removing suffix words, and/or doing a Schlinkert prune;
+    /// (c) the user needs the resulting list to be an exact length.
     ///
     /// Optionally can also take and a rough "starting point", after a comma.
     /// For example, --whittle-to 7776,15000 would start by taking the first
