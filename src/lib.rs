@@ -353,9 +353,17 @@ pub fn get_new_starting_point_guess(
     } else {
         // We're too low!
         let difference = length_to_whittle_to - this_list_length;
+        eprintln!("difference is {}", difference);
         let multiplier = starting_point as f64 / length_to_whittle_to as f64;
-        let change = (difference as f64 * multiplier).floor() as usize;
+        eprintln!("multiplier is {}", multiplier);
+        let mut change = (difference as f64 * multiplier).floor() as usize;
+        // Edge case we need to catch to avoid an infinite loop
+        if change == 0 {
+            change = 1;
+        }
+        eprintln!("'change' is {}", change);
         starting_point += change;
+        eprintln!("starting point is now {}", starting_point);
     }
     starting_point
 }
