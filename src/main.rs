@@ -482,7 +482,7 @@ fn main() {
 
                 if opt.debug {
                     eprintln!(
-                        "whittled list to {}. Will try again, taking {} words.",
+                        "Whittled list to {}. Will try again, taking {} words.",
                         this_list_length, starting_point
                     );
                 }
