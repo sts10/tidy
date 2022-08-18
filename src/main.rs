@@ -547,7 +547,9 @@ fn main() {
 
     // Next, we figure out what to print where
     if !opt.dry_run {
-        eprintln!("Printing new list...");
+        if !opt.quiet {
+            eprintln!("Printing new list...");
+        }
         match opt.output {
             Some(output) => {
                 let mut f = File::create(output).expect("Unable to create file");
