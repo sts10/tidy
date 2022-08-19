@@ -25,14 +25,14 @@ fn eval_list_length(input: &str) -> usize {
         [] => panic!("Please specify a number."),
         [num_string] => num_string
             .parse::<usize>()
-            .expect("Unable to parse print-rand! Enter a number or a base**exponent"),
+            .expect("Unable to parse an input. Enter a number or a base**exponent"),
         [base_string, exponent_string] => {
             let base: usize = base_string
                 .parse::<usize>()
-                .expect("Unable to parse base of print-rand!");
+                .expect("Unable to parse base of an input. Please use positive integers only.");
             let exponent: u32 = exponent_string
                 .parse::<u32>()
-                .expect("Unable to parse exponent of print-rand!");
+                .expect("Unable to parse exponent of an input. Please use positive integers only.");
             base.pow(exponent)
         }
         _ => panic!("You can only specify one exponent! Use format: base**exponent"),
@@ -157,14 +157,14 @@ struct Args {
     /// Only take first N words from inputted word list.
     /// If two or more word lists are inputted, it will
     /// combine arbitrarily and then take first N words.
-    #[clap(long = "take-first")]
+    #[clap(long = "take-first", parse(from_str = eval_list_length))]
     take_first: Option<usize>,
 
     /// Only take a random N number of words from inputted word list.
     /// If two or more word lists are inputted, it will
     /// combine arbitrarily and then take a random N words. If you're looking to cut a list exactly
     /// to a specified size, consider print-rand or whittle-to options.
-    #[clap(long = "take-rand")]
+    #[clap(long = "take-rand", parse(from_str = eval_list_length))]
     take_rand: Option<usize>,
 
     /// Whittle list exactly to a specified length, only taking minimum number of words
