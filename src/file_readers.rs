@@ -39,14 +39,14 @@ pub fn make_vec_from_filenames(
         for line in raw_lines {
             match (skip_rows_start, skip_rows_end) {
                 (Some(skip_rows_start), Some(skip_rows_end)) => {
-                    if line_number > skip_rows_start
+                    if line_number >= skip_rows_start
                         && line_number < number_of_lines_in_file - skip_rows_end
                     {
                         word_list.push(line);
                     }
                 }
                 (Some(skip_rows_start), None) => {
-                    if line_number > skip_rows_start {
+                    if line_number >= skip_rows_start {
                         word_list.push(line);
                     }
                 }
