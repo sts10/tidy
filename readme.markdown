@@ -326,7 +326,6 @@ In both Tidy's code and documentation, "remove" means that a word will be remove
 ## Installation
 
 ### Using Rust and cargo (suggested method)
-
 1. [Install Rust](https://www.rust-lang.org/tools/install) if you haven't already
 2. Run: `cargo install --git https://github.com/sts10/tidy --branch main`
 
@@ -334,18 +333,18 @@ You should then be able to run `tidy --help`.
 
 ### Releases
 
-I occasionally [build releases](https://github.com/sts10/tidy/releases) of Tidy and upload them to GitHub. Note that most releases contain a binary only suitable for Mac and Linux users. If you like to help packaging for Windows, let me know.
+I occasionally [build releases](https://github.com/sts10/tidy/releases) of Tidy and upload them to GitHub. Note that most releases contain a binary only suitable for Mac and Linux users. If you'd like to help package Tidy for Windows, let me know.
 
 ## For Tidy developers
 
 Run all code tests: `cargo test`
 
-Generate docs: `cargo doc --document-private-items --no-deps`. Add `--open` flag to open docs after generation. They're printed to `./target/doc/tidy/index.html`.
+Generate docs: `cargo doc --document-private-items --no-deps`. Add `--open` flag to open docs after generation. Locally, docs are printed to `./target/doc/tidy/index.html`.
 
 ## Blog posts related to this project
 
 * [Read more about the 0.2 version of this project](https://sts10.github.io/2021/12/09/tidy-0-2-0.html)
-* [Read about uniquely decodable codes and "Schlinkert pruning"](https://sts10.github.io/2022/08/12/efficiently-pruning-until-uniquely-decodable.html)
+* [Read about uniquely decodable codes and "Schlinkert pruning"](https://sts10.github.io/2022/08/12/efficiently-pruning-until-uniquely-decodable.html) (introduced in Tidy version 0.2.60)
 * [Read about initial inspiration for the project](https://sts10.github.io/2020/09/30/making-a-word-list.html)
 
 ## Working with homophones
