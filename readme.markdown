@@ -6,13 +6,13 @@ A command-line tool for combining and cleaning large word list files.
 
 ## What this tool aims to help users do
 
-Tidy aims to help users create "_better_" word lists -- generally word lists that will be used to create passphrases.
+Tidy aims to help users create "_better_" word lists -- generally word lists that will be used to create passphrases like "block insoluble cardinal discounts".
 
-Tidy performs basic list-cleaning operations like removing duplicates words and blank lines by default. It additionally provides various optional standardizations and filters, like lowercasing all words (`-l`), or removing words in with integers in them (`-I`), as well as protections against rare-but-possible passphrase pitfalls, such as prefix codes (`-P`) and low minimum word lengths (see below for explanations).
+Tidy performs basic list-cleaning operations like removing duplicate words and blank lines by default. It additionally provides various optional standardizations and filters, like lowercasing all words (`-l`), or removing words in with integers in them (`-I`), as well as protections against rare-but-possible passphrase pitfalls, such as prefix codes (`-P`) and low minimum word lengths (see below for explanations).
 
 Tidy also can make word lists more "typo-resistant" by enforcing a minimum edit distance (`-d`), removing homophones and/or enforcing a unique prefix length (`-x`), which can allow users to auto-complete words after a specified number of characters.
 
-Tidy can be used to create new word lists (for example, if given more than one list, it will combine and de-duplicate them) with desirable qualities, but it can also assist in audits of existing lists by removing duplicates and optionally printing notable information about a given word list, and/or a handful of pseudorandomly generated sample passphrases (`--samples`).
+Tidy can be used to **create new word lists** (for example, if given more than one list, Tidy will combine and de-duplicate them) with desirable qualities. It can also assist in **audits** of existing lists by removing duplicates and optionally printing notable information about a given word list, and/or a handful of pseudorandomly generated sample passphrases (`--samples`).
 
 ## Features
 
@@ -23,7 +23,7 @@ Given a text file with one word per line, this tool will create a new word list 
 -   whitespace from beginning and end of words is deleted
 -   words are sorted alphabetically (though this can be optionally prevented -- see below)
 
-and print that new word list to the terminal or to a new text file.
+and print that new word list to the terminal or to a text file.
 
 Optionally, the tool can...
 
@@ -461,7 +461,7 @@ See [this repo](https://github.com/sts10/splitter) for more information.
 
 -   [X] Add option to remove suffix words 
 -   [X] Add option to remove words that have characters from certain character sets, for example non-ASCII characters
--   [ ] Figure out how to have Tidy read from stdin
+-   [ ] Figure out how to have Tidy read from stdin (See [issue #12](https://github.com/sts10/tidy/issues/12))
 -   [ ] Improve performance of Sardinas-Patterson functions
 <!-- -   [ ] Investigate making the list variable as [AHashSet](https://github.com/tkaitchuck/ahash)<String> rather than a `Vec<String>` to potentially boost performance. Will probably need to write some benchmarks with Criterion to measure potential performance gains. -->
 
@@ -469,10 +469,11 @@ See [this repo](https://github.com/sts10/splitter) for more information.
 
 -   The [Electronic Frontier Foundation](https://www.eff.org/) has published [a few word lists for creating diceware passphrases](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases). 
     -   I'm pretty sure password manager BitWarden uses [the EFF long list](https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt). 
-    -   [KeePassXC](https://keepassxc.org/) uses [the EFF long list with some minor modifications](https://github.com/keepassxreboot/keepassxc/blob/develop/share/wordlists/eff_large.wordlist). Since there's a tab between the dice numbers and each word, Tidy can delete the dice numbers easily with something like `tidy -D t -o clean_eff.txt eff_large_wordlist.txt` or using the `-i` flag.
+    -   [KeePassXC](https://keepassxc.org/) uses [the EFF long list with some minor modifications](https://github.com/keepassxreboot/keepassxc/blob/develop/share/wordlists/eff_large.wordlist). 
     -   The EFF also has some [fandom-inspired lists](https://www.eff.org/deeplinks/2018/08/dragon-con-diceware). They use a space between dice numbers and words, so Tidy can clean up with the `-D s` option.
+    -   Note: These lists often have a tab between the dice numbers and each word. Tidy can delete the dice numbers easily with something like `tidy -D t -o clean_eff.txt eff_large_wordlist.txt` or using the `-i` flag.
 -   I'm [pretty sure](https://twitter.com/1Password/status/1462885816569577480) this is [1Password](https://1password.com/)'s [word list](https://1password.com/txt/agwordlist.txt) as of 2021.
-    -   [1Password](https://1password.com/) published a slightly different [word list](https://github.com/agilebits/crackme/blob/master/doc/AgileWords.txt) in 2018.
+    -   1Password published a slightly different [word list](https://github.com/agilebits/crackme/blob/master/doc/AgileWords.txt) in 2018.
 -   If you're using Linux or MacOS, you've likely got some long lists on your computer. Check `/usr/share/dict/words` or `/usr/share/dict/american-english`.
 -   [SecureDrop](https://github.com/freedomofpress/securedrop/) has a few lists, including one of [adjectives](https://github.com/freedomofpress/securedrop/blob/develop/securedrop/dictionaries/adjectives.txt) and one of [nouns](https://github.com/freedomofpress/securedrop/blob/develop/securedrop/dictionaries/nouns.txt).
 -   [Bitcoin BIPS-0039](https://github.com/bitcoin/bips/tree/master/bip-0039) (2,048 words) (h/t [atoponce](https://www.reddit.com/r/Passwords/comments/sqrymt/comment/hwnfb94/))
@@ -486,8 +487,9 @@ See [this repo](https://github.com/sts10/splitter) for more information.
 -   [Lists used by a program called webpassgen](https://github.com/atoponce/webpassgen/tree/master/lists)
 -   [Original "Reinhold" diceware list](https://theworld.com/%7Ereinhold/diceware.wordlist.asc) created by [Arnold Reinhold](https://theworld.com/~reinhold/). Though it has some issues.
     -   Arnold Reinhold hosts [diceware lists in a variety of languages](https://theworld.com/~reinhold/diceware.html#Diceware%20in%20Other%20Languages|outline).
--   [r/wordlists subreddit](https://www.reddit.com/r/wordlists/), which seems to have links to a few non-English word lists.
 -   [simple1024](https://github.com/pera/simple1024) is a word list with 1024 common English words, an alternative to EFF's short word lists.
+-   [r/wordlists subreddit](https://www.reddit.com/r/wordlists/), which seems to have links to a few non-English word lists.
+-   You can also scan [GitHub's #wordlists topic](https://github.com/topics/wordlists)
 
 ### Shameless plug
 
