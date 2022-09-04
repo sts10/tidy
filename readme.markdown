@@ -465,7 +465,7 @@ See [this repo](https://github.com/sts10/splitter) for more information.
 -   [ ] Improve performance of Sardinas-Patterson functions
 <!-- -   [ ] Investigate making the list variable as [AHashSet](https://github.com/tkaitchuck/ahash)<String> rather than a `Vec<String>` to potentially boost performance. Will probably need to write some benchmarks with Criterion to measure potential performance gains. -->
 
-## Appendix: Where can I find some word lists?
+## Appendix A: Where can I find some word lists?
 
 -   The [Electronic Frontier Foundation](https://www.eff.org/) has published [a few word lists for creating diceware passphrases](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases). 
     -   I'm pretty sure password manager BitWarden uses [the EFF long list](https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt). 
@@ -492,3 +492,7 @@ See [this repo](https://github.com/sts10/splitter) for more information.
 ### Shameless plug
 
 -   I've created [a few word lists](https://github.com/sts10/generated-wordlists) using Tidy.
+
+## Appendix B: Tools that seem similar to Tidy
+-   [cook](https://github.com/giteshnxtlvl/cook): "An overpower[ed] wordlist generator, splitter, merger, finder, saver, create words permutation and combinations, apply different encoding/decoding and everything you need." Written in Go.
+-   [duplict](https://github.com/nil0x42/duplicut): "Remove duplicates from MASSIVE wordlist, without sorting it". Seems to indeed be much faster (10x) than `tidy --no-sort` for large word lists.
