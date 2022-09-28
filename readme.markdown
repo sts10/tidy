@@ -362,13 +362,15 @@ Given a pair of homophones, like "sun" and "son":
 1. To ensure you don't have BOTH homophones in your generated list, you'd run `tidy` with a flag like `-h ../homophones/homophone-lists/homophones-large-as-pairs.txt` ([link](https://github.com/sts10/homophones/blob/main/homophone-lists/homophones-large-as-pairs.txt)). This will let either "sun" or "son" on your list but NOT both.
 2. To ensure you have NEITHER of the words in the homophone pair on your generated word list, you'd use the reject words flags: `-r ../homophones/homophone-lists/cleaned-as-singles.txt` ([link](https://github.com/sts10/homophones/blob/main/homophone-lists/cleaned-as-singles.txt)). This will remove _both_ "sun" and "son" from your generated list before its outputted.
 
-## What are prefix words (a.k.a. prefix codes)?
+## Prefix codes, suffix codes, and uniquely decodable codes
 
-A word list that doesn't has any prefix words (also known as "[prefix codes](https://en.wikipedia.org/wiki/Prefix_code)") can better guarantee more consistent entropy when combining words from the list randomly and without punctuation between the words.
+If a word list is "uniquely decodable" that means that words from the list can be combined with a delimiter.
 
-As a brief example, if a list has "boy", "hood", and "boyhood" on it, users who specified they wanted two words worth of randomness (entropy) might end up with "boyhood", which an attacker guessing single words would try. Removing prefix words -- in this case "boy" -- prevents this possibility from occurring. Mandating that words have a punctuation mark, like a hyphen, between them (`boy-hood`) also solves this potential issue.
+As a brief example, if a list has "boy", "hood", and "boyhood" on it, users who specified they wanted two words worth of randomness (entropy) might end up with "boyhood", which an attacker guessing single words would try. Removing the word "boy", which makes the remaining list uniquely decodable, prevents this possibility from occurring. 
 
-You can read more about this issue [here](https://github.com/ulif/diceware#prefix-code).
+To make a list uniquely decodable, Tidy removes words. Tidy offers three (3) distinct procedures to make cuts until a list is uniquely decodable. Users can (1) remove all [prefix words](https://en.wikipedia.org/wiki/Prefix_code), (2) remove all suffix words, or (3) perform a procedure based on [the Sardinas–Patterson algorithm](https://en.wikipedia.org/wiki/Sardinas%E2%80%93Patterson_algorithm) that I have named "Schlinkert pruning." You can learn more about uniquely decodable codes and Schlinkert pruning from [this blog post](https://sts10.github.io/2022/08/12/efficiently-pruning-until-uniquely-decodable.html).
+
+Tidy can also simply check if a list is uniquely decodable. It does this using [the Sardinas–Patterson algorithm](https://en.wikipedia.org/wiki/Sardinas%E2%80%93Patterson_algorithm). You can do this by passing Tidy four `attributes` flag (`-AAAA`).
 
 ## Whittling
 
