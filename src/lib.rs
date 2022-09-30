@@ -85,9 +85,9 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     // Now we go word-by-word
     for word in &list_to_tidy {
         // METADATA-IGNORING WORD REMOVALS
-        // If user chose to ignore metadata, split word vs. metadata on the first comma
-        // found.
-        // We'll then do removals operations on the "word", ignoriong metadata.
+        // If user chose to ignore metadata, split the line into the word and the metadata
+        // based on given delimiter. Note that metadata may come before or after the word.
+        // We'll then do removals operations on the "word", ignoring metadata.
         // Later, we'll re-add the metadata to the word.
 
         // We need delimiter to have a broad scope so that we can use it
@@ -192,40 +192,28 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         if req.should_remove_integers && new_word.chars().any(|c| c.is_numeric()) {
             new_word = "".to_string();
         }
-
-        match req.reject_list {
-            Some(ref reject_list) => {
-                if reject_list.contains(&new_word) {
-                    new_word = "".to_string();
-                }
+        if let Some(ref reject_list) = req.reject_list {
+            if reject_list.contains(&new_word) {
+                new_word = "".to_string();
             }
-            None => (),
+        }
+
+        if let Some(ref approved_list) = req.approved_list {
+            if !approved_list.contains(&new_word) {
+                new_word = "".to_string();
+            }
         };
 
-        match req.approved_list {
-            Some(ref approved_list) => {
-                if !approved_list.contains(&new_word) {
-                    new_word = "".to_string();
-                }
+        if let Some(minimum_length) = req.minimum_length {
+            if new_word.chars().count() < minimum_length {
+                new_word = "".to_string();
             }
-            None => (),
         };
 
-        match req.minimum_length {
-            Some(minimum_length) => {
-                if new_word.chars().count() < minimum_length {
-                    new_word = "".to_string();
-                }
+        if let Some(maximum_length) = req.maximum_length {
+            if new_word.chars().count() > maximum_length {
+                new_word = "".to_string();
             }
-            None => (),
-        };
-        match req.maximum_length {
-            Some(maximum_length) => {
-                if new_word.chars().count() > maximum_length {
-                    new_word = "".to_string();
-                }
-            }
-            None => (),
         };
 
         // trim whitespace
@@ -233,16 +221,12 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
 
         // If there was metadata, re-add it to the word now.
         if new_word != "" {
-            match metadata {
-                Some(metadata) => {
-                    if metadata_position == Some(MetadataPosition::End) {
-                        new_word = new_word + &delimiter.unwrap().to_string() + metadata;
-                    } else if metadata_position == Some(MetadataPosition::Start) {
-                        new_word =
-                            metadata.to_owned() + &delimiter.unwrap().to_string() + &new_word;
-                    }
+            if let Some(metadata) = metadata {
+                if metadata_position == Some(MetadataPosition::End) {
+                    new_word = new_word + &delimiter.unwrap().to_string() + metadata;
+                } else if metadata_position == Some(MetadataPosition::Start) {
+                    new_word = metadata.to_owned() + &delimiter.unwrap().to_string() + &new_word;
                 }
-                None => (),
             };
         }
 

@@ -68,7 +68,7 @@ fn generate_c_infinity_with_a_halt_break(c: HashSet<String>) -> HashSet<String> 
     let mut n = 1;
     let mut cn = generate_cn(&c, n);
 
-    while cn.len() > 0 {
+    while !cn.is_empty() {
         if cn.is_subset(&cs) {
             // Cycle detected. Halting algorithm.
             break;

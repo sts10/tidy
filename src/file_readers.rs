@@ -35,8 +35,7 @@ pub fn make_vec_from_filenames(
         }
         let number_of_lines_in_file = raw_lines.len();
 
-        let mut line_number = 0;
-        for line in raw_lines {
+        for (line_number, line) in raw_lines.into_iter().enumerate() {
             match (skip_rows_start, skip_rows_end) {
                 (Some(skip_rows_start), Some(skip_rows_end)) => {
                     if line_number >= skip_rows_start
@@ -57,7 +56,6 @@ pub fn make_vec_from_filenames(
                 }
                 (None, None) => word_list.push(line),
             }
-            line_number += 1;
         }
     }
     word_list
