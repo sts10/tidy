@@ -1,5 +1,10 @@
 use std::collections::HashSet;
 
+// Return a Vector of words that "caused" the Sardinas-
+// Patterson algorithm to determine that this list was not
+// uniquely decodable.
+// These "offending" words can then be removed from the original
+// list to, theoretically, make the list uniquely decodable.
 pub fn get_sardinas_patterson_final_intersection(c: &[String]) -> Vec<String> {
     // Right off the bat, convert inputted Slice to a HashSet
     // Since we always want this list to be unique, and we're
@@ -81,9 +86,3 @@ fn generate_c_infinity_with_a_halt_break(c: HashSet<String>) -> HashSet<String> 
     }
     c_infinity
 }
-
-// /// Returns true if c is uniquely decodable
-// fn sardinas_patterson_theorem(c: HashSet<String>) -> bool {
-//     let c_infinity = generate_c_infinity_with_a_halt_break(c.clone());
-//     c.is_disjoint(&c_infinity)
-// }
