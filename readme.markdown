@@ -40,7 +40,7 @@ Optionally, the tool can...
 -   remove all words with non-alphabetic characters from new list
 -   straighten curly/smart quotes, i.e. replacing them with their "straight" equivalents (`-q`)
 -   guarantee a maximum shared prefix length (see below) (`-x`)
--   print corresponding dice rolls before words, separated by a tab. Dice can have 2 to 36 sides. (`-dice`)
+-   print corresponding dice rolls before words, separated by a tab. Dice can have 2 to 36 sides. (`--dice`)
 -   print information about the new list, such as entropy per word, to the terminal (`-A`, `-AA`, `-AAA`, or `-AAAA` depending on how much information you want to printed)
 
 and more! 
