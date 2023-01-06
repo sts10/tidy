@@ -1,11 +1,11 @@
 [package]
 name = "tidy"
-version = "0.2.72"
+version = "0.2.73"
 authors = ["sts10 <sschlinkert@gmail.com>"]
 edition = "2021"
 
 [dependencies]
-clap = { version = "3.0.14", features = ["derive"] }
+clap = { version = "4", features = ["derive"] }
 memchr = "2.4"
 radix_fmt = "1.0.0"
 rand = "0.8.4"

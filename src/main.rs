@@ -20,22 +20,25 @@ use crate::input_validations::*;
 ///  
 /// This is useful when making lists fit to a specific amount of dice and
 /// dice sides. (As an example, five rolls of a six-sided dice would be: 6**5).
-fn eval_list_length(input: &str) -> usize {
+fn eval_list_length(input: &str) -> Result<usize, String> {
     match input.split("**").collect::<Vec<&str>>().as_slice() {
-        [] => panic!("Please specify a number."),
-        [num_string] => num_string
-            .parse::<usize>()
-            .expect("Unable to parse an input. Enter a number or a base**exponent"),
+        [] => Err("Please specify a number.".to_string()),
+        [num_string] => num_string.parse::<usize>().map_err(|_| {
+            format!(
+                "Unable to parse input {}. Enter a number or a base**exponent",
+                input
+            )
+        }),
         [base_string, exponent_string] => {
             let base: usize = base_string
                 .parse::<usize>()
-                .expect("Unable to parse base of an input. Please use positive integers only.");
+                .map_err(|_| format!("Unable to parse input {}. Positive integers only.", input))?;
             let exponent: u32 = exponent_string
                 .parse::<u32>()
-                .expect("Unable to parse exponent of an input. Please use positive integers only.");
-            base.pow(exponent)
+                .map_err(|_| format!("Unable to parse input {}. Positive integers only.", input))?;
+            Ok(base.pow(exponent))
         }
-        _ => panic!("You can only specify one exponent! Use format: base**exponent"),
+        _ => Err("You can only specify one exponent! Use format: base**exponent".to_string()),
     }
 }
 
@@ -58,7 +61,7 @@ struct Args {
     /// Print attributes about new list to terminal. Can be used more than once
     /// to print more attributes. Some attributes may take a nontrivial amount
     /// of time to calculate.
-    #[clap(short = 'A', long = "attributes", parse(from_occurrences))]
+    #[clap(short = 'A', long = "attributes", action = clap::ArgAction::Count)]
     attributes: u8,
 
     /// Print a handful of pseudorandomly selected words from the created list
@@ -155,16 +158,15 @@ struct Args {
     delete_before_delimiter: Option<char>,
 
     /// Only take first N words from inputted word list.
-    /// If two or more word lists are inputted, it will
-    /// combine arbitrarily and then take first N words.
-    #[clap(long = "take-first", parse(from_str = eval_list_length))]
+    /// If two or more word lists are inputted, it will combine arbitrarily and then take first N words.
+    #[clap(long = "take-first", value_parser=eval_list_length)]
     take_first: Option<usize>,
 
     /// Only take a random N number of words from inputted word list.
     /// If two or more word lists are inputted, it will
     /// combine arbitrarily and then take a random N words. If you're looking to cut a list exactly
     /// to a specified size, consider print-rand or whittle-to options.
-    #[clap(long = "take-rand", parse(from_str = eval_list_length))]
+    #[clap(long = "take-rand", value_parser=eval_list_length)]
     take_rand: Option<usize>,
 
     /// Whittle list exactly to a specified length, only taking minimum number of words
@@ -190,14 +192,14 @@ struct Args {
     /// to a set number of words. Can accept expressions in the
     /// form of base**exponent (helpful for generating diceware lists).
     /// Cuts are done randomly.
-    #[clap(long = "print-rand", parse(from_str = eval_list_length))]
+    #[clap(long = "print-rand", value_parser=eval_list_length)]
     print_rand: Option<usize>,
 
     /// Just before printing generated list, cut list down
     /// to a set number of words. Can accept expressions in the
     /// form of base**exponent (helpful for generating diceware lists).
     /// Words are selected from the beginning of processed list, and before it is sorted alphabetically.
-    #[clap(long = "print-first", parse(from_str = eval_list_length))]
+    #[clap(long = "print-first", value_parser=eval_list_length)]
     print_first: Option<usize>,
 
     /// Set minimum word length
@@ -233,17 +235,17 @@ struct Args {
 
     /// Path(s) for optional list of words to reject. Can accept multiple
     /// files.
-    #[clap(short = 'r', long = "reject", parse(from_os_str))]
+    #[clap(short = 'r', long = "reject")]
     reject_list: Option<Vec<PathBuf>>,
 
     /// Path(s) for optional list of approved words. Can accept multiple
     /// files.
-    #[clap(short = 'a', long = "approve", parse(from_os_str))]
+    #[clap(short = 'a', long = "approve")]
     approved_list: Option<Vec<PathBuf>>,
 
     /// Path(s) to file(s) containing homophone pairs. There must be one pair
     /// of homophones per line, separated by a comma (sun,son).
-    #[clap(short = 'h', long = "homophones", parse(from_os_str))]
+    #[clap(long = "homophones")]
     homophones_list: Option<Vec<PathBuf>>,
 
     /// Print dice roll before word in output. Set number of sides
@@ -262,7 +264,7 @@ struct Args {
 
     /// Path for outputted list file. If none given, generated word list
     /// will be printed to terminal.
-    #[clap(short = 'o', long = "output", parse(from_os_str))]
+    #[clap(short = 'o', long = "output")]
     output: Option<PathBuf>,
 
     /// Force overwrite of output file if it exists.
@@ -272,7 +274,7 @@ struct Args {
     /// Word list input files. Can be more than one, in which case
     /// they'll be combined and de-duplicated. Requires at least
     /// one file.
-    #[clap(name = "Inputted Word Lists", parse(from_os_str), required = true)]
+    #[clap(name = "Inputted Word Lists", required = true)]
     inputted_word_list: Vec<PathBuf>,
 }
 
@@ -397,7 +399,7 @@ fn main() {
             // Some whittle_to String has been provided, which we need to do a lot of work for
             // First, parse length_to_whittle_to
             let length_to_whittle_to =
-                eval_list_length(split_and_vectorize(&whittle_to_string, ",")[0]);
+                eval_list_length(split_and_vectorize(&whittle_to_string, ",")[0]).unwrap();
             // Determine initial starting point
             let mut starting_point = if split_and_vectorize(&whittle_to_string, ",").len() == 2 {
                 // If user gave us one, use that.
@@ -631,21 +633,19 @@ mod tests {
     use super::*;
     #[test]
     fn can_parse_print_rand() {
-        assert_eq!(eval_list_length("7776"), 7776);
-        assert_eq!(eval_list_length("6**5"), 7776);
-        assert_eq!(eval_list_length("10000"), 10000);
-        assert_eq!(eval_list_length("10**2"), 100);
+        assert_eq!(eval_list_length("7776").unwrap(), 7776);
+        assert_eq!(eval_list_length("6**5").unwrap(), 7776);
+        assert_eq!(eval_list_length("10000").unwrap(), 10000);
+        assert_eq!(eval_list_length("10**2").unwrap(), 100);
     }
 
     #[test]
-    #[should_panic]
     fn panics_when_noninteger_is_inputted_to_print_rand() {
-        eval_list_length("four");
+        assert!(eval_list_length("four").is_err());
     }
 
     #[test]
-    #[should_panic]
     fn panics_when_too_many_exponents_inputted_to_print_rand() {
-        eval_list_length("2**4**3");
+        assert!(eval_list_length("2**4**3").is_err());
     }
 }
