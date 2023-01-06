@@ -386,7 +386,7 @@ pub fn get_shortest_word_length(list: &[String]) -> usize {
         .min_by(|a, b| a.chars().count().cmp(&b.chars().count()))
         .unwrap()
         .chars()
-        .count() as usize
+        .count()
 }
 
 /// Calculates mean (or average) word length of given word
