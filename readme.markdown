@@ -491,6 +491,7 @@ See [this repo](https://github.com/sts10/splitter) for more information.
 -  [ulif's "diceware"](https://github.com/ulif/diceware) seems to have collected [a few word lists](https://github.com/ulif/diceware/tree/master/diceware/wordlists) in its Github repo, along with [a separate page that explains each of the lists](https://github.com/ulif/diceware/blob/master/docs/wordlists.rst).
 -   [dmuth's "diceware" program](https://github.com/dmuth/diceware) has a [collection of lists](https://github.com/dmuth/diceware/tree/master/wordlist) (h/t [atoponce](https://www.reddit.com/r/Passwords/comments/sqrymt/comment/hwnfb94/))
 -   [Niceware list](https://github.com/diracdeltas/niceware/blob/master/lib/wordlist.js) (~65,000 words)<!-- (there's also [a Rust port of niceware](https://github.com/healeycodes/niceware)).-->
+-   [Norvig Natural Language Corpus Data](https://norvig.com/ngrams/) has [a list of 333,000 commonly used words](https://norvig.com/ngrams/count_1w.txt) from the Google Web Trillion Word Corpus, as well as an assortment of other word lists.
 -   [Lists used by a program called webpassgen](https://github.com/atoponce/webpassgen/tree/master/lists)
 -   [Original "Reinhold" diceware list](https://theworld.com/%7Ereinhold/diceware.wordlist.asc) created by [Arnold Reinhold](https://theworld.com/~reinhold/). Though it has some issues.
     -   Arnold Reinhold hosts [diceware lists in a variety of languages](https://theworld.com/~reinhold/diceware.html#Diceware%20in%20Other%20Languages|outline).
