@@ -269,7 +269,7 @@ Options:
 
 -   `tidy -l -o new_list.txt -a approved_words.txt inputted_word_list.txt` Similar to above, but ensures that only words in the approved_words.txt file make it on to the final list that is printed to new_list.txt. The approved list is case sensitive. (On Mac and some Linux distributions, `/usr/share/dict/words` should contain a list of words for spellcheck purposes.)
 
--   `tidy -l -o new_list.txt -h homophone_pairs.txt inputted_word_list.txt` Similar to above, but expects `homophones_pairs.txt` to be a list of homophones pairs separated by a comma ("right,write" then next line: "epic,epoch"). If both words in the pair are on the inputted_word_list, Tidy will remove the second one. If only one of the words in the pair are on the list, Tidy won't remove it. Must be only two words per line.
+-   `tidy -l -o new_list.txt --homophones homophone_pairs.txt inputted_word_list.txt` Similar to above, but expects `homophones_pairs.txt` to be a list of homophones pairs separated by a comma ("right,write" then next line: "epic,epoch"). If both words in the pair are on the inputted_word_list, Tidy will remove the second one. If only one of the words in the pair are on the list, Tidy won't remove it. Must be only two words per line.
 
 -   `tidy -lA -m 3 -o new-list.txt inputted_word_list.txt` Similar to above, but the `-m 3` means new list won't have any words under 3 characters in length. Have Tidy also print some attributes about the new list to the terminal screen.
 
@@ -360,7 +360,7 @@ I'd say that Tidy offers two ways of dealing with homophones.
 
 Given a pair of homophones, like "sun" and "son":
 
-1. To ensure you don't have BOTH homophones in your generated list, you'd run `tidy` with a flag like `-h ../homophones/homophone-lists/homophones-large-as-pairs.txt` ([link](https://github.com/sts10/homophones/blob/main/homophone-lists/homophones-large-as-pairs.txt)). This will let either "sun" or "son" on your list but NOT both.
+1. To ensure you don't have BOTH homophones in your generated list, you'd run `tidy` with a flag like `--homophones ../homophones/homophone-lists/homophones-large-as-pairs.txt` ([link](https://github.com/sts10/homophones/blob/main/homophone-lists/homophones-large-as-pairs.txt)). This will let either "sun" or "son" on your list but NOT both.
 2. To ensure you have NEITHER of the words in the homophone pair on your generated word list, you'd use the reject words flags: `-r ../homophones/homophone-lists/cleaned-as-singles.txt` ([link](https://github.com/sts10/homophones/blob/main/homophone-lists/cleaned-as-singles.txt)). This will remove _both_ "sun" and "son" from your generated list before its outputted.
 
 ## Prefix codes, suffix codes, and uniquely decodable codes
