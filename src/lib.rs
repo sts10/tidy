@@ -4,6 +4,7 @@ pub mod dice;
 pub mod display_information;
 pub mod edit_distance;
 pub mod file_readers;
+pub mod file_writer;
 pub mod list_manipulations;
 pub mod parsers;
 pub mod sardinas_patterson_pruning;

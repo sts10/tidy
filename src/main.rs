@@ -1,6 +1,4 @@
 use clap::Parser;
-use std::fs::File;
-use std::io::Write;
 use std::path::Path;
 use std::path::PathBuf;
 use std::process;
@@ -11,6 +9,7 @@ use crate::dice::print_as_dice;
 use crate::display_information::display_list_information;
 use crate::display_information::generate_samples;
 use crate::file_readers::*;
+use crate::file_writer::*;
 use crate::input_validations::*;
 use crate::parsers::*;
 
@@ -367,6 +366,8 @@ fn main() {
             return;
         }
     }
+
+    // Whittling is... complicated
     let tidied_list = match opt.whittle_to {
         Some(whittle_to_string) => {
             // Some whittle_to String has been provided, which we need to do a lot of work for
@@ -381,13 +382,13 @@ fn main() {
                     .unwrap_or((length_to_whittle_to as f64 * 1.4) as usize)
             } else {
                 // If not, start with length_to_whittle_to*1.4 as a decent opening guess.
-                // Effectively this assumes we'll cut about 30% of words in most
+                // Effectively this assumes we'll cut about 40% of words in most
                 // Tidy runs.
                 (length_to_whittle_to as f64 * 1.4) as usize
             };
             // Give user a heads up that we're working on it.
             eprintln!(
-                "Whittling list to {} words. This may take a moment.",
+                "Whittling list to {} words. This may take a moment...",
                 length_to_whittle_to
             );
 
@@ -527,26 +528,13 @@ fn main() {
         }
         match opt.output {
             Some(output) => {
-                let mut f = File::create(output).expect("Unable to create file");
-                for (i, word) in tidied_list.iter().enumerate() {
-                    // If user set a number of dice_sides, we'll add the appropriate
-                    // dice roll information, then a tab, then the word.
-                    if let Some(dice_sides) = opt.dice_sides {
-                        write!(
-                            f,
-                            "{}\t",
-                            print_as_dice(
-                                i,
-                                dice_sides,
-                                tidied_list.len(),
-                                opt.print_dice_sides_as_their_base
-                            ),
-                        )
-                        .expect("Unable to write dice roll to file");
-                    }
-                    // Else, just print the word
-                    writeln!(f, "{}", word).expect("Unable to write word to file");
-                }
+                // Print to file
+                print_list_to_file(
+                    &tidied_list,
+                    output,
+                    opt.dice_sides,
+                    opt.print_dice_sides_as_their_base,
+                );
             }
             // If no output file destination, print resulting list, word by word,
             // to println (which goes to stdout, allowing use of > on command line)
