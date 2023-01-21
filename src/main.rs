@@ -345,79 +345,6 @@ fn main() {
         print_first: opt.print_first,
     };
 
-    // ---
-    // Warn about the (many!) current limitations of the 'ignore' options
-    let (ignore_after_delimiter, ignore_before_delimiter) = match (
-        this_tidy_request.ignore_after_delimiter,
-        this_tidy_request.ignore_before_delimiter,
-    ) {
-        // If given both a from_delimiter and through_delimiter, error out nicely.
-        (Some(_after_delimiter), Some(_before_delimiter)) => {
-            let err_message = "Can't ignore metadata on both sides.";
-            eprintln!("Error: {}", err_message);
-            process::exit(1);
-        }
-        // No ignore delimiters given, so just return None to both
-        // variables.
-        (None, None) => (None, None),
-        // A after_delimiter given, but not a before_delimiter
-        (Some(after_delimiter), None) => {
-            if this_tidy_request.to_lowercase
-                || this_tidy_request.should_straighten_quotes
-                || this_tidy_request.should_remove_prefix_words
-                || this_tidy_request.should_remove_suffix_words
-                || this_tidy_request.should_schlinkert_prune
-                || this_tidy_request.should_delete_nonalphanumeric
-                || this_tidy_request.should_delete_integers
-                || this_tidy_request
-                    .should_delete_before_first_delimiter
-                    .is_some()
-                || this_tidy_request
-                    .should_delete_after_first_delimiter
-                    .is_some()
-                || this_tidy_request.minimum_edit_distance.is_some()
-                || this_tidy_request.maximum_shared_prefix_length.is_some()
-                || this_tidy_request.homophones_list.is_some()
-                || opt.dice_sides.is_some()
-                || opt.print_dice_sides_as_their_base
-            {
-                let err_message = "--ignore-after option does not work with one of the other options you selected. Please change options. Exiting";
-                eprintln!("Error: {}", err_message);
-                process::exit(1);
-            } else {
-                (Some(after_delimiter), None)
-            }
-        }
-        // No after_delimiter given, but a before_delimiter has been given
-        (None, Some(before_delimiter)) => {
-            if this_tidy_request.to_lowercase
-                || this_tidy_request.should_straighten_quotes
-                || this_tidy_request.should_remove_prefix_words
-                || this_tidy_request.should_remove_suffix_words
-                || this_tidy_request.should_schlinkert_prune
-                || this_tidy_request.should_delete_nonalphanumeric
-                || this_tidy_request.should_delete_integers
-                || this_tidy_request
-                    .should_delete_before_first_delimiter
-                    .is_some()
-                || this_tidy_request
-                    .should_delete_after_first_delimiter
-                    .is_some()
-                || this_tidy_request.minimum_edit_distance.is_some()
-                || this_tidy_request.maximum_shared_prefix_length.is_some()
-                || this_tidy_request.homophones_list.is_some()
-                || opt.dice_sides.is_some()
-                || opt.print_dice_sides_as_their_base
-            {
-                let err_message = "--ignore-before option does not work with one of the other options you selected. Please change options. Exiting";
-                eprintln!("Error: {}", err_message);
-                process::exit(1);
-            } else {
-                (None, Some(before_delimiter))
-            }
-        }
-    };
-
     // Make a Vec from provided text file names,
     // respecting skip_rows_start and skip_rows_end
     let inputted_word_list = make_vec_from_filenames(
@@ -425,6 +352,13 @@ fn main() {
         opt.skip_rows_start,
         opt.skip_rows_end,
     );
+    // ---
+    let (ignore_before_delimiter, ignore_after_delimiter) = validate_and_parse_ignore_options(
+        &this_tidy_request,
+        opt.dice_sides,
+        opt.print_dice_sides_as_their_base,
+    );
+
     // Parse provided "whittle string" for a length_to_whittle_to and an
     // optional starting point.
     let (length_to_whittle_to, starting_point) = match opt.whittle_to {
