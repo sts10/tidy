@@ -286,7 +286,7 @@ fn main() {
 
     if !valid_dice_sides(opt.dice_sides) {
         eprintln!("Error: Specified number of dice sides must be between 2 and 36.");
-        process::exit(2);
+        process::exit(1);
     }
 
     if !valid_list_truncation_options(
@@ -295,7 +295,8 @@ fn main() {
         opt.take_first,
         opt.take_rand,
     ) {
-        process::exit(2);
+        // valid_list_truncation_options prints relevation Error message
+        process::exit(1);
     }
 
     // Determine if this is a niche case in which whittle_to would be a smarter choice
@@ -312,7 +313,7 @@ fn main() {
             eprintln!("RECOMMENDATION: If your input list is sorted by desirability (e.g. word frequency), consider using --whittle-to rather than --print-rand if you're removing prefix words, removing suffix words, and/or doing a Schlinkert prune.\n");
         }
     }
-    // Warn about the (many!) current limits of the ignore option
+    // Warn about the (many!) current limitations of the 'ignore' options
     let (ignore_after_delimiter, ignore_before_delimiter) = match (
         opt.ignore_after_delimiter,
         opt.ignore_before_delimiter,
@@ -321,7 +322,7 @@ fn main() {
         (Some(_after_delimiter), Some(_before_delimiter)) => {
             let err_message = "Can't ignore metadata on both sides.";
             eprintln!("Error: {}", err_message);
-            process::exit(2);
+            process::exit(1);
         }
         // No ignore delimiters given, so just return None to both
         // variables.
@@ -345,7 +346,7 @@ fn main() {
             {
                 let err_message = "--ignore-after option does not work with one of the other options you selected. Please change options. Exiting";
                 eprintln!("Error: {}", err_message);
-                process::exit(2);
+                process::exit(1);
             } else {
                 (Some(after_delimiter), None)
             }
@@ -369,7 +370,7 @@ fn main() {
             {
                 let err_message = "--ignore-before option does not work with one of the other options you selected. Please change options. Exiting";
                 eprintln!("Error: {}", err_message);
-                process::exit(2);
+                process::exit(1);
             } else {
                 (None, Some(before_delimiter))
             }
@@ -479,7 +480,7 @@ fn main() {
                         "ERROR: Cannot make a list of {} words from the inputted list(s), given the selected options. Please try again, either by changing options or inputting more words.",
                         length_to_whittle_to
                     );
-                    process::exit(2);
+                    process::exit(1);
                 }
 
                 if opt.debug {
