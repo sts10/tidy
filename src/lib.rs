@@ -146,11 +146,15 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         // that all of these will be None, so we don't have to worry
         // about metadata loss due to de-duplication caused by word modification.
         new_word = match req.should_delete_before_first_delimiter {
-            Some(delimiter) => delete_before_first_char(&new_word, delimiter).to_string(),
+            Some(delimiter) => {
+                delete_before_first_char(&new_word, parse_delimiter(delimiter).unwrap()).to_string()
+            }
             None => new_word,
         };
         new_word = match req.should_delete_after_first_delimiter {
-            Some(delimiter) => delete_after_first_char(&new_word, delimiter).to_string(),
+            Some(delimiter) => {
+                delete_after_first_char(&new_word, parse_delimiter(delimiter).unwrap()).to_string()
+            }
             None => new_word,
         };
         if req.should_delete_integers {

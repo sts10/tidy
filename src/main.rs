@@ -255,6 +255,7 @@ fn main() {
         eprintln!("Received args: {:?}", opt);
     }
 
+    // Some initial validations
     if !valid_dice_sides(opt.dice_sides) {
         eprintln!("Error: Specified number of dice sides must be between 2 and 36.");
         process::exit(1);
@@ -268,6 +269,16 @@ fn main() {
     ) {
         // valid_list_truncation_options prints relevation Error message
         process::exit(1);
+    }
+
+    // Check if output file exists
+    if let Some(ref output_file_name) = opt.output {
+        if !opt.force_overwrite && Path::new(output_file_name).exists() {
+            eprintln!(
+                "Specified output file already exists. Use --force flag to force an overwrite."
+            );
+            return;
+        }
     }
 
     // Determine if this is a niche case in which whittle_to would be a smarter choice
@@ -284,10 +295,61 @@ fn main() {
             eprintln!("RECOMMENDATION: If your input list is sorted by desirability (e.g. word frequency), consider using --whittle-to rather than --print-rand if you're removing prefix words, removing suffix words, and/or doing a Schlinkert prune.\n");
         }
     }
+
+    // OK let's do this. Make a Tidy request.
+    // Has to be mutable because we have to overwrite some of these later on
+    let mut this_tidy_request = TidyRequest {
+        list: make_vec_from_filenames(
+            &opt.inputted_word_list,
+            opt.skip_rows_start,
+            opt.skip_rows_end,
+        ),
+        take_first: opt.take_first,
+        take_rand: opt.take_rand,
+        sort_alphabetically: !opt.no_alpha_sort,
+        ignore_after_delimiter: opt.ignore_after_delimiter,
+        ignore_before_delimiter: opt.ignore_before_delimiter,
+        to_lowercase: opt.to_lowercase,
+        should_straighten_quotes: opt.straighten_quotes,
+        should_remove_prefix_words: opt.remove_prefix_words,
+        should_remove_suffix_words: opt.remove_suffix_words,
+        should_schlinkert_prune: opt.schlinkert_prune,
+        should_remove_integers: opt.remove_integers,
+        should_delete_integers: opt.delete_integers,
+        should_remove_nonalphanumeric: opt.remove_nonalphanumeric,
+        should_delete_nonalphanumeric: opt.delete_nonalphanumeric,
+        should_remove_nonalphabetic: opt.remove_nonalphabetic,
+        should_remove_non_latin_alphabetic: opt.remove_non_latin_alphabetic,
+        should_remove_nonascii: opt.remove_nonascii,
+        should_delete_after_first_delimiter: opt.delete_after_delimiter,
+        should_delete_before_first_delimiter: opt.delete_before_delimiter,
+
+        // If given more than one file of reject words, combine them
+        // right here.
+        reject_list: opt
+            .reject_list
+            .map(|list_of_files| make_vec_from_filenames(&list_of_files, None, None)),
+        // Likewise with approved word lists
+        approved_list: opt
+            .approved_list
+            .map(|list_of_files| make_vec_from_filenames(&list_of_files, None, None)),
+        // And homophones
+        homophones_list: opt
+            .homophones_list
+            .map(|list_of_files| read_homophones_list_from_filenames(&list_of_files)),
+        minimum_length: opt.minimum_length,
+        maximum_length: opt.maximum_length,
+        maximum_shared_prefix_length: opt.maximum_shared_prefix_length,
+        minimum_edit_distance: opt.minimum_edit_distance,
+        print_rand: opt.print_rand,
+        print_first: opt.print_first,
+    };
+
+    // ---
     // Warn about the (many!) current limitations of the 'ignore' options
     let (ignore_after_delimiter, ignore_before_delimiter) = match (
-        opt.ignore_after_delimiter,
-        opt.ignore_before_delimiter,
+        this_tidy_request.ignore_after_delimiter,
+        this_tidy_request.ignore_before_delimiter,
     ) {
         // If given both a from_delimiter and through_delimiter, error out nicely.
         (Some(_after_delimiter), Some(_before_delimiter)) => {
@@ -300,18 +362,22 @@ fn main() {
         (None, None) => (None, None),
         // A after_delimiter given, but not a before_delimiter
         (Some(after_delimiter), None) => {
-            if opt.to_lowercase
-                || opt.straighten_quotes
-                || opt.remove_prefix_words
-                || opt.remove_suffix_words
-                || opt.schlinkert_prune
-                || opt.delete_nonalphanumeric
-                || opt.delete_integers
-                || opt.delete_before_delimiter.is_some()
-                || opt.delete_after_delimiter.is_some()
-                || opt.minimum_edit_distance.is_some()
-                || opt.maximum_shared_prefix_length.is_some()
-                || opt.homophones_list.is_some()
+            if this_tidy_request.to_lowercase
+                || this_tidy_request.should_straighten_quotes
+                || this_tidy_request.should_remove_prefix_words
+                || this_tidy_request.should_remove_suffix_words
+                || this_tidy_request.should_schlinkert_prune
+                || this_tidy_request.should_delete_nonalphanumeric
+                || this_tidy_request.should_delete_integers
+                || this_tidy_request
+                    .should_delete_before_first_delimiter
+                    .is_some()
+                || this_tidy_request
+                    .should_delete_after_first_delimiter
+                    .is_some()
+                || this_tidy_request.minimum_edit_distance.is_some()
+                || this_tidy_request.maximum_shared_prefix_length.is_some()
+                || this_tidy_request.homophones_list.is_some()
                 || opt.dice_sides.is_some()
                 || opt.print_dice_sides_as_their_base
             {
@@ -324,18 +390,22 @@ fn main() {
         }
         // No after_delimiter given, but a before_delimiter has been given
         (None, Some(before_delimiter)) => {
-            if opt.to_lowercase
-                || opt.straighten_quotes
-                || opt.remove_prefix_words
-                || opt.remove_suffix_words
-                || opt.schlinkert_prune
-                || opt.delete_nonalphanumeric
-                || opt.delete_integers
-                || opt.delete_after_delimiter.is_some()
-                || opt.delete_before_delimiter.is_some()
-                || opt.minimum_edit_distance.is_some()
-                || opt.maximum_shared_prefix_length.is_some()
-                || opt.homophones_list.is_some()
+            if this_tidy_request.to_lowercase
+                || this_tidy_request.should_straighten_quotes
+                || this_tidy_request.should_remove_prefix_words
+                || this_tidy_request.should_remove_suffix_words
+                || this_tidy_request.should_schlinkert_prune
+                || this_tidy_request.should_delete_nonalphanumeric
+                || this_tidy_request.should_delete_integers
+                || this_tidy_request
+                    .should_delete_before_first_delimiter
+                    .is_some()
+                || this_tidy_request
+                    .should_delete_after_first_delimiter
+                    .is_some()
+                || this_tidy_request.minimum_edit_distance.is_some()
+                || this_tidy_request.maximum_shared_prefix_length.is_some()
+                || this_tidy_request.homophones_list.is_some()
                 || opt.dice_sides.is_some()
                 || opt.print_dice_sides_as_their_base
             {
@@ -348,34 +418,23 @@ fn main() {
         }
     };
 
-    let delete_after_delimiter = match opt.delete_after_delimiter {
-        Some(delimiter) => parse_delimiter(delimiter),
-        None => None,
-    };
-    let delete_before_delimiter = match opt.delete_before_delimiter {
-        Some(delimiter) => parse_delimiter(delimiter),
-        None => None,
-    };
-
-    // Check if output file exists
-    if let Some(ref output_file_name) = opt.output {
-        if !opt.force_overwrite && Path::new(output_file_name).exists() {
-            eprintln!(
-                "Specified output file already exists. Use --force flag to force an overwrite."
-            );
-            return;
-        }
-    }
-
-    // Whittling is... complicated
-    let tidied_list = match opt.whittle_to {
+    // Make a Vec from provided text file names,
+    // respecting skip_rows_start and skip_rows_end
+    let inputted_word_list = make_vec_from_filenames(
+        &opt.inputted_word_list,
+        opt.skip_rows_start,
+        opt.skip_rows_end,
+    );
+    // Parse provided "whittle string" for a length_to_whittle_to and an
+    // optional starting point.
+    let (length_to_whittle_to, starting_point) = match opt.whittle_to {
         Some(whittle_to_string) => {
             // Some whittle_to String has been provided, which we need to do a lot of work for
             // First, parse length_to_whittle_to
             let length_to_whittle_to =
                 eval_list_length(split_and_vectorize(&whittle_to_string, ",")[0]).unwrap();
             // Determine initial starting point
-            let mut starting_point = if split_and_vectorize(&whittle_to_string, ",").len() == 2 {
+            let starting_point = if split_and_vectorize(&whittle_to_string, ",").len() == 2 {
                 // If user gave us one, use that.
                 split_and_vectorize(&whittle_to_string, ",")[1]
                     .parse::<usize>()
@@ -386,80 +445,66 @@ fn main() {
                 // Tidy runs.
                 (length_to_whittle_to as f64 * 1.4) as usize
             };
+            // It's possible that our derive starting_point is higher than the length
+            // of our inputted_word_list. If that's the case, reset starting_point
+            // to that length.
+            let starting_point = if starting_point > inputted_word_list.len() {
+                inputted_word_list.len() as usize
+            } else {
+                // if not, we're good. Let given starting_point pass through.
+                starting_point
+            };
+
+            // Another potential issue: User is asking for too many words, given length of
+            // the inputted_word_list (which would be a problem!)
+            if length_to_whittle_to > inputted_word_list.len() {
+                eprintln!(
+                    "ERROR: Cannot make a list of {} words from the inputted list(s), given the selected options. Please try again, either by changing options or inputting more words.",
+                    length_to_whittle_to
+                );
+                process::exit(1);
+            }
+
             // Give user a heads up that we're working on it.
             eprintln!(
                 "Whittling list to {} words. This may take a moment...",
                 length_to_whittle_to
             );
 
-            let inputted_word_list = make_vec_from_filenames(
-                &opt.inputted_word_list,
-                opt.skip_rows_start,
-                opt.skip_rows_end,
-            );
+            // When whittling, confidentally overwrite a few request parameters
+            this_tidy_request.take_first = Some(starting_point);
+            this_tidy_request.take_rand = None;
+            this_tidy_request.print_rand = None;
+            this_tidy_request.print_first = None;
 
-            let mut this_list_length = 0;
+            (Some(length_to_whittle_to), Some(starting_point))
+        }
+        None => (None, None),
+    };
+
+    // Finally get to actually tidy the inputted_word_list
+    // If we have a length_to_whittle_to and a starting_point, we know we're
+    // whittling, which is (still) a bit too complicated for my tastes. But we
+    // need a while loop here.
+    let mut this_list_length = 0;
+    let tidied_list = match (length_to_whittle_to, starting_point) {
+        (Some(our_length_to_whittle_to), Some(mut our_starting_point)) => {
             let mut this_tidied_list = vec![];
-            while this_list_length != length_to_whittle_to {
-                this_tidied_list =
-                    tidy_list(TidyRequest {
-                        list: inputted_word_list.clone(),
-                        take_first: Some(starting_point),
-                        take_rand: None, // Ignore this option in this context (whittling)
-                        sort_alphabetically: !opt.no_alpha_sort,
-                        ignore_after_delimiter,
-                        ignore_before_delimiter,
-                        to_lowercase: opt.to_lowercase,
-                        should_straighten_quotes: opt.straighten_quotes,
-                        should_remove_prefix_words: opt.remove_prefix_words,
-                        should_remove_suffix_words: opt.remove_suffix_words,
-                        should_schlinkert_prune: opt.schlinkert_prune,
-                        should_remove_integers: opt.remove_integers,
-                        should_delete_integers: opt.delete_integers,
-                        should_remove_nonalphanumeric: opt.remove_nonalphanumeric,
-                        should_delete_nonalphanumeric: opt.delete_nonalphanumeric,
-                        should_remove_nonalphabetic: opt.remove_nonalphabetic,
-                        should_remove_non_latin_alphabetic: opt.remove_non_latin_alphabetic,
-                        should_remove_nonascii: opt.remove_nonascii,
-                        should_delete_after_first_delimiter: delete_after_delimiter,
-                        should_delete_before_first_delimiter: delete_before_delimiter,
-                        reject_list: opt.reject_list.as_ref().map(|list_of_files| {
-                            make_vec_from_filenames(list_of_files, None, None)
-                        }),
-                        approved_list: opt.approved_list.as_ref().map(|list_of_files| {
-                            make_vec_from_filenames(list_of_files, None, None)
-                        }),
-                        homophones_list: opt.homophones_list.as_ref().map(|list_of_files| {
-                            read_homophones_list_from_filenames(list_of_files)
-                        }),
-                        minimum_length: opt.minimum_length,
-                        maximum_length: opt.maximum_length,
-                        maximum_shared_prefix_length: opt.maximum_shared_prefix_length,
-                        minimum_edit_distance: opt.minimum_edit_distance,
-                        print_rand: None, // Ignore this option in this context (whittling)
-                        print_first: None, // Ignore this option in this context (whittling)
-                    });
+            while this_list_length != our_length_to_whittle_to {
+                // this clone might be too expensice. maybe tidy_list can take a
+                // reference?
+                this_tidied_list = tidy_list(this_tidy_request.clone());
 
                 this_list_length = this_tidied_list.len();
-                starting_point = get_new_starting_point_guess(
-                    starting_point,
+                our_starting_point = get_new_starting_point_guess(
+                    our_starting_point,
                     this_list_length,
-                    length_to_whittle_to,
+                    our_length_to_whittle_to,
                 );
-                // Check if we're now asking for too many words from the original
-                // inputted_word_list (which would be a problem!)
-                if starting_point > inputted_word_list.len() {
-                    eprintln!(
-                        "ERROR: Cannot make a list of {} words from the inputted list(s), given the selected options. Please try again, either by changing options or inputting more words.",
-                        length_to_whittle_to
-                    );
-                    process::exit(1);
-                }
-
                 if opt.debug {
                     eprintln!(
                         "Whittled list to {}. Will try again, taking {} words.",
-                        this_list_length, starting_point
+                        this_list_length, our_starting_point
                     );
                 }
             }
@@ -467,56 +512,10 @@ fn main() {
             // length. return this verison of the list.
             this_tidied_list
         }
-        None => {
-            // `whittle_to` option not specified, so proceed as normal,
-            // sening all parameters in TidyRequest
-            let this_tidy_request = TidyRequest {
-                list: make_vec_from_filenames(
-                    &opt.inputted_word_list,
-                    opt.skip_rows_start,
-                    opt.skip_rows_end,
-                ),
-                take_first: opt.take_first,
-                take_rand: opt.take_rand,
-                sort_alphabetically: !opt.no_alpha_sort,
-                ignore_after_delimiter,
-                ignore_before_delimiter,
-                to_lowercase: opt.to_lowercase,
-                should_straighten_quotes: opt.straighten_quotes,
-                should_remove_prefix_words: opt.remove_prefix_words,
-                should_remove_suffix_words: opt.remove_suffix_words,
-                should_schlinkert_prune: opt.schlinkert_prune,
-                should_remove_integers: opt.remove_integers,
-                should_delete_integers: opt.delete_integers,
-                should_remove_nonalphanumeric: opt.remove_nonalphanumeric,
-                should_delete_nonalphanumeric: opt.delete_nonalphanumeric,
-                should_remove_nonalphabetic: opt.remove_nonalphabetic,
-                should_remove_non_latin_alphabetic: opt.remove_non_latin_alphabetic,
-                should_remove_nonascii: opt.remove_nonascii,
-                should_delete_after_first_delimiter: delete_after_delimiter,
-                should_delete_before_first_delimiter: delete_before_delimiter,
-
-                // If given more than one file of reject words, combine them
-                // right here.
-                reject_list: opt
-                    .reject_list
-                    .map(|list_of_files| make_vec_from_filenames(&list_of_files, None, None)),
-                // Likewise with approved word lists
-                approved_list: opt
-                    .approved_list
-                    .map(|list_of_files| make_vec_from_filenames(&list_of_files, None, None)),
-                // And homophones
-                homophones_list: opt
-                    .homophones_list
-                    .map(|list_of_files| read_homophones_list_from_filenames(&list_of_files)),
-                minimum_length: opt.minimum_length,
-                maximum_length: opt.maximum_length,
-                maximum_shared_prefix_length: opt.maximum_shared_prefix_length,
-                minimum_edit_distance: opt.minimum_edit_distance,
-                print_rand: opt.print_rand,
-                print_first: opt.print_first,
-            };
-
+        (_, _) => {
+            // In all other cases, `whittle_to` option not specified, so
+            // proceed as normal, sending all parameters in this_tidied_list
+            // as they are just once.
             tidy_list(this_tidy_request)
         }
     };
