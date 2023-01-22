@@ -33,7 +33,6 @@ use std::process;
 pub fn parse_whittle_options(
     mut this_tidy_request: TidyRequest,
     whittle_to_s: Option<String>,
-    inputted_word_list_length: usize,
 ) -> (TidyRequest, Option<usize>, Option<usize>) {
     match whittle_to_s {
         Some(whittle_to_string) => {
@@ -56,8 +55,8 @@ pub fn parse_whittle_options(
             // It's possible that our derive starting_point is higher than the length
             // of our inputted_word_list. If that's the case, reset starting_point
             // to that length.
-            let starting_point = if starting_point > inputted_word_list_length {
-                inputted_word_list_length as usize
+            let starting_point = if starting_point > this_tidy_request.list.len() {
+                this_tidy_request.list.len() as usize
             } else {
                 // if not, we're good. Let given starting_point pass through.
                 starting_point
@@ -65,7 +64,7 @@ pub fn parse_whittle_options(
 
             // Another potential issue: User is asking for too many words, given length of
             // the inputted_word_list (which would be a problem!)
-            if length_to_whittle_to > inputted_word_list_length {
+            if length_to_whittle_to > this_tidy_request.list.len() {
                 eprintln!(
                     "ERROR: Cannot make a list of {} words from the inputted list(s), given the selected options. Please try again, either by changing options or inputting more words.",
                     length_to_whittle_to

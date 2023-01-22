@@ -343,14 +343,6 @@ fn main() {
         print_first: opt.print_first,
     };
 
-    // Make a Vec from provided text file names,
-    // respecting skip_rows_start and skip_rows_end
-    let inputted_word_list = make_vec_from_filenames(
-        &opt.inputted_word_list,
-        opt.skip_rows_start,
-        opt.skip_rows_end,
-    );
-    // ---
     let (ignore_before_delimiter, ignore_after_delimiter) = validate_and_parse_ignore_options(
         &this_tidy_request,
         opt.dice_sides,
@@ -360,7 +352,7 @@ fn main() {
     // Parse provided "whittle string" for a length_to_whittle_to and an
     // optional starting point.
     let (mut this_tidy_request, length_to_whittle_to, starting_point) =
-        parse_whittle_options(this_tidy_request, opt.whittle_to, inputted_word_list.len());
+        parse_whittle_options(this_tidy_request, opt.whittle_to);
 
     // Finally get to actually tidy the inputted_word_list
     // If we have a length_to_whittle_to and a starting_point, we know we're
