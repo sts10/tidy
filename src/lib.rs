@@ -181,7 +181,6 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
             // https://doc.rust-lang.org/std/primitive.char.html#method.is_ascii
             if new_word.chars().any(|chr| !chr.is_ascii()) {
                 new_word = "".to_string();
-                // new_word = None
             }
         }
         if req.should_remove_nonalphanumeric && new_word.chars().any(|c| !c.is_alphanumeric()) {
@@ -226,7 +225,7 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         new_word = new_word.trim_start().trim_end().to_string();
 
         // If there was metadata, re-add it to the word now.
-        if new_word != "" {
+        if !new_word.is_empty() {
             if let Some(metadata) = metadata {
                 if metadata_position == Some(MetadataPosition::End) {
                     new_word = new_word + &delimiter.unwrap().to_string() + metadata;
@@ -238,8 +237,9 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
 
         // trim whitespace
         new_word = new_word.trim_start().trim_end().to_string();
-        // check if blank
-        if new_word != "" {
+        // The trim calls could have made new_word empty
+        // so need to check again
+        if !new_word.is_empty() {
             tidied_list.push(new_word);
         }
     }
