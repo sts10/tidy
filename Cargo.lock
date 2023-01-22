@@ -307,7 +307,7 @@ dependencies = [
 
 [[package]]
 name = "tidy"
-version = "0.2.76"
+version = "0.2.77"
 dependencies = [
  "clap",
  "itertools",

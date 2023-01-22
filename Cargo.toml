@@ -1,6 +1,6 @@
 [package]
 name = "tidy"
-version = "0.2.76"
+version = "0.2.77"
 authors = ["sts10 <sschlinkert@gmail.com>"]
 edition = "2021"
 

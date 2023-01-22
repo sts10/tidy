@@ -371,12 +371,11 @@ fn main() {
         (Some(our_length_to_whittle_to), Some(mut our_starting_point)) => {
             let mut this_tidied_list = vec![];
             while this_list_length != our_length_to_whittle_to {
-                // edit
-                // take_first: Some(starting_point),
+                // Edit this_tidy_request to have our new starting point
                 this_tidy_request.take_first = Some(our_starting_point);
-                // this clone might be too expensice. maybe tidy_list can take a
-                // reference?
 
+                // This clone might be too expensice. maybe tidy_list can take a
+                // reference?
                 this_tidied_list = tidy_list(this_tidy_request.clone());
 
                 this_list_length = this_tidied_list.len();
