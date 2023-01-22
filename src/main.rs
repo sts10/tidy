@@ -297,8 +297,9 @@ fn main() {
     }
 
     // OK let's do this. Make a Tidy request.
-    // Has to be mutable because we have to overwrite some of these later on
-    let mut this_tidy_request = TidyRequest {
+    // While it's not declared as mutable here, we will reassign it
+    // it later, unfortunately.
+    let this_tidy_request = TidyRequest {
         list: make_vec_from_filenames(
             &opt.inputted_word_list,
             opt.skip_rows_start,
@@ -361,60 +362,8 @@ fn main() {
 
     // Parse provided "whittle string" for a length_to_whittle_to and an
     // optional starting point.
-    let (length_to_whittle_to, starting_point) = match opt.whittle_to {
-        Some(whittle_to_string) => {
-            // Some whittle_to String has been provided, which we need to do a lot of work for
-            // First, parse length_to_whittle_to
-            let length_to_whittle_to =
-                eval_list_length(split_and_vectorize(&whittle_to_string, ",")[0]).unwrap();
-            // Determine initial starting point
-            let starting_point = if split_and_vectorize(&whittle_to_string, ",").len() == 2 {
-                // If user gave us one, use that.
-                split_and_vectorize(&whittle_to_string, ",")[1]
-                    .parse::<usize>()
-                    .unwrap_or((length_to_whittle_to as f64 * 1.4) as usize)
-            } else {
-                // If not, start with length_to_whittle_to*1.4 as a decent opening guess.
-                // Effectively this assumes we'll cut about 40% of words in most
-                // Tidy runs.
-                (length_to_whittle_to as f64 * 1.4) as usize
-            };
-            // It's possible that our derive starting_point is higher than the length
-            // of our inputted_word_list. If that's the case, reset starting_point
-            // to that length.
-            let starting_point = if starting_point > inputted_word_list.len() {
-                inputted_word_list.len() as usize
-            } else {
-                // if not, we're good. Let given starting_point pass through.
-                starting_point
-            };
-
-            // Another potential issue: User is asking for too many words, given length of
-            // the inputted_word_list (which would be a problem!)
-            if length_to_whittle_to > inputted_word_list.len() {
-                eprintln!(
-                    "ERROR: Cannot make a list of {} words from the inputted list(s), given the selected options. Please try again, either by changing options or inputting more words.",
-                    length_to_whittle_to
-                );
-                process::exit(1);
-            }
-
-            // Give user a heads up that we're working on it.
-            eprintln!(
-                "Whittling list to {} words. This may take a moment...",
-                length_to_whittle_to
-            );
-
-            // When whittling, confidentally overwrite a few request parameters
-            this_tidy_request.take_first = Some(starting_point);
-            this_tidy_request.take_rand = None;
-            this_tidy_request.print_rand = None;
-            this_tidy_request.print_first = None;
-
-            (Some(length_to_whittle_to), Some(starting_point))
-        }
-        None => (None, None),
-    };
+    let (this_tidy_request, length_to_whittle_to, starting_point) =
+        parse_whittle_options(this_tidy_request, opt.whittle_to, inputted_word_list.len());
 
     // Finally get to actually tidy the inputted_word_list
     // If we have a length_to_whittle_to and a starting_point, we know we're
