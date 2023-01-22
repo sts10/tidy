@@ -55,7 +55,7 @@ pub fn parse_whittle_options(
             // of our inputted_word_list. If that's the case, reset starting_point
             // to that length.
             let starting_point = if starting_point > this_tidy_request.list.len() {
-                this_tidy_request.list.len() as usize
+                this_tidy_request.list.len()
             } else {
                 // if not, we're good. Let given starting_point pass through.
                 starting_point

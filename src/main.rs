@@ -418,16 +418,17 @@ fn main() {
     };
 
     // Next, we figure out what to print where
-    print_list(
+    let this_print_request = PrintRequest {
         tidied_list,
-        opt.dry_run,
-        opt.quiet,
-        opt.output,
-        opt.dice_sides,
-        opt.print_dice_sides_as_their_base,
-        opt.attributes,
-        opt.samples,
+        dry_run: opt.dry_run,
+        quiet: opt.quiet,
+        output: opt.output,
+        dice_sides: opt.dice_sides,
+        print_dice_sides_as_their_base: opt.print_dice_sides_as_their_base,
+        attributes: opt.attributes,
+        samples: opt.samples,
         ignore_before_delimiter,
         ignore_after_delimiter,
-    );
+    };
+    print_list(this_print_request);
 }
