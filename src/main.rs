@@ -5,9 +5,6 @@ use std::process;
 use tidy::*;
 pub mod display_information;
 pub mod input_validations;
-use crate::dice::print_as_dice;
-use crate::display_information::display_list_information;
-use crate::display_information::generate_samples;
 use crate::file_readers::*;
 use crate::file_writer::*;
 use crate::input_validations::*;
@@ -404,69 +401,16 @@ fn main() {
     };
 
     // Next, we figure out what to print where
-    if !opt.dry_run {
-        if !opt.quiet {
-            eprintln!("Printing new list...");
-        }
-        match opt.output {
-            Some(output) => {
-                // Print to file
-                print_list_to_file(
-                    &tidied_list,
-                    output,
-                    opt.dice_sides,
-                    opt.print_dice_sides_as_their_base,
-                );
-            }
-            // If no output file destination, print resulting list, word by word,
-            // to println (which goes to stdout, allowing use of > on command line)
-            None => {
-                for (i, word) in tidied_list.iter().enumerate() {
-                    if let Some(dice_sides) = opt.dice_sides {
-                        print!(
-                            "{:}\t",
-                            print_as_dice(
-                                i,
-                                dice_sides,
-                                tidied_list.len(),
-                                opt.print_dice_sides_as_their_base
-                            )
-                        );
-                    }
-                    println!("{}", word);
-                }
-            }
-        }
-    }
-    if !opt.quiet {
-        if !opt.dry_run {
-            eprintln!("\nDone making list\n");
-        } else {
-            eprintln!("Dry run complete");
-        }
-        if opt.attributes > 0 {
-            display_list_information(
-                &tidied_list,
-                opt.attributes,
-                ignore_after_delimiter,
-                ignore_before_delimiter,
-            );
-        }
-        if opt.samples {
-            let samples = generate_samples(
-                &tidied_list,
-                ignore_after_delimiter,
-                ignore_before_delimiter,
-            );
-            eprintln!("\nPseudorandomly generated sample passphrases");
-            eprintln!("-------------------------------------------");
-            for n in 0..30 {
-                if n != 0 && n % 6 == 0 {
-                    eprintln!();
-                }
-                eprint!("{} ", samples[n]);
-            }
-            eprintln!();
-        }
-    }
+    print_list(
+        tidied_list,
+        opt.dry_run,
+        opt.quiet,
+        opt.output,
+        opt.dice_sides,
+        opt.print_dice_sides_as_their_base,
+        opt.attributes,
+        opt.samples,
+        ignore_before_delimiter,
+        ignore_after_delimiter,
+    );
 }
