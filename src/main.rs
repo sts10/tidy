@@ -253,19 +253,25 @@ fn main() {
     }
 
     // Some initial validations
-    if !valid_dice_sides(opt.dice_sides) {
-        eprintln!("Error: Specified number of dice sides must be between 2 and 36.");
-        process::exit(1);
+    match validate_dice_sides(opt.dice_sides) {
+        Ok(()) => (),
+        Err(e) => {
+            eprintln!("{}", e);
+            process::exit(1);
+        }
     }
 
-    if !valid_list_truncation_options(
+    match validate_list_truncation_options(
         &opt.whittle_to,
         opt.print_rand,
         opt.take_first,
         opt.take_rand,
     ) {
-        // valid_list_truncation_options prints relevation Error message
-        process::exit(1);
+        Ok(()) => (),
+        Err(e) => {
+            eprintln!("{}", e);
+            process::exit(1);
+        }
     }
 
     // Check if output file exists

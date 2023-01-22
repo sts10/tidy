@@ -1,27 +1,25 @@
-pub fn valid_dice_sides(dice_sides: Option<u8>) -> bool {
+pub fn validate_dice_sides(dice_sides: Option<u8>) -> Result<(), &'static str> {
     if let Some(dice_sides) = dice_sides {
         if !(2 <= dice_sides && dice_sides <= 36) {
-            return false;
+            return Err("Error: Specified number of dice sides must be between 2 and 36.");
         }
     }
-    true
+    Ok(())
 }
 
-pub fn valid_list_truncation_options(
+pub fn validate_list_truncation_options(
     whittle_to: &Option<String>,
     cut_to: Option<usize>,
     take_first: Option<usize>,
     take_rand: Option<usize>,
-) -> bool {
+) -> Result<(), &'static str> {
     // Check for invalid whittle_to requests
     if whittle_to.is_some() && cut_to.is_some() {
-        eprintln!("Error: Can not specify BOTH a 'cut to' and 'whittle to' option. Please only use one of these two.");
-        false
+        Err("Error: Can not specify BOTH a 'cut to' and 'whittle to' option. Please only use one of these two.")
     } else if whittle_to.is_some() && (take_first.is_some() || take_rand.is_some()) {
-        eprintln!("Error: Can not specify BOTH a 'whittle to' amount and a 'take first' or 'take rand' amount. Please only specify a whittle-to amount or a take amount.");
-        false
+        Err("Error: Can not specify BOTH a 'whittle to' amount and a 'take first' or 'take rand' amount. Please only specify a whittle-to amount or a take amount.")
     } else {
-        true
+        Ok(())
     }
 }
 
@@ -39,7 +37,7 @@ pub fn validate_and_parse_ignore_options(
         // If given both a from_delimiter and through_delimiter, error out nicely.
         (Some(_after_delimiter), Some(_before_delimiter)) => {
             let err_message = "Can't ignore metadata on both sides.";
-            return Err(err_message);
+            Err(err_message)
         }
         // No ignore delimiters given, so just return None to both
         // variables.
@@ -66,7 +64,7 @@ pub fn validate_and_parse_ignore_options(
                 || print_dice_sides_as_their_base
             {
                 let err_message = "--ignore-after option does not work with one of the other options you selected. Please change options. Exiting";
-                return Err(err_message);
+                Err(err_message)
             } else {
                 Ok((Some(after_delimiter), None))
             }
@@ -93,7 +91,7 @@ pub fn validate_and_parse_ignore_options(
                 || print_dice_sides_as_their_base
             {
                 let err_message = "--ignore-before option does not work with one of the other options you selected. Please change options. Exiting";
-                return Err(err_message);
+                Err(err_message)
             } else {
                 Ok((None, Some(before_delimiter)))
             }
