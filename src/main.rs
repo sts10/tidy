@@ -352,7 +352,15 @@ fn main() {
     // Parse provided "whittle string" for a length_to_whittle_to and an
     // optional starting point.
     let (mut this_tidy_request, length_to_whittle_to, starting_point) =
-        parse_whittle_options(this_tidy_request, opt.whittle_to);
+        match parse_whittle_options(this_tidy_request, opt.whittle_to) {
+            Ok((this_tidy_request, length_to_whittle_to, starting_point)) => {
+                (this_tidy_request, length_to_whittle_to, starting_point)
+            }
+            Err(e) => {
+                eprintln!("{}", e);
+                process::exit(1);
+            }
+        };
 
     // Finally get to actually tidy the inputted_word_list
     // If we have a length_to_whittle_to and a starting_point, we know we're

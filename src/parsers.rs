@@ -29,11 +29,11 @@ pub fn eval_list_length(input: &str) -> Result<usize, String> {
 
 use crate::split_and_vectorize;
 use crate::TidyRequest;
-use std::process;
+// use std::process;
 pub fn parse_whittle_options(
     mut this_tidy_request: TidyRequest,
     whittle_to_s: Option<String>,
-) -> (TidyRequest, Option<usize>, Option<usize>) {
+) -> Result<(TidyRequest, Option<usize>, Option<usize>), String> {
     match whittle_to_s {
         Some(whittle_to_string) => {
             // Some whittle_to String has been provided, which we need to do a lot of work for
@@ -65,11 +65,11 @@ pub fn parse_whittle_options(
             // Another potential issue: User is asking for too many words, given length of
             // the inputted_word_list (which would be a problem!)
             if length_to_whittle_to > this_tidy_request.list.len() {
-                eprintln!(
+                let error_msg = format!(
                     "ERROR: Cannot make a list of {} words from the inputted list(s), given the selected options. Please try again, either by changing options or inputting more words.",
                     length_to_whittle_to
                 );
-                process::exit(1);
+                return Err(error_msg);
             }
 
             // Give user a heads up that we're working on it.
@@ -84,12 +84,12 @@ pub fn parse_whittle_options(
             this_tidy_request.print_rand = None;
             this_tidy_request.print_first = None;
 
-            (
+            Ok((
                 this_tidy_request,
                 Some(length_to_whittle_to),
                 Some(starting_point),
-            )
+            ))
         }
-        None => (this_tidy_request, None, None),
+        None => Ok((this_tidy_request, None, None)),
     }
 }
