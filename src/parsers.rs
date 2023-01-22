@@ -29,7 +29,6 @@ pub fn eval_list_length(input: &str) -> Result<usize, String> {
 
 use crate::split_and_vectorize;
 use crate::TidyRequest;
-// use std::process;
 pub fn parse_whittle_options(
     mut this_tidy_request: TidyRequest,
     whittle_to_s: Option<String>,

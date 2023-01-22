@@ -343,11 +343,19 @@ fn main() {
         print_first: opt.print_first,
     };
 
-    let (ignore_before_delimiter, ignore_after_delimiter) = validate_and_parse_ignore_options(
+    let (ignore_before_delimiter, ignore_after_delimiter) = match validate_and_parse_ignore_options(
         &this_tidy_request,
         opt.dice_sides,
         opt.print_dice_sides_as_their_base,
-    );
+    ) {
+        Ok((ignore_before_delimiter, ignore_after_delimiter)) => {
+            (ignore_before_delimiter, ignore_after_delimiter)
+        }
+        Err(e) => {
+            eprintln!("{}", e);
+            process::exit(1);
+        }
+    };
 
     // Parse provided "whittle string" for a length_to_whittle_to and an
     // optional starting point.
