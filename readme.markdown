@@ -54,8 +54,8 @@ Usage: tidy [OPTIONS] <Inputted Word Lists>...
 
 Arguments:
   <Inputted Word Lists>...
-          Word list input files. Can be more than one, in which case they'll be combined and 
-          de-duplicated. Requires at least one file
+          Word list input files. Can be more than one, in which case they'll be combined 
+          and de-duplicated. Requires at least one file
 
 Options:
       --quiet
@@ -68,39 +68,37 @@ Options:
           Debug mode
 
   -A, --attributes...
-          Print attributes about new list to terminal. Can be used more than once to print 
-          more attributes. Some attributes may take a nontrivial amount of time to calculate
+          Print attributes about new list to terminal. Can be used more than once to 
+          print more attributes. Some attributes may take a nontrivial amount of time to calculate
 
   -s, --samples
           Print a handful of pseudorandomly selected words from the created list to the 
           terminal. Should NOT be used as secure passphrases
 
   -g, --ignore-after <IGNORE_AFTER_DELIMITER>
-          Ignore characters after the first instance of the specified delimiter until the 
-          end of line, treating anything before the delimiter as a word. Delimiter must be a 
-          single character (e.g., ','). Use 't' for tab and 's' for space. Helpful for 
-          ignoring metadata like word frequencies. Works with attribute analysis and most 
-          word removal options, but not with word modifications (like to lowercase). May not 
-          be used together with -d, -D or -G options
+          Ignore characters after the first instance of the specified delimiter until the end 
+          of line, treating anything before the delimiter as a word. Delimiter must be a single 
+          character (e.g., ','). Use 't' for tab and 's' for space. Helpful for ignoring metadata 
+          like word frequencies. Works with attribute analysis and most word removal options, but 
+          not with word modifications (like to lowercase). May not be used together with 
+          -d, -D or -G options
 
   -G, --ignore-before <IGNORE_BEFORE_DELIMITER>
-          Ignore characters before and including the first instance of the specified 
-          delimiter, treating anything after the delimiter as a word. Delimiter must be a 
-          single character (e.g., ','). Use 't' for tab and 's' for space. Helpful for 
-          ignoring metadata like word frequencies. Works with attribute analysis and most 
-          word removal options, but not with word modifications (like to lowercase). May not 
-          be used together with -d, -D or -g options
+          Ignore characters before and including the first instance of the specified delimiter, 
+          treating anything after the delimiter as a word. Delimiter must be a single character 
+          (e.g., ','). Use 't' for tab and 's' for space. Helpful for ignoring metadata like word 
+          frequencies. Works with attribute analysis and most word removal options, but not with 
+          word modifications (like to lowercase). May not be used together with -d, -D or -g options
 
   -O, --no-sort
-          Do NOT sort outputted list alphabetically. Preserves original list order. Note 
-          that duplicates lines and blank lines will still be removed
+          Do NOT sort outputted list alphabetically. Preserves original list order. Note that 
+          duplicates lines and blank lines will still be removed
 
   -l, --lowercase
           Lowercase all words on new list
 
   -q, --straighten
-          Replace “smart” quotation marks, both “double” and ‘single’, with their "straight" 
-          versions
+          Replace “smart” quotation marks, both “double” and ‘single’, with their "straight" versions
 
   -P, --remove-prefix
           Remove prefix words from new list
@@ -109,25 +107,23 @@ Options:
           Remove suffix words from new list
 
   -K, --schlinkert-prune
-          Use Sardinas-Patterson algorithm to remove words to make list uniquely decodable. 
-          Experimental!
+          Use Sardinas-Patterson algorithm to remove words to make list uniquely decodable. Experimental!
 
   -N, --remove-nonalphanumeric
-          Remove all words with non-alphanumeric characters from new list. Words with 
-          diacritics will remain
+          Remove all words with non-alphanumeric characters from new list. Words with diacritics will remain
 
   -n, --delete-nonalphanumeric
           Delete all non-alphanumeric characters from all words on new list. Characters with 
           diacritics will remain
 
       --remove-nonalphabetic
-          Remove all words with non-alphabetic characters from new list. Words with 
-          diacritcis and other non-Latin characters will remain
+          Remove all words with non-alphabetic characters from new list. Words with diacritcis 
+          and other non-Latin characters will remain
 
   -L, --remove-non-latin-alphabetic
           Remove all words with any characters not in the Latin alphabet (A through Z and a 
-          through z). All words with accented or diacritic characters will be removed, as 
-          well as any words with puncuation and internal whitespace
+          through z). All words with accented or diacritic characters will be removed, as well 
+          as any words with puncuation and internal whitespace
 
   -C, --remove-nonascii
           Remove all words that have any non-ASCII characters from new list
@@ -140,54 +136,49 @@ Options:
 
   -d, --delete-after <DELETE_AFTER_DELIMITER>
           Delete all characters after the first instance of the specified delimiter until 
-          the end of line (including the delimiter). Delimiter must be a single character (e.
-          g., ','). Use 't' for tab and 's' for space. May not be used together with -g or -
-          G options
+          the end of line (including the delimiter). Delimiter must be a single character 
+          (e.g., ','). Use 't' for tab and 's' for space. May not be used together with -g or -G options
 
   -D, --delete-before <DELETE_BEFORE_DELIMITER>
-          Delete all characters before and including the first instance of the specified 
-          delimiter. Delimiter must be a single character (e.g., ','). Use 't' for tab and 
-          's' for space. May not be used together with -g or -G options
+          Delete all characters before and including the first instance of the specified delimiter. 
+          Delimiter must be a single character (e.g., ','). Use 't' for tab and 's' for space. 
+          May not be used together with -g or -G options
 
       --take-first <TAKE_FIRST>
-          Only take first N words from inputted word list. If two or more word lists are 
-          inputted, it will combine arbitrarily and then take first N words
+          Only take first N words from inputted word list. If two or more word lists are inputted, it 
+          will combine arbitrarily and then take first N words
 
       --take-rand <TAKE_RAND>
-          Only take a random N number of words from inputted word list. If two or more word 
-          lists are inputted, it will combine arbitrarily and then take a random N words. If 
-          you're looking to cut a list exactly to a specified size, consider print-rand or 
-          whittle-to options
+          Only take a random N number of words from inputted word list. If two or more word lists are 
+          inputted, it will combine arbitrarily and then take a random N words. If you're looking to 
+          cut a list exactly to a specified size, consider print-rand or whittle-to options
 
   -W, --whittle-to <WHITTLE_TO>
-          Whittle list exactly to a specified length, only taking minimum number of words 
-          from the beginning of inputted list(s). If the outputted list is not exactly the 
-          specified length, it will try again by taking a different amount of words form 
-          input list(s). As a result, this using this option may cause Tidy to take a moment 
-          to produce the finished list. Can accept expressions in the form of base**exponent 
-          (helpful for generating diceware lists).
+          Whittle list exactly to a specified length, only taking minimum number of words from the 
+          beginning of inputted list(s). If the outputted list is not exactly the specified
+          length, it will try again by taking a different amount of words form input list(s). 
+          As a result, this using this option may cause Tidy to take a moment to produce 
+          the finished list. Can accept expressions in the form of base**exponent (helpful 
+          for generating diceware lists).
           
-          This option should generally only be used if the following conditions are met:
+          This option should generally only be used if all of the following conditions are met: 
+          (a) the inputted word list is sorted by desirability (e.g. ordered by word frequency); 
+          (b) the user is either removing prefix words, removing suffix words, or doing a 
+          Schlinkert prune; (c) the user needs the resulting list to be a specified length.
           
-          (a) the inputted word list is sorted by desirability (e.g. ordered by word 
-          frequency); (b) the user is either removing prefix words, removing suffix words, 
-          and/or doing a Schlinkert prune; (c) the user needs the resulting list to be an 
-          exact length.
-          
-          Optionally can also take and a rough "starting point", after a comma. For 
-          example, --whittle-to 7776,15000 would start by taking the first 15,000 words from 
-          the inputted list(s), then keep iterating from there.
+          Optionally can also take a "starting point" after a comma. For example, 
+          --whittle-to 7776,15000 would start by taking the first 15,000 words from the inputted 
+          list(s) as a first attempt at making a list of 7,776 words, iterating if necessary.
 
       --print-rand <PRINT_RAND>
-          Just before printing generated list, cut list down to a set number of words. Can 
-          accept expressions in the form of base**exponent (helpful for generating diceware 
-          lists). Cuts are done randomly
+          Just before printing generated list, cut list down to a set number of words. 
+          Can accept expressions in the form of base**exponent (helpful for generating 
+          diceware lists). Cuts are done randomly
 
       --print-first <PRINT_FIRST>
           Just before printing generated list, cut list down to a set number of words. Can 
-          accept expressions in the form of base**exponent (helpful for generating diceware 
-          lists). Words are selected from the beginning of processed list, and before it is 
-          sorted alphabetically
+          accept expressions in the form of base**exponent (helpful for generating diceware lists). 
+          Words are selected from the beginning of processed list, and before it is sorted alphabetically
 
   -m, --minimum-word-length <MINIMUM_LENGTH>
           Set minimum word length
@@ -196,13 +187,12 @@ Options:
           Set maximum word length
 
   -e, --minimum-edit-distance <MINIMUM_EDIT_DISTANCE>
-          Set minimum edit distance between words, which can reduce the cost of typos when 
-          entering words
+          Set minimum edit distance between words, which can reduce the cost of typos when entering words
 
   -x, --shared-prefix-length <MAXIMUM_SHARED_PREFIX_LENGTH>
-          Set number of leading characters to get to a unique prefix, which can aid auto-
-          complete functionality. Setting this value to say, 4, means that knowing the first 
-          4 characters of any word on the generated list is enough to know which word it is
+          Set number of leading characters to get to a unique prefix, which can aid auto-complete 
+          functionality. Setting this value to say, 4, means that knowing the first 4 characters of any 
+          word on the generated list is enough to know which word it is
 
       --skip-rows-start <SKIP_ROWS_START>
           Skip first number of lines from inputted files. Useful for dealing with headers 
@@ -219,18 +209,18 @@ Options:
           Path(s) for optional list of approved words. Can accept multiple files
 
       --homophones <HOMOPHONES_LIST>
-          Path(s) to file(s) containing homophone pairs. There must be one pair of 
-          homophones per line, separated by a comma (sun,son)
+          Path(s) to file(s) containing homophone pairs. There must be one pair of homophones 
+          per line, separated by a comma (sun,son)
 
       --dice <DICE_SIDES>
-          Print dice roll before word in output. Set number of sides of dice. Must be 
-          between 2 and 36. Use 6 for normal dice
+          Print dice roll before word in output. Set number of sides of dice. Must be between 
+          2 and 36. Use 6 for normal dice
 
       --sides-as-base
           When printing dice roll before word in output, print dice values according to the 
           base selected through --dice option. Effectively this means that letters will be 
-          used to represent numbers higher than 9. Note that this option also 0-indexes the 
-          dice values. This setting defaults to `false`, which will 1-indexed dice values, 
+          used to represent numbers higher than 9. Note that this option also 0-indexes the
+          dice values. This setting defaults to `false`, which will 1-indexed dice values,
           and use double-digit numbers when necessary (e.g. 18-03-08)
 
   -o, --output <OUTPUT>

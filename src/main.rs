@@ -144,15 +144,15 @@ struct Args {
     /// Tidy to take a moment to produce the finished list.
     /// Can accept expressions in the form of base**exponent (helpful for generating diceware lists).
     ///
-    /// This option should generally only be used if the following conditions are met:
-    ///
+    /// This option should generally only be used if all of the following conditions are met:
     /// (a) the inputted word list is sorted by desirability (e.g. ordered by word frequency);
-    /// (b) the user is either removing prefix words, removing suffix words, and/or doing a Schlinkert prune;
-    /// (c) the user needs the resulting list to be an exact length.
+    /// (b) the user is either removing prefix words, removing suffix words, or doing a Schlinkert prune;
+    /// (c) the user needs the resulting list to be a specified length.
     ///
-    /// Optionally can also take and a rough "starting point", after a comma.
-    /// For example, --whittle-to 7776,15000 would start by taking the first
-    /// 15,000 words from the inputted list(s), then keep iterating from there.
+    /// Optionally can also take a "starting point" after a comma. For example,
+    /// --whittle-to 7776,15000 would start by taking the first 15,000 words
+    /// from the inputted list(s) as a first attempt at making a list of 7,776 words, iterating
+    /// if necessary.
     #[clap(short = 'W', long = "whittle-to")]
     whittle_to: Option<String>,
 
