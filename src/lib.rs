@@ -180,44 +180,47 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         if req.should_remove_nonascii {
             // https://doc.rust-lang.org/std/primitive.char.html#method.is_ascii
             if new_word.chars().any(|chr| !chr.is_ascii()) {
-                new_word = "".to_string();
+                // If we're here, that means we already know that we
+                // do NOT want to add this word to our ouputted list.
+                // So we can just skip to the next word in our loop.
+                continue;
             }
         }
         if req.should_remove_nonalphanumeric && new_word.chars().any(|c| !c.is_alphanumeric()) {
-            new_word = "".to_string();
+            continue;
         }
         if req.should_remove_nonalphabetic && new_word.chars().any(|c| !c.is_alphabetic()) {
-            new_word = "".to_string();
+            continue;
         }
         if req.should_remove_non_latin_alphabetic
             && new_word.chars().any(|chr| !is_latin_alphabetic(chr as u16))
         {
-            new_word = "".to_string();
+            continue;
         }
         if req.should_remove_integers && new_word.chars().any(|c| c.is_numeric()) {
-            new_word = "".to_string();
+            continue;
         }
         if let Some(ref reject_list) = req.reject_list {
             if reject_list.contains(&new_word) {
-                new_word = "".to_string();
+                continue;
             }
         }
 
         if let Some(ref approved_list) = req.approved_list {
             if !approved_list.contains(&new_word) {
-                new_word = "".to_string();
+                continue;
             }
         };
 
         if let Some(minimum_length) = req.minimum_length {
             if new_word.chars().count() < minimum_length {
-                new_word = "".to_string();
+                continue;
             }
         };
 
         if let Some(maximum_length) = req.maximum_length {
             if new_word.chars().count() > maximum_length {
-                new_word = "".to_string();
+                continue;
             }
         };
 
