@@ -49,17 +49,11 @@ fn generate_cn(c: &HashSet<String>, n: usize) -> HashSet<String> {
                     // so, we're going to add the dangling suffix to a new HashSet
                     // called cn
                     cn.insert(w1[w2.len()..].to_string());
-                }
-            }
-        }
-        // Now the other way? Could we clean this up?
-        for w1 in cn_minus_1.iter() {
-            for w2 in c.iter() {
-                if w1.len() > w2.len() && w1.starts_with(w2) {
+                } else if w1.len() < w2.len() && w2.starts_with(w1) {
                     // w2 is a prefix word of w1
                     // so, we're going to add the dangling suffix to a new HashSet
                     // called cn
-                    cn.insert(w1[w2.len()..].to_string());
+                    cn.insert(w2[w1.len()..].to_string());
                 }
             }
         }
