@@ -140,10 +140,10 @@ pub fn straighten_quotes(input: &str) -> String {
     let mut result = String::new();
     for c in input.chars() {
         match c {
-            '\u{201C}' => result.push('\"'), // LEFT DOUBLE QUOTATION MARK
-            '\u{201D}' => result.push('\"'), // RIGHT DOUBLE QUOTATION MARK
-            '\u{2018}' => result.push('\''), // LEFT SINGLE QUOTATION MARK
-            '\u{2019}' => result.push('\''), // RIGHT SINGLE QUOTATION MARK
+            '\u{201C}' => result.push('\"'), // left double quotation mark
+            '\u{201D}' => result.push('\"'), // right double quotation mark
+            '\u{2018}' => result.push('\''), // left single quotation mark
+            '\u{2019}' => result.push('\''), // right single quotation mark
             _ => result.push(c),
         }
     }

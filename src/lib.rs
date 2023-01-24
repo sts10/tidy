@@ -157,10 +157,10 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
             }
             None => new_word,
         };
-        if req.should_delete_integers {
+        if req.should_delete_integers && new_word.chars().any(|c| c.is_numeric()) {
             new_word = delete_integers(new_word.to_string());
         }
-        if req.should_delete_nonalphanumeric {
+        if req.should_delete_nonalphanumeric && new_word.chars().any(|c| c.is_alphanumeric()) {
             new_word = delete_nonalphanumeric(new_word.to_string());
         }
         if req.to_lowercase {
