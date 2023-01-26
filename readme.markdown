@@ -375,7 +375,9 @@ To see why whittling is best for this particular situation, see [this document](
 
 Tidy allows users to set a maximum shared prefix length.
 
-Setting this value to say, 4, means that knowing the first 4 characters of any word on the generated list is sufficient to know which word it is. As an example, we'd know that if a word starts with "radi", we know it must be the word "radius" (if "radical" had been on the list, it Tidy would have removed it).
+Setting this value to say, 4, means that knowing the first 4 characters of any word on the generated list is sufficient to know which word it is. 
+
+On this example generated list where we told Tidy to make the maximum shared prefix length 4 characters, we'd know that if a word starts with "radi", we know it must be the word "radius" (if "radical" had been on the list, Tidy would have removed it).
 
 This is useful if you intend the list to be used by software that uses auto-complete. For example, a user will only have to type the first 4 characters of any word before a program could successfully auto-complete the entire word.
 
