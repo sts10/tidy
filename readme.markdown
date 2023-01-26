@@ -385,13 +385,13 @@ Use the attributes flag twice (`-AA`) to get information about shared prefix len
 
 ## What is "Efficiency per character" and "Assumed entropy per char" and what's the difference?
 
-If we take the entropy per word from a list (log<sub>2</sub>(list_length)) and divide it by the length of the **average**-length word on the list, we get a value we might call "efficiency per character". This just means that, on average, you get _E_ bits per character typed. 
+If we take the entropy per word from a list (log<sub>2</sub>(list_length)) and divide it by the **average** word length of words on the list, we get a value we might call "efficiency per character". This just means that, on average, you get _E_ bits per character typed. 
 
 If we take the entropy per word from a list (log<sub>2</sub>(list_length)) and divide it by the length of the **shortest** word on the list, we get a value we might call "assumed entropy per char" (or character).
 
-For example, if we're looking at the EFF long list, we see that its' 7,776-words long, so we'd assume an entropy of 12.925 bits per word. The average word length is 7.0, so the efficiency is 1.8 bits per character. (I got this definition of "efficiency" from [an EFF blog post about their list](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases).) The shortest word on the list is three letters long, so we'd divide 12.925 by 3 and get an "assumed entropy per character" of about 4.31 bits per character.
+For example, if we're looking at the EFF long list, we see that it is 7,776-words long, so we'd assume an entropy of log<sub>2</sub>7776 or 12.925 bits per word. The average word length is 7.0, so the efficiency is 1.8 bits per character. (I got this definition of "efficiency" from [an EFF blog post about their list](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases).) And lastly, the shortest word on the list is three letters long, so we'd divide 12.925 by 3 and get an "assumed entropy per character" of about 4.31 bits per character.
 
-I contend that this second value in particular may be useful when we ask what the shortest word on a good word list should be. There may be an established method for determining what this minimum word length should be, but if there is I don't know about it yet. Here's the math I've worked out on my own.
+I contend that this "assumed entropy per character" value in particular may be useful when we ask the more theoretical question of "how short should the shortest word on a good word list should be?" There may be an established method for determining what this minimum word length should be, but if there is I don't know about it yet! Here's the math I've worked out on my own.
 
 <!-- Consider the story of a user who gets a passphrase compromised of only the shortest words on the list. Does this passphrase genuinely have the entropy of `log2(list_length)` per word? -->
 
