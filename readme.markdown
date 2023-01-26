@@ -340,7 +340,7 @@ Generate docs: `cargo doc --document-private-items --no-deps`. Add `--open` flag
 
 ## Working with homophones
 
-If you're looking for a large-ish list of English homophones, I'd humbly point you to [this other project of mine](https://github.com/sts10/homophones).
+If you're looking for a relatively long list of English homophones, I'd humbly point you to [this other project of mine](https://github.com/sts10/homophones).
 
 ### Using Tidy to remove homophones
 
