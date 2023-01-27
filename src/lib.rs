@@ -137,10 +137,8 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
                 (None, None) => (word.to_string(), None, None, None),
             };
 
-        new_word = new_word.trim_start().trim_end().to_string();
-
-        // UNICODE NORAMLIZATION
-        new_word = normalize_unicode(&new_word);
+        // Trim new word, then normalize unicode
+        new_word = normalize_unicode(new_word.trim()).to_string();
 
         // WORD MODIFICATIONS
         // For logic reasons, it's crucial that Tidy perform these word
@@ -173,7 +171,7 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
             new_word = straighten_quotes(&new_word).to_string();
         }
 
-        new_word = new_word.trim_start().trim_end().to_string();
+        new_word = new_word.trim().to_string();
 
         // WORD REMOVALS
         // Now that the words have been modified, we can move on to
@@ -228,7 +226,7 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         };
 
         // trim whitespace
-        new_word = new_word.trim_start().trim_end().to_string();
+        new_word = new_word.trim().to_string();
 
         // If there was metadata, re-add it to the word now.
         if !new_word.is_empty() {
@@ -241,8 +239,8 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
             };
         }
 
-        // trim whitespace
-        new_word = new_word.trim_start().trim_end().to_string();
+        // trim whitespace again
+        new_word = new_word.trim().to_string();
         // The trim calls could have made new_word empty
         // so need to check again
         if !new_word.is_empty() {
