@@ -324,7 +324,7 @@ fastness september boasting unbroken battalion sweep
 
 ## How Tidy counts the length of a word
 
-When counting the length of a word, Tidy counts the number of [grapheme clusters](https://www.unicode.org/reports/tr29/#Grapheme_Cluster_Boundaries) in the word. Generally, less common characters like accented letters and emoji all count as 1 grapheme cluster and thus, to Tidy, one character. I believe this better fulfills the intuitive counting of us humans.
+When counting the length of a word, Tidy counts the number of [grapheme clusters](https://www.unicode.org/reports/tr29/#Grapheme_Cluster_Boundaries) in the word. Generally, less common characters like accented letters and emoji all count as 1 grapheme cluster and thus, to Tidy, one character. I believe this better fits with how us humans intuitively count characters in a string/word.
 
 ## On verbs used
 
