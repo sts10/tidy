@@ -273,6 +273,8 @@ Options:
 
 -   `tidy -lA -m 3 -o new-list.txt inputted_word_list.txt` Similar to above, but the `-m 3` means new list won't have any words under 3 characters in length. Have Tidy also print some attributes about the new list to the terminal screen.
 
+-   `tidy -z nfkd --locale fr -o bip-0039/french.txt --force bip-0039/french.txt` Verify that [the BIP-0039 French list](https://github.com/bitcoin/bips/blob/master/bip-0039/french.txt) is (a) normalized to [Unicode Normalization Form](https://www.unicode.org/reports/tr15/) Compatibility Decomposition (abbreviated as NFKD) (as per [the BIP-0039 specification](https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki#wordlist)) and (b) sorted appropriately for the French language (thanks to specifying `--locale fr`). Locales can also be specified like "en-US" or "es-ES".
+
 -   `tidy -d t -o just_the_words.txt diceware_list.txt` If you've got [a diceware list with numbers and a tab before each word](https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt), the `-d t` flag will delete everything up to and including the first tab in each line ("11133 abruptly" becomes "abruptly").
 
 -   `tidy --dice 6 -o diceware_list.txt just_words.txt` Add corresponding dice roll numbers to a list with `--dice`. Can accept dice sides between 2 and 36. Each dice roll and word are separated by a tab.
