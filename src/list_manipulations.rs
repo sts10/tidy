@@ -1,6 +1,12 @@
 use crate::edit_distance::find_edit_distance;
 use crate::sardinas_patterson_pruning::get_sardinas_patterson_final_intersection;
 use memchr::memchr;
+use unicode_normalization::UnicodeNormalization;
+
+/// Normalize the Unicode of a string
+pub fn normalize_unicode(word: &str) -> String {
+    word.nfc().collect::<String>()
+}
 
 /// Given a String (a word), delete all integers from the word.
 pub fn delete_integers(mut word: String) -> String {

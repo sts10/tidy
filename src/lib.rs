@@ -139,6 +139,9 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
 
         new_word = new_word.trim_start().trim_end().to_string();
 
+        // UNICODE NORAMLIZATION
+        new_word = normalize_unicode(&new_word);
+
         // WORD MODIFICATIONS
         // For logic reasons, it's crucial that Tidy perform these word
         // modifications BEFORE it runs word removals.
