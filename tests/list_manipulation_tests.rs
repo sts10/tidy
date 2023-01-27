@@ -2,7 +2,7 @@ mod list_manipulation_tests {
     use tidy::dice::print_as_dice; // not exactly sure why I need this here...
     use tidy::*;
 
-    fn make_lists() -> (Vec<String>, Vec<String>, Vec<String>) {
+    fn make_lists() -> (Vec<String>, Vec<String>, Vec<String>, Vec<String>) {
         (
             vec![
                 "  zookeeper",
@@ -69,6 +69,12 @@ mod list_manipulation_tests {
             ]
             .iter()
             .map(|x| x.to_string())
+            .collect(),
+            vec![
+                "énigme", "enlever", "abbey", "zoo", "Zambia", "eager", "ezra",
+            ]
+            .iter()
+            .map(|word| word.to_string())
             .collect(),
         )
     }
@@ -545,6 +551,24 @@ mod list_manipulation_tests {
         assert!(new_list.contains(&"be".to_string()));
         assert!(!new_list.contains(&"bee".to_string()));
         assert!(new_list.contains(&"mistake".to_string()));
+    }
+
+    #[test]
+    fn can_sort_accented_and_capitalized_letters_properly() {
+        let this_tidy_request = TidyRequest {
+            list: make_lists().3,
+            sort_alphabetically: true,
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
+
+        let how_list_should_be_sorted: Vec<String> = vec![
+            "abbey", "eager", "énigme", "enlever", "ezra", "Zambia", "zoo",
+        ]
+        .iter()
+        .map(|word| word.to_string())
+        .collect();
+        assert_eq!(new_list, how_list_should_be_sorted);
     }
 
     use tidy::list_manipulations::normalize_unicode;

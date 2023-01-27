@@ -311,7 +311,8 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     };
     // Finally, sort list alphabetically, if the user didn't override this default behavior
     if req.sort_alphabetically {
-        tidied_list.sort();
+        // tidied_list.sort();
+        tidied_list = sort_carefully(tidied_list);
     }
     // And remove duplicates one more time
     tidied_list = dedup_without_sorting(&mut tidied_list);
