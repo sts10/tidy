@@ -1,6 +1,31 @@
 use crate::edit_distance::find_edit_distance;
 use crate::sardinas_patterson_pruning::get_sardinas_patterson_final_intersection;
 use memchr::memchr;
+use unicode_normalization::UnicodeNormalization;
+
+/// Normalize the Unicode of a string
+pub fn normalize_unicode(word: &str) -> String {
+    word.nfc().collect::<String>()
+}
+
+use icu::collator::*;
+use icu_collator::Collator;
+use icu_collator::CollatorOptions;
+/// Sort a Vector of words a bit more carefully than Rust's
+/// default .sort(), treating capitalized letters and accented letters a
+/// bit more smart.
+/// `.sorted()` words -> ["Zambia", "abbey", "eager", "enlever", "ezra", "zoo", "énigme"]
+/// sort_carefully words -> ["abbey", "eager", "énigme", "enlever", "ezra", "Zambia", "zoo"]
+pub fn sort_carefully(list: Vec<String>) -> Vec<String> {
+    let mut options_l2 = CollatorOptions::new();
+    options_l2.strength = Some(Strength::Secondary);
+    let collator_l2: Collator =
+        Collator::try_new_unstable(&icu_testdata::unstable(), &Default::default(), options_l2)
+            .unwrap();
+    let mut newly_sorted_list = list;
+    newly_sorted_list.sort_by(|a, b| collator_l2.compare(a, b));
+    newly_sorted_list
+}
 
 /// Given a String (a word), delete all integers from the word.
 pub fn delete_integers(mut word: String) -> String {

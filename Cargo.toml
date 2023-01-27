@@ -1,6 +1,6 @@
 [package]
 name = "tidy"
-version = "0.2.78"
+version = "0.2.79"
 authors = ["sts10 <sschlinkert@gmail.com>"]
 edition = "2021"
 
@@ -10,3 +10,7 @@ memchr = "2.5"
 radix_fmt = "1.0.0"
 rand = "0.8.4"
 itertools = "0.10.3"
+unicode-normalization = "0.1.22"
+icu_collator = "1.1.0"
+icu = "1.1.0"
+icu_testdata = "1.1.0"

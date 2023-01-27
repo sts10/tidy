@@ -54,9 +54,14 @@ struct Args {
     ignore_before_delimiter: Option<char>,
 
     /// Do NOT sort outputted list alphabetically. Preserves original list order.
-    /// Note that duplicates lines and blank lines will still be removed.
+    /// Note that duplicate lines and blank lines will still be removed.
     #[clap(short = 'O', long = "no-sort")]
     no_alpha_sort: bool,
+
+    /// Normalize Unicode of all characters of all words. Uses Unicode Normalization Form C.
+    /// May negatively affect Tidy's performance.
+    #[clap(short = 'z', long = "normalize")]
+    normalize: bool,
 
     /// Lowercase all words on new list
     #[clap(short = 'l', long = "lowercase")]
@@ -314,6 +319,7 @@ fn main() {
         ignore_after_delimiter: opt.ignore_after_delimiter,
         ignore_before_delimiter: opt.ignore_before_delimiter,
         to_lowercase: opt.to_lowercase,
+        normalize: opt.normalize,
         should_straighten_quotes: opt.straighten_quotes,
         should_remove_prefix_words: opt.remove_prefix_words,
         should_remove_suffix_words: opt.remove_suffix_words,
