@@ -348,7 +348,7 @@ use unicode_segmentation::UnicodeSegmentation;
 /// of characters in a word.
 /// An alternate approach would be to convert word to NFC before counting `word.nfc().count()`
 pub fn count_characters(word: &str) -> usize {
-    word.graphemes(false).count()
+    word.graphemes(true).count()
 }
 
 /// Little helper function that allows users to write out whitespace

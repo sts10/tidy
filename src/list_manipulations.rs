@@ -152,18 +152,19 @@ pub fn schlinkert_prune(list: &[String]) -> Vec<String> {
     new_list
 }
 
+use unicode_segmentation::UnicodeSegmentation;
 /// Given a word and a `usize` of `length`, this function returns
-/// the first `length` characters of that word.
+/// the first `length` characters of that word. This length is
+/// measured in grapheme clusters to better handle accented
+/// characters and emoji.
 /// ```
 /// use tidy::list_manipulations::get_prefix;
-/// assert_eq!(get_prefix("hello world", 4), "hell")
+/// assert_eq!(get_prefix("hello world", 4), "hell");
+/// assert_eq!(get_prefix("sécréter", 5), "sécré");
+/// assert_eq!(get_prefix("😀😃😄😁😆", 2), "😀😃");
 /// ```
 pub fn get_prefix(word: &str, length: usize) -> String {
-    // Normalize to Unicode NFC before taking given length
-    // This is a bit of a controversial choice, but everywhere else
-    // I've convinved myself it's a good idea to do this normalization
-    // before counting characters.
-    word.nfc().take(length).collect::<String>()
+    word.graphemes(true).take(length).collect::<String>()
 }
 
 /// Helper function to determine if a given char as `u16` is a
