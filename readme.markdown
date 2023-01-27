@@ -94,8 +94,9 @@ Options:
           Do NOT sort outputted list alphabetically. Preserves original list order. Note that 
           duplicates lines and blank lines will still be removed
 
-      --normalize
-          Normalize Unicode of all characters of all words. May slow down performance
+  -z, --normalize
+          Normalize Unicode of all characters of all words. Uses Unicode Normalization Form C. 
+          May negatively affect Tidy's performance
 
   -l, --lowercase
           Lowercase all words on new list
