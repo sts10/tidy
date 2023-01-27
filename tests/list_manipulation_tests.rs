@@ -609,14 +609,21 @@ mod list_manipulation_tests {
     #[test]
     fn can_accurately_count_characters() {
         let normal_word = "normal";
+        assert_eq!(count_characters(normal_word), 6);
+
+        // These two words below seem the same, don't they?
         let word_with_combined_accents = "sécréter";
         let word_with_two_char_accents = "sécréter";
 
-        assert_eq!(count_characters(normal_word), 6);
+        // Oh, you sweet summer child...
         assert_ne!(
             word_with_combined_accents.chars().count(),
             word_with_two_char_accents.chars().count()
         );
+        // Hence, my count_characters function, which normalizes
+        // Unicopde via NFC before counting the length of given string slice
+        // I chose NFC because it seems to be closest to how human read/count
+        // letters (e.g. and accented e always counts as 1 character).
         assert_eq!(count_characters(word_with_combined_accents), 8);
         assert_eq!(count_characters(word_with_two_char_accents), 8);
     }
