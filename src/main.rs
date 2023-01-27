@@ -64,6 +64,10 @@ struct Args {
     #[clap(short = 'z', long = "normalization-form")]
     normalization_form: Option<String>,
 
+    /// Specify a locale for words on the list. Aids with sorting. Examples: en-US, es-ES
+    #[clap(long = "locale", default_value = "en-US")]
+    locale: String,
+
     /// Lowercase all words on new list
     #[clap(short = 'l', long = "lowercase")]
     to_lowercase: bool,
@@ -321,6 +325,7 @@ fn main() {
         ignore_before_delimiter: opt.ignore_before_delimiter,
         to_lowercase: opt.to_lowercase,
         normalization_form: opt.normalization_form,
+        locale: opt.locale,
         should_straighten_quotes: opt.straighten_quotes,
         should_remove_prefix_words: opt.remove_prefix_words,
         should_remove_suffix_words: opt.remove_suffix_words,

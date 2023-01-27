@@ -1,3 +1,4 @@
+use icu::locid::Locale;
 use rand::seq::SliceRandom;
 use rand::thread_rng;
 pub mod dice;
@@ -19,6 +20,7 @@ pub struct TidyRequest {
     pub ignore_after_delimiter: Option<char>,
     pub ignore_before_delimiter: Option<char>,
     pub normalization_form: Option<String>,
+    pub locale: String, // defaults to en-US
     pub to_lowercase: bool,
     pub should_straighten_quotes: bool,
     pub should_remove_prefix_words: bool,
@@ -322,8 +324,17 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     };
     // Finally, sort list alphabetically, if the user didn't override this default behavior
     if req.sort_alphabetically {
-        // tidied_list.sort();
-        tidied_list = sort_carefully(tidied_list);
+        // We used to just be content to run tidied_list.sort() here,
+        // but that doesn't support non-English languages and
+        // accented characters very well.
+
+        // First, parse the given locale into a valid Locale
+        let locale: Locale = req
+            .locale
+            .parse()
+            .expect("Error: given locale is not parse-able. Try form similar to en-US or es-ES.");
+        // Now use that Locale to sort the list more carefully
+        tidied_list = sort_carefully(tidied_list, locale);
     }
     // And remove duplicates one more time
     tidied_list = dedup_without_sorting(&mut tidied_list);
