@@ -1,3 +1,4 @@
+use crate::count_characters;
 use crate::edit_distance::find_edit_distance;
 use crate::sardinas_patterson_pruning::get_sardinas_patterson_final_intersection;
 use memchr::memchr;
@@ -119,7 +120,7 @@ pub fn guarantee_maximum_prefix_length(
     let mut prefix_hashmap: HashMap<String, String> = HashMap::new();
     for this_word in list {
         // If this word is too short just skip it.
-        if this_word.chars().count() < maximum_shared_prefix_length {
+        if count_characters(this_word) < maximum_shared_prefix_length {
             continue;
         }
         prefix_hashmap
@@ -127,7 +128,7 @@ pub fn guarantee_maximum_prefix_length(
             .and_modify(|existing_word| {
                 // Prefer shorter words, as a stand-in for simplicity (though that
                 // is debatable...)
-                if this_word.chars().count() < existing_word.chars().count() {
+                if count_characters(this_word) < count_characters(existing_word) {
                     *existing_word = this_word.to_string()
                 }
             })
@@ -158,7 +159,11 @@ pub fn schlinkert_prune(list: &[String]) -> Vec<String> {
 /// assert_eq!(get_prefix("hello world", 4), "hell")
 /// ```
 pub fn get_prefix(word: &str, length: usize) -> String {
-    word.chars().take(length).collect::<String>()
+    // Normalize to Unicode NFC before taking given length
+    // This is a bit of a controversial choice, but everywhere else
+    // I've convinved myself it's a good idea to do this normalization
+    // before counting characters.
+    word.nfc().take(length).collect::<String>()
 }
 
 /// Helper function to determine if a given char as `u16` is a
@@ -263,8 +268,7 @@ pub fn enfore_minimum_edit_distance(
     let minimum_edit_distance: u32 = minimum_edit_distance.try_into().unwrap();
     let mut list_to_read = list.to_vec();
     // Sort short words first to prefer them
-    // list_to_read.sort_by(|a, b| a.chars().count().cmp(&b.chars().count()));
-    list_to_read.sort_by_key(|a| a.chars().count());
+    list_to_read.sort_by_key(|a| count_characters(a));
 
     let mut new_list = list.to_vec();
     new_list.retain(|potential_too_close_word| {

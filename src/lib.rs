@@ -227,13 +227,13 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         };
 
         if let Some(minimum_length) = req.minimum_length {
-            if new_word.chars().count() < minimum_length {
+            if count_characters(&new_word) < minimum_length {
                 continue;
             }
         };
 
         if let Some(maximum_length) = req.maximum_length {
-            if new_word.chars().count() > maximum_length {
+            if count_characters(&new_word) > maximum_length {
                 continue;
             }
         };
@@ -339,6 +339,14 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     // And remove duplicates one more time
     tidied_list = dedup_without_sorting(&mut tidied_list);
     tidied_list
+}
+
+use unicode_normalization::UnicodeNormalization;
+/// When counting characters of a word, we want to count all accented character as 1
+/// regardless of the Unicode. To accomplish this, we count its charactes when normalized
+/// with NFC
+pub fn count_characters(word: &str) -> usize {
+    word.nfc().count()
 }
 
 /// Little helper function that allows users to write out whitespace

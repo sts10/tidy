@@ -607,13 +607,23 @@ mod list_manipulation_tests {
         );
     }
     #[test]
-    fn can_accurately_count_characters_after_a_nfc_normalization() {
+    fn can_accurately_count_characters() {
+        let normal_word = "normal";
         let word_with_combined_accents = "sécréter";
         let word_with_two_char_accents = "sécréter";
+
+        assert_eq!(count_characters(normal_word), 6);
         assert_ne!(
             word_with_combined_accents.chars().count(),
             word_with_two_char_accents.chars().count()
         );
+        assert_eq!(count_characters(word_with_combined_accents), 8);
+        assert_eq!(count_characters(word_with_two_char_accents), 8);
+    }
+    #[test]
+    fn can_accurately_count_characters_of_nfc_and_nfkd_normalized_words() {
+        let word_with_combined_accents = "sécréter";
+        let word_with_two_char_accents = "sécréter";
         assert_eq!(
             normalize_unicode(word_with_combined_accents, "nfc")
                 .unwrap()
