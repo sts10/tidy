@@ -23,13 +23,6 @@ pub fn sort_carefully(list: Vec<String>) -> Vec<String> {
     let collator_l2: Collator =
         Collator::try_new_unstable(&icu_testdata::unstable(), &Default::default(), options_l2)
             .unwrap();
-    assert_eq!(collator_l2.compare("a", "b"), Ordering::Less); // primary
-    assert_eq!(collator_l2.compare("as", "às"), Ordering::Less); // secondary
-    assert_eq!(collator_l2.compare("às", "at"), Ordering::Less);
-    assert_eq!(collator_l2.compare("ao", "Ao"), Ordering::Equal); // tertiary
-    assert_eq!(collator_l2.compare("Ao", "aò"), Ordering::Less);
-    assert_eq!(collator_l2.compare("A", "Ⓐ"), Ordering::Equal);
-
     let mut newly_sorted_list = list;
     newly_sorted_list.sort_by(|a, b| collator_l2.compare(a, b));
     newly_sorted_list
