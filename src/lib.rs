@@ -341,12 +341,12 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     tidied_list
 }
 
-// use unicode_normalization::UnicodeNormalization;
 use unicode_segmentation::UnicodeSegmentation;
-/// When counting characters of a word, we want to count all accented character as 1
-/// regardless of the Unicode to better approximate how humans would count the number
+/// When counting characters of a word, we want to count all accented character as 1,
+/// regardless of the Unicode, to better approximate how humans would count the number
 /// of characters in a word.
-/// An alternate approach would be to convert word to NFC before counting `word.nfc().count()`
+/// An alternate approach would be to convert each character to NFC before counting `word.nfc().count()`
+/// but I don't think this handles emoji as well as grapheme cluster counting.
 pub fn count_characters(word: &str) -> usize {
     word.graphemes(true).count()
 }
