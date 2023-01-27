@@ -94,6 +94,9 @@ Options:
           Do NOT sort outputted list alphabetically. Preserves original list order. Note that 
           duplicates lines and blank lines will still be removed
 
+      --normalize
+          Normalize Unicode of all characters of all words. May slow down performance
+
   -l, --lowercase
           Lowercase all words on new list
 
