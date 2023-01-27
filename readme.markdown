@@ -94,7 +94,7 @@ Options:
           Do NOT sort outputted list alphabetically. Preserves original list order. Note that 
           duplicates lines and blank lines will still be removed
 
-  -z, --normalize <NORMALIZATION_FORM>
+  -z, --normalization-form <NORMALIZATION_FORM>
           Normalize Unicode of all characters of all words. Accepts nfc, nfd, nfkc, or nfkd 
           (case insensitive). May negatively affect Tidy's performance
 

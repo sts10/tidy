@@ -61,7 +61,7 @@ struct Args {
     /// Normalize Unicode of all characters of all words. Accepts nfc, nfd, nfkc, or nfkd (case
     /// insensitive).
     /// May negatively affect Tidy's performance.
-    #[clap(short = 'z', long = "normalize")]
+    #[clap(short = 'z', long = "normalization-form")]
     normalization_form: Option<String>,
 
     /// Lowercase all words on new list
