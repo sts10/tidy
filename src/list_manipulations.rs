@@ -20,6 +20,7 @@ pub fn normalize_unicode(word: &str, nf: &str) -> Result<String, String> {
 }
 
 use icu::collator::*;
+use icu::locid::Locale;
 use icu_collator::Collator;
 use icu_collator::CollatorOptions;
 /// Sort a Vector of words a bit more carefully than Rust's
@@ -27,12 +28,16 @@ use icu_collator::CollatorOptions;
 /// bit more smart.
 /// `.sorted()` words -> ["Zambia", "abbey", "eager", "enlever", "ezra", "zoo", "énigme"]
 /// sort_carefully words -> ["abbey", "eager", "énigme", "enlever", "ezra", "Zambia", "zoo"]
-pub fn sort_carefully(list: Vec<String>) -> Vec<String> {
+pub fn sort_carefully(list: Vec<String>, locale: Locale) -> Vec<String> {
+    // let given_locale: Locale = match given_locale {
+    //     Some(given_locale) => locale!(given_locale),
+    //     None => locale!("en"),
+    // };
+    // let given_locale = locale!("en");
     let mut options_l2 = CollatorOptions::new();
     options_l2.strength = Some(Strength::Secondary);
     let collator_l2: Collator =
-        Collator::try_new_unstable(&icu_testdata::unstable(), &Default::default(), options_l2)
-            .unwrap();
+        Collator::try_new_unstable(&icu_testdata::unstable(), &locale.into(), options_l2).unwrap();
     let mut newly_sorted_list = list;
     newly_sorted_list.sort_by(|a, b| collator_l2.compare(a, b));
     newly_sorted_list

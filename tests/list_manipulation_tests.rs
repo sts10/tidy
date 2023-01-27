@@ -96,6 +96,7 @@ mod list_manipulation_tests {
         let this_tidy_request = TidyRequest {
             list: make_lists().0,
             sort_alphabetically: true,
+            locale: "en-US".to_string(),
             ..Default::default()
         };
         let new_list = tidy_list(this_tidy_request);
@@ -558,13 +559,22 @@ mod list_manipulation_tests {
         let this_tidy_request = TidyRequest {
             list: make_lists().3,
             sort_alphabetically: true,
+            locale: "es-ES".to_string(),
             normalization_form: Some("nfkd".to_string()),
             ..Default::default()
         };
         let new_list = tidy_list(this_tidy_request);
 
         let how_list_should_be_sorted: Vec<String> = vec![
-            "abbey", "antena", "año", "eager", "énigme", "enlever", "ezra", "Zambia", "zoo",
+            "abbey",
+            "antena",
+            "año",
+            "eager",
+            &normalize_unicode("énigme", "nfkd").unwrap(),
+            "enlever",
+            "ezra",
+            "Zambia",
+            "zoo",
         ]
         .iter()
         .map(|word| word.to_string())

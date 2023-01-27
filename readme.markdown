@@ -98,6 +98,11 @@ Options:
           Normalize Unicode of all characters of all words. Accepts nfc, nfd, nfkc, or nfkd 
           (case insensitive). May negatively affect Tidy's performance
 
+      --locale <LOCALE>
+          Specify a locale for words on the list. Aids with sorting. Examples: en-US, es-ES
+
+          [default: en-US]
+
   -l, --lowercase
           Lowercase all words on new list
 
