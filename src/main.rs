@@ -54,11 +54,11 @@ struct Args {
     ignore_before_delimiter: Option<char>,
 
     /// Do NOT sort outputted list alphabetically. Preserves original list order.
-    /// Note that duplicates lines and blank lines will still be removed.
+    /// Note that duplicate lines and blank lines will still be removed.
     #[clap(short = 'O', long = "no-sort")]
     no_alpha_sort: bool,
 
-    /// Normalize Unicode of all characters of all words. May slow down performance.
+    /// Normalize Unicode of all characters of all words. May negatively affect Tidy's performance.
     #[clap(long = "normalize")]
     normalize: bool,
 
