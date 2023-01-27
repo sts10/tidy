@@ -626,7 +626,11 @@ mod list_manipulation_tests {
         // letters (e.g. and accented e always counts as 1 character).
         assert_eq!(count_characters(word_with_combined_accents), 8);
         assert_eq!(count_characters(word_with_two_char_accents), 8);
+
+        let emojis = "😀😃😄😁😆";
+        assert_eq!(count_characters(emojis), 5);
     }
+
     #[test]
     fn can_accurately_count_characters_of_nfc_and_nfkd_normalized_words() {
         let word_with_combined_accents = "sécréter";

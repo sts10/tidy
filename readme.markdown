@@ -324,7 +324,7 @@ fastness september boasting unbroken battalion sweep
 
 ## How Tidy counts the length of a word
 
-When counting the length of a word, Tidy uses the word length of the word when normalized to Unicode Normalization Form C (NFC) before counting the length. This means that, if even if your list is normalized with NFKD, Tidy will use the word length as if they were in NFC. Note that Tidy does NOT, by default, normalize all characters to NFC on outputted list. However, Tidy does offer that is an option (see `-z / --normalization-form` option).
+When counting the length of a word, Tidy counts the number of [grapheme clusters](https://www.unicode.org/reports/tr29/#Grapheme_Cluster_Boundaries) in the word. Generally, less common characters like accented letters and emoji all count as 1 grapheme cluster and thus, to Tidy, one character. I believe this better fulfills the intuitive counting of us humans.
 
 ## On verbs used
 

@@ -341,12 +341,14 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     tidied_list
 }
 
-use unicode_normalization::UnicodeNormalization;
+// use unicode_normalization::UnicodeNormalization;
+use unicode_segmentation::UnicodeSegmentation;
 /// When counting characters of a word, we want to count all accented character as 1
-/// regardless of the Unicode. To accomplish this, we count its charactes when normalized
-/// with NFC
+/// regardless of the Unicode to better approximate how humans would count the number
+/// of characters in a word.
+/// An alternate approach would be to convert word to NFC before counting `word.nfc().count()`
 pub fn count_characters(word: &str) -> usize {
-    word.nfc().count()
+    word.graphemes(false).count()
 }
 
 /// Little helper function that allows users to write out whitespace
