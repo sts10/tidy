@@ -8,7 +8,6 @@ pub fn normalize_unicode(word: &str) -> String {
     word.nfc().collect::<String>()
 }
 
-use core::cmp::Ordering;
 use icu::collator::*;
 use icu_collator::Collator;
 use icu_collator::CollatorOptions;
