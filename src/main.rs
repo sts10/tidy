@@ -58,10 +58,11 @@ struct Args {
     #[clap(short = 'O', long = "no-sort")]
     no_alpha_sort: bool,
 
-    /// Normalize Unicode of all characters of all words. Uses Unicode Normalization Form C.
+    /// Normalize Unicode of all characters of all words. Accepts nfc, nfd, nfkc, or nfkd (case
+    /// insensitive).
     /// May negatively affect Tidy's performance.
-    #[clap(short = 'z', long = "normalize")]
-    normalize: bool,
+    #[clap(short = 'z', long = "normalization-form")]
+    normalization_form: Option<String>,
 
     /// Lowercase all words on new list
     #[clap(short = 'l', long = "lowercase")]
@@ -319,7 +320,7 @@ fn main() {
         ignore_after_delimiter: opt.ignore_after_delimiter,
         ignore_before_delimiter: opt.ignore_before_delimiter,
         to_lowercase: opt.to_lowercase,
-        normalize: opt.normalize,
+        normalization_form: opt.normalization_form,
         should_straighten_quotes: opt.straighten_quotes,
         should_remove_prefix_words: opt.remove_prefix_words,
         should_remove_suffix_words: opt.remove_suffix_words,
