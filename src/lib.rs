@@ -18,7 +18,7 @@ pub struct TidyRequest {
     pub sort_alphabetically: bool,
     pub ignore_after_delimiter: Option<char>,
     pub ignore_before_delimiter: Option<char>,
-    pub normalize: bool,
+    pub normalize: Option<String>,
     pub to_lowercase: bool,
     pub should_straighten_quotes: bool,
     pub should_remove_prefix_words: bool,
@@ -139,12 +139,16 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
             };
 
         // Trim new word, then normalize unicode
-        if req.normalize {
-            new_word = normalize_unicode(new_word.trim()).to_string();
-        } else {
-            // still need to trim
-            new_word = new_word.trim().to_string();
-        }
+        new_word = match &req.normalize {
+            Some(nf) => match normalize_unicode(new_word.trim(), &nf) {
+                Ok(word) => word,
+                Err(e) => panic!("{}", e),
+            },
+            None => {
+                // still need to trim
+                new_word.trim().to_string()
+            }
+        };
 
         // WORD MODIFICATIONS
         // For logic reasons, it's crucial that Tidy perform these word

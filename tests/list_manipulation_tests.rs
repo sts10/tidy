@@ -571,9 +571,32 @@ mod list_manipulation_tests {
         assert_eq!(new_list, how_list_should_be_sorted);
     }
 
+    // this is really a WORD manipulation, so maybe should be in a
+    // different test file
     use tidy::list_manipulations::normalize_unicode;
     #[test]
     fn can_normalize_unicode_in_a_given_word() {
+        let word_with_combined_accents = "sécréter";
+        let word_with_two_char_accents = "sécréter";
+        assert_eq!(
+            word_with_combined_accents,
+            normalize_unicode(word_with_combined_accents, "nfc").unwrap()
+        );
+        assert_eq!(
+            word_with_combined_accents,
+            normalize_unicode(word_with_combined_accents, "nfkc").unwrap()
+        );
+        assert_eq!(
+            word_with_two_char_accents,
+            normalize_unicode(word_with_two_char_accents, "nfd").unwrap()
+        );
+        assert_eq!(
+            word_with_two_char_accents,
+            normalize_unicode(word_with_two_char_accents, "nfkd").unwrap()
+        );
+    }
+    #[test]
+    fn can_accurately_count_characters_after_a_nfc_normalization() {
         let word_with_combined_accents = "sécréter";
         let word_with_two_char_accents = "sécréter";
         assert_ne!(
@@ -581,10 +604,22 @@ mod list_manipulation_tests {
             word_with_two_char_accents.chars().count()
         );
         assert_eq!(
-            normalize_unicode(word_with_combined_accents)
+            normalize_unicode(word_with_combined_accents, "nfc")
+                .unwrap()
                 .chars()
                 .count(),
-            normalize_unicode(word_with_two_char_accents)
+            normalize_unicode(word_with_two_char_accents, "nfc")
+                .unwrap()
+                .chars()
+                .count()
+        );
+        assert_eq!(
+            normalize_unicode(word_with_combined_accents, "nfkd")
+                .unwrap()
+                .chars()
+                .count(),
+            normalize_unicode(word_with_two_char_accents, "nfkd")
+                .unwrap()
                 .chars()
                 .count()
         );

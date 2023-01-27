@@ -4,8 +4,19 @@ use memchr::memchr;
 use unicode_normalization::UnicodeNormalization;
 
 /// Normalize the Unicode of a string
-pub fn normalize_unicode(word: &str) -> String {
-    word.nfc().collect::<String>()
+/// See https://docs.rs/unicode-normalization/latest/unicode_normalization/trait.UnicodeNormalization.html#tymethod.nfc
+pub fn normalize_unicode(word: &str, nf: &str) -> Result<String, String> {
+    if nf.to_lowercase() == "nfc" {
+        Ok(word.nfc().collect::<String>())
+    } else if nf.to_lowercase() == "nfd" {
+        Ok(word.nfd().collect::<String>())
+    } else if nf.to_lowercase() == "nfkc" {
+        Ok(word.nfkc().collect::<String>())
+    } else if nf.to_lowercase() == "nfkd" {
+        Ok(word.nfkd().collect::<String>())
+    } else {
+        Err("Unknown Unicode normalizaion form received in arguments.\nPleasue use one of the following normalizaion forms: nfc, nfd, nfkc, or nfkd.".to_string())
+    }
 }
 
 use icu::collator::*;

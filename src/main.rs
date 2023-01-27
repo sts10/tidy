@@ -61,7 +61,7 @@ struct Args {
     /// Normalize Unicode of all characters of all words. Uses Unicode Normalization Form C.
     /// May negatively affect Tidy's performance.
     #[clap(short = 'z', long = "normalize")]
-    normalize: bool,
+    normalize: Option<String>,
 
     /// Lowercase all words on new list
     #[clap(short = 'l', long = "lowercase")]
