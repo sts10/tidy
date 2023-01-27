@@ -40,6 +40,7 @@ Optionally, the tool can...
 -   remove all words with non-alphabetic characters from new list
 -   straighten curly/smart quotes, i.e. replacing them with their "straight" equivalents (`-q`)
 -   guarantee a maximum shared prefix length (see below) (`-x`)
+-   normalize Unicode of all characters of all words on list to a specified [normalization form](https://www.unicode.org/faq/normalization.html) (NFC, NFKD, etc.) (`-z`)
 -   print corresponding dice rolls before words, separated by a tab. Dice can have 2 to 36 sides. (`--dice`)
 -   print information about the new list, such as entropy per word, to the terminal (`-A`, `-AA`, `-AAA`, or `-AAAA` depending on how much information you want to printed)
 
@@ -318,6 +319,10 @@ creamlike strum snowfall tannery clean protrude
 favorable unlivable vanquish crate sarcastic exclude 
 fastness september boasting unbroken battalion sweep
 ```
+
+## How Tidy counts the length of a word
+
+When counting the length of a word, Tidy uses the word length of the word when normalized to Unicode Normalization Form C (NFC) before counting the length. This means that, if even if your list is normalized with NFKD, Tidy will use the word length as if they were in NFC. Note that Tidy does NOT, by default, normalize all characters to NFC on outputted list. However, Tidy does offer that is an option (see `-z / --normalization-form` option).
 
 ## On verbs used
 
