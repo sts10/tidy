@@ -547,6 +547,25 @@ mod list_manipulation_tests {
         assert!(new_list.contains(&"mistake".to_string()));
     }
 
+    use tidy::list_manipulations::normalize_unicode;
+    #[test]
+    fn can_normalize_unicode_in_a_given_word() {
+        let word_with_combined_accents = "sécréter";
+        let word_with_two_char_accents = "sécréter";
+        assert_ne!(
+            word_with_combined_accents.chars().count(),
+            word_with_two_char_accents.chars().count()
+        );
+        assert_eq!(
+            normalize_unicode(word_with_combined_accents)
+                .chars()
+                .count(),
+            normalize_unicode(word_with_two_char_accents)
+                .chars()
+                .count()
+        );
+    }
+
     #[test]
     fn can_print_dice_rolls_of_base_6() {
         assert_eq!(print_as_dice(0, 6, 7776, false), "11111".to_string());
