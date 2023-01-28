@@ -40,6 +40,7 @@ Optionally, the tool can...
 -   remove all words with non-alphabetic characters from new list
 -   straighten curly/smart quotes, i.e. replacing them with their "straight" equivalents (`-q`)
 -   guarantee a maximum shared prefix length (see below) (`-x`)
+-   normalize Unicode of all characters of all words on list to a specified [normalization form](https://www.unicode.org/faq/normalization.html) (NFC, NFKD, etc.) (`-z`)
 -   print corresponding dice rolls before words, separated by a tab. Dice can have 2 to 36 sides. (`--dice`)
 -   print information about the new list, such as entropy per word, to the terminal (`-A`, `-AA`, `-AAA`, or `-AAAA` depending on how much information you want to printed)
 
@@ -272,6 +273,8 @@ Options:
 
 -   `tidy -lA -m 3 -o new-list.txt inputted_word_list.txt` Similar to above, but the `-m 3` means new list won't have any words under 3 characters in length. Have Tidy also print some attributes about the new list to the terminal screen.
 
+-   `tidy -z nfkd --locale fr -o bip-0039/french.txt --force bip-0039/french.txt` Verify that [the BIP-0039 French list](https://github.com/bitcoin/bips/blob/master/bip-0039/french.txt) is (a) normalized to [Unicode Normalization Form](https://www.unicode.org/reports/tr15/) Compatibility Decomposition (abbreviated as NFKD) (as per [the BIP-0039 specification](https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki#wordlist)) and (b) sorted appropriately for the French language (thanks to specifying `--locale fr`). Locales can also be specified like "en-US" or "es-ES". If a `locale` is not specified, locale defaults to "en-US" (America!). This locale setting only really affects how the words on the outputted list are **sorted**, so it's not _crucial_ for users to specify one.
+
 -   `tidy -d t -o just_the_words.txt diceware_list.txt` If you've got [a diceware list with numbers and a tab before each word](https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt), the `-d t` flag will delete everything up to and including the first tab in each line ("11133 abruptly" becomes "abruptly").
 
 -   `tidy --dice 6 -o diceware_list.txt just_words.txt` Add corresponding dice roll numbers to a list with `--dice`. Can accept dice sides between 2 and 36. Each dice roll and word are separated by a tab.
@@ -318,6 +321,10 @@ creamlike strum snowfall tannery clean protrude
 favorable unlivable vanquish crate sarcastic exclude 
 fastness september boasting unbroken battalion sweep
 ```
+
+## How Tidy counts the length of a word
+
+When counting the length of a word, Tidy counts the number of [grapheme clusters](https://www.unicode.org/reports/tr29/#Grapheme_Cluster_Boundaries) in the word. Generally, less common characters like accented letters and emoji all count as 1 grapheme cluster and thus, to Tidy, one character. I believe this better fits with how us humans intuitively count characters in a string/word.
 
 ## On verbs used
 

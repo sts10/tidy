@@ -1,7 +1,7 @@
 //! Display attributes and information about the generated word list
 
 pub mod uniquely_decodable;
-// use crate::check_decodability;
+use crate::count_characters;
 use crate::display_information::uniquely_decodable::check_decodability;
 use crate::parse_delimiter;
 use crate::split_and_vectorize;
@@ -54,20 +54,20 @@ pub fn display_list_information(
     );
     let shortest_word = list
         .iter()
-        .min_by(|a, b| a.chars().count().cmp(&b.chars().count()))
+        .min_by(|a, b| count_characters(a).cmp(&count_characters(b)))
         .unwrap();
     eprintln!(
         "Length of shortest word   : {} characters ({})",
-        shortest_word.chars().count(),
+        count_characters(shortest_word),
         shortest_word
     );
     let longest_word = list
         .iter()
-        .max_by(|a, b| a.chars().count().cmp(&b.chars().count()))
+        .max_by(|a, b| count_characters(a).cmp(&count_characters(b)))
         .unwrap();
     eprintln!(
         "Length of longest word    : {} characters ({})",
-        longest_word.chars().count(),
+        count_characters(longest_word),
         longest_word
     );
     let free_of_prefix_words = !has_prefix_words(&list);
@@ -290,15 +290,15 @@ pub fn find_first_different_character_zero_indexed(word1: &str, word2: &str) -> 
             }
             // word1 is longer than word2
             None => {
-                return word2.chars().count();
+                return count_characters(word2);
             }
         }
     }
     // Fall back to shorter word length
-    if word1.chars().count() < word2.chars().count() {
-        word1.chars().count()
+    if count_characters(word1) < count_characters(word2) {
+        count_characters(word1)
     } else {
-        word2.chars().count()
+        count_characters(word2)
     }
 }
 
@@ -356,17 +356,20 @@ pub fn efficiency_per_character(list: &[String]) -> f64 {
     entropy_per_word / mean_word_length
 }
 
-// https://www.youtube.com/watch?v=yHw1ka-4g0s
+/// This function returns a bool based on whether the list fulfills something
+/// called the McMillan Inequality
+/// See: https://www.youtube.com/watch?v=yHw1ka-4g0s
 pub fn satisfies_mcmillan(list: &[String]) -> bool {
-    let alphabet_size = count_unqiue_characters(list);
+    let alphabet_size = count_unique_characters(list);
     let mut running_total: f64 = 0.0;
     for word in list {
-        running_total += 1.0 / (alphabet_size.pow(word.chars().count().try_into().unwrap()) as f64);
+        running_total +=
+            1.0 / (alphabet_size.pow(count_characters(word).try_into().unwrap()) as f64);
     }
     running_total <= 1.0
 }
 
-fn count_unqiue_characters(list: &[String]) -> usize {
+fn count_unique_characters(list: &[String]) -> usize {
     let mut characters = vec![];
     for word in list {
         for l in word.chars() {
@@ -379,18 +382,20 @@ fn count_unqiue_characters(list: &[String]) -> usize {
 }
 
 /// A simple helper function that gets the shortest word on
-/// a list. Uses `.chars().count()` rather than `len()` to
-/// handle non-English characters.
+/// a list.
 pub fn get_shortest_word_length(list: &[String]) -> usize {
-    list.iter()
-        .min_by(|a, b| a.chars().count().cmp(&b.chars().count()))
-        .unwrap()
-        .chars()
-        .count()
+    count_characters(
+        list.iter()
+            .min_by(|a, b| count_characters(a).cmp(&count_characters(b)))
+            .unwrap(),
+    )
 }
 
 /// Calculates mean (or average) word length of given word
 /// list
 pub fn mean_word_length(list: &[String]) -> f32 {
-    list.iter().map(|word| word.chars().count()).sum::<usize>() as f32 / list.len() as f32
+    list.iter()
+        .map(|word| count_characters(word))
+        .sum::<usize>() as f32
+        / list.len() as f32
 }

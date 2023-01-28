@@ -227,13 +227,13 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         };
 
         if let Some(minimum_length) = req.minimum_length {
-            if new_word.chars().count() < minimum_length {
+            if count_characters(&new_word) < minimum_length {
                 continue;
             }
         };
 
         if let Some(maximum_length) = req.maximum_length {
-            if new_word.chars().count() > maximum_length {
+            if count_characters(&new_word) > maximum_length {
                 continue;
             }
         };
@@ -339,6 +339,16 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     // And remove duplicates one more time
     tidied_list = dedup_without_sorting(&mut tidied_list);
     tidied_list
+}
+
+use unicode_segmentation::UnicodeSegmentation;
+/// When counting characters of a word, we want to count all accented character as 1,
+/// regardless of the Unicode, to better approximate how humans would count the number
+/// of characters in a word.
+/// An alternate approach would be to convert each character to NFC before counting `word.nfc().count()`
+/// but I don't think this handles emoji as well as grapheme cluster counting.
+pub fn count_characters(word: &str) -> usize {
+    word.graphemes(true).count()
 }
 
 /// Little helper function that allows users to write out whitespace
