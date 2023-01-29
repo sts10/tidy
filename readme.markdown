@@ -350,15 +350,24 @@ Generate docs: `cargo doc --document-private-items --no-deps`. Add `--open` flag
 
 ## Blog posts related to this project
 
+* [Read about how Tidy handles Unicode normalization, locales, and alphabetizing words](https://sts10.github.io/2023/01/29/sorting-words-alphabetically-rust.html)
 * [Read more about the 0.2 version of this project](https://sts10.github.io/2021/12/09/tidy-0-2-0.html)
 * [Read about uniquely decodable codes and "Schlinkert pruning"](https://sts10.github.io/2022/08/12/efficiently-pruning-until-uniquely-decodable.html) (introduced in Tidy version 0.2.60)
 * [Read about initial inspiration for the project](https://sts10.github.io/2020/09/30/making-a-word-list.html)
 
-## Working with homophones
+## Using Tidy with non-English words and/or accented characters
 
-If you're looking for a relatively long list of English homophones, I'd humbly point you to [this other project of mine](https://github.com/sts10/homophones).
+Tidy does its best to work well with all languages. That said, I'm an English speaker and have not tested Tidy with other languages all that much. 
 
-### Using Tidy to remove homophones
+There are a few steps you can take to help Tidy produce a good word list in all languages. 
+
+If you're using Tidy to work a word list with accented characters, it is highly recommended that you:
+1. have Tidy normalize the Unicode of all characters on the list (e.g. `-z nfc` or `-z nfkd`). This will better ensure that there are no duplicate-looking words on the list, which could cause Tidy and others to over-estimate the strength of passphrases generated from the outputted list.
+2. specify the "locale" of the words on your list (e.g. `--locale fr` or `--locale ES-es`). This will ensure that the outputted list is sorted correctly.
+
+See [this blog post](https://sts10.github.io/2023/01/29/sorting-words-alphabetically-rust.html) for more. If you find Tidy not performing as expected with non-English words, please open an Issue on this repository with an example.
+
+## Using Tidy to remove homophones
 
 If passphrases from your list will ever be spoken out loud, you may want to consider removing homophones -- words that sound alike -- from your list.
 
@@ -368,6 +377,8 @@ Given a pair of homophones, like "sun" and "son":
 
 1. To ensure you don't have BOTH homophones in your generated list, you'd run `tidy` with a flag like `--homophones ../homophones/homophone-lists/homophones-large-as-pairs.txt` ([link](https://github.com/sts10/homophones/blob/main/homophone-lists/homophones-large-as-pairs.txt)). This will let either "sun" or "son" on your list but NOT both.
 2. To ensure you have NEITHER of the words in the homophone pair on your generated word list, you'd use the reject words flags: `-r ../homophones/homophone-lists/cleaned-as-singles.txt` ([link](https://github.com/sts10/homophones/blob/main/homophone-lists/cleaned-as-singles.txt)). This will remove _both_ "sun" and "son" from your generated list before its outputted.
+
+If you're looking for a relatively long list of English homophones, I'd humbly point you to [this other project of mine](https://github.com/sts10/homophones).
 
 ## Prefix codes, suffix codes, and uniquely decodable codes
 
