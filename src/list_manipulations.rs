@@ -16,7 +16,7 @@ pub fn normalize_unicode(word: &str, nf: &str) -> Result<String, String> {
     } else if nf.to_lowercase() == "nfkd" {
         Ok(word.nfkd().collect::<String>())
     } else {
-        Err("Unknown Unicode normalizaion form received in arguments.\nPleasue use one of the following normalizaion forms: nfc, nfd, nfkc, or nfkd.".to_string())
+        Err("Unknown Unicode Normalization Form received in arguments.\nPlease use one of the following normalization forms: nfc, nfd, nfkc, or nfkd.".to_string())
     }
 }
 
