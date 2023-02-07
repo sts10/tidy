@@ -364,6 +364,7 @@ There are a few steps you can take to help Tidy produce a good word list in all 
 If you're using Tidy to work a word list with accented characters, it is highly recommended that you:
 1. have Tidy normalize the Unicode of all characters on the list (e.g. `-z nfc` or `-z nfkd`). This will better ensure that there are no duplicate-looking words on the list, which could cause Tidy and others to over-estimate the strength of passphrases generated from the outputted list. Note that if you're passing a reject list file or approved list file to Tidy, you should normalize those lists _before_ using them. For example: `tidy -z nfc --locale ES-es --force -o profane-spanish-words.txt profane-spanish-words.txt && tidy -z nfc --locale ES-es -r profane-spanish-words.txt -o my-new-spanish-word-list.txt -l a-bunch-of-spanish-words.txt`
 2. specify the "locale" of the words on your list (e.g. `--locale fr` or `--locale ES-es`). This will ensure that the outputted list is sorted correctly.
+3. if the language you're working with has or may have apostrophes in words, consider using the `-q` or `--straighten` option to standardize these characters across all words on the new list.
 
 See [this blog post](https://sts10.github.io/2023/01/29/sorting-words-alphabetically-rust.html) for more. If you find Tidy not performing as expected with non-English words, please open an Issue on this repository with an example.
 
