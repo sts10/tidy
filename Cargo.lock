@@ -118,6 +118,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "glidesort"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f2e102e6eb644d3e0b186fc161e4460417880a0a0b87d235f2e5b8fb30f2e9e0"
+
+[[package]]
 name = "heck"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -635,6 +641,7 @@ name = "tidy"
 version = "0.2.84"
 dependencies = [
  "clap",
+ "glidesort",
  "icu",
  "icu_collator",
  "icu_testdata",
