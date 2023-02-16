@@ -24,9 +24,8 @@ pub fn print_list(print_req: PrintRequest) {
     if !print_req.quiet {
         if print_req.tidied_list.is_empty() {
             eprintln!(
-                "All words removed (tidied list is empty). Check inputted list and given options."
+                "WARNING: All words removed (tidied list is empty). Check inputted list and given options."
             );
-            return;
         } else if !print_req.dry_run {
             eprintln!("Printing new list...");
         }
@@ -63,9 +62,9 @@ pub fn print_list(print_req: PrintRequest) {
         }
     }
     if !print_req.quiet {
-        if !print_req.dry_run {
-            eprintln!("\nDone making list\n");
-        } else {
+        if !print_req.dry_run && !print_req.tidied_list.is_empty() {
+            eprintln!("\nDone making list.");
+        } else if print_req.dry_run {
             eprintln!("Dry run complete");
         }
         if print_req.attributes > 0 {
