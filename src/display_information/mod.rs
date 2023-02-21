@@ -26,7 +26,7 @@ pub fn display_list_information(
             let mut just_the_words = vec![];
             for word in list {
                 let split_vec = split_and_vectorize(word, &delimiter.to_string());
-                just_the_words.push(split_vec[0].to_string());
+                just_the_words.push(split_vec[1].to_string());
             }
             just_the_words
         }
@@ -35,7 +35,7 @@ pub fn display_list_information(
             let mut just_the_words = vec![];
             for word in list {
                 let split_vec = split_and_vectorize(word, &delimiter.to_string());
-                just_the_words.push(split_vec[1].to_string());
+                just_the_words.push(split_vec[0].to_string());
             }
             just_the_words
         }
@@ -163,12 +163,12 @@ pub fn generate_samples(
                     (Some(delimiter), None) => {
                         let delimiter = parse_delimiter(delimiter).unwrap();
                         samples
-                            .push(split_and_vectorize(word, &delimiter.to_string())[0].to_string())
+                            .push(split_and_vectorize(word, &delimiter.to_string())[1].to_string())
                     }
                     (None, Some(delimiter)) => {
                         let delimiter = parse_delimiter(delimiter).unwrap();
                         samples
-                            .push(split_and_vectorize(word, &delimiter.to_string())[1].to_string())
+                            .push(split_and_vectorize(word, &delimiter.to_string())[0].to_string())
                     }
                     (Some(_delimiter1), Some(_delimiter2)) => {
                         panic!("Can't have starting and ending delimiters")
