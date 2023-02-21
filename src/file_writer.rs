@@ -1,3 +1,4 @@
+use crate::cards::print_as_cards;
 use crate::dice::print_as_dice;
 use crate::display_information::display_list_information;
 use crate::display_information::generate_samples;
@@ -12,6 +13,7 @@ pub struct PrintRequest {
     pub quiet: bool,
     pub output: Option<PathBuf>,
     pub dice_sides: Option<u8>,
+    pub cards: bool,
     pub print_dice_sides_as_their_base: bool,
     pub attributes: u8,
     pub samples: bool,
@@ -37,6 +39,7 @@ pub fn print_list(print_req: PrintRequest) {
                 print_list_to_file(
                     &print_req.tidied_list,
                     output,
+                    print_req.cards,
                     print_req.dice_sides,
                     print_req.print_dice_sides_as_their_base,
                 );
@@ -55,6 +58,8 @@ pub fn print_list(print_req: PrintRequest) {
                                 print_req.print_dice_sides_as_their_base
                             )
                         );
+                    } else if print_req.cards {
+                        print!("{:}\t", print_as_cards(i, print_req.tidied_list.len()));
                     }
                     println!("{}", word);
                 }
@@ -97,6 +102,7 @@ pub fn print_list(print_req: PrintRequest) {
 fn print_list_to_file(
     tidied_list: &[String],
     output: PathBuf,
+    cards: bool,
     dice_sides: Option<u8>,
     print_dice_sides_as_their_base: bool,
 ) {
@@ -116,8 +122,11 @@ fn print_list_to_file(
                 ),
             )
             .expect("Unable to write dice roll to file");
+        } else if cards {
+            write!(f, "{}\t", print_as_cards(i, tidied_list.len()))
+                .expect("Unable to write corresponding card to file");
         }
-        // Else, just print the word
+
         writeln!(f, "{}", word).expect("Unable to write word to file");
     }
 }

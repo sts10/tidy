@@ -240,6 +240,11 @@ struct Args {
     #[clap(long = "sides-as-base")]
     print_dice_sides_as_their_base: bool,
 
+    /// Print playing card abbreviation next to each word.
+    /// Must be base 26,
+    #[clap(long = "cards")]
+    cards: bool,
+
     /// Path for outputted list file. If none given, generated word list
     /// will be printed to terminal.
     #[clap(short = 'o', long = "output")]
@@ -269,6 +274,11 @@ fn main() {
             eprintln!("{}", e);
             process::exit(1);
         }
+    }
+
+    if opt.cards && opt.dice_sides.is_some() {
+        eprintln!("Erroro: Cannot use dice and cards. Must be either cards or dice or neither.");
+        process::exit(1);
     }
 
     match validate_list_truncation_options(
@@ -435,6 +445,7 @@ fn main() {
         dry_run: opt.dry_run,
         quiet: opt.quiet,
         output: opt.output,
+        cards: opt.cards,
         dice_sides: opt.dice_sides,
         print_dice_sides_as_their_base: opt.print_dice_sides_as_their_base,
         attributes: opt.attributes,
