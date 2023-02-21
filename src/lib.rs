@@ -1,6 +1,7 @@
 use icu::locid::Locale;
 use rand::seq::SliceRandom;
 use rand::thread_rng;
+pub mod cards;
 pub mod dice;
 pub mod display_information;
 pub mod edit_distance;
