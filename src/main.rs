@@ -276,6 +276,11 @@ fn main() {
         }
     }
 
+    if opt.cards && opt.dice_sides.is_some() {
+        eprintln!("Can't use dice and cards. Must be either cards or dice or neither.");
+        process::exit(1);
+    }
+
     match validate_list_truncation_options(
         &opt.whittle_to,
         opt.print_rand,
