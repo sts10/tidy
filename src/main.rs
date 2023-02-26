@@ -241,7 +241,8 @@ struct Args {
     print_dice_sides_as_their_base: bool,
 
     /// Print playing card abbreviation next to each word.
-    /// Must be base 26,
+    /// Strongly recommend only use on lists that have 26^1, 26^2, 26^3,
+    /// etc. words
     #[clap(long = "cards")]
     cards: bool,
 
