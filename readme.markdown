@@ -233,6 +233,10 @@ Options:
           dice values. This setting defaults to `false`, which will 1-indexed dice values,
           and use double-digit numbers when necessary (e.g. 18-03-08)
 
+      --cards
+          Print playing card abbreviation next to each word. Strongly recommend only use 
+          on lists that have 26^1, 26^2, 26^3, etc. words
+
   -o, --output <OUTPUT>
           Path for outputted list file. If none given, generated word list will be printed 
           to terminal
