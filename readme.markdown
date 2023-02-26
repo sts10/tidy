@@ -235,7 +235,7 @@ Options:
 
       --cards
           Print playing card abbreviation next to each word. Strongly recommend only use 
-          on lists that have 26^1, 26^2, 26^3, etc. words
+          on lists with lengths that are powers of 26 (that have 26^1, 26^2, 26^3, etc.)
 
   -o, --output <OUTPUT>
           Path for outputted list file. If none given, generated word list will be printed 
