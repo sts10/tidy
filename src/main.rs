@@ -241,7 +241,7 @@ struct Args {
 
     /// Print playing card abbreviation next to each word.
     /// Strongly recommend only use on lists with lengths that are powers
-    /// of 26 (that have 26^1, 26^2, 26^3, etc.)
+    /// of 26 (26^1, 26^2, 26^3, etc.)
     #[clap(long = "cards")]
     cards: bool,
 
