@@ -258,7 +258,7 @@ struct Args {
     /// they'll be combined and de-duplicated. Requires at least
     /// one file.
     #[clap(name = "Inputted Word Lists", required = true)]
-    inputted_word_list: Vec<PathBuf>,
+    inputted_word_lists: Vec<PathBuf>,
 }
 
 fn main() {
@@ -268,6 +268,7 @@ fn main() {
     }
 
     // Some initial validations
+    // Check given number of dice sides
     match validate_dice_sides(opt.dice_sides) {
         Ok(()) => (),
         Err(e) => {
@@ -276,8 +277,17 @@ fn main() {
         }
     }
 
+    // Check if any of inputted_word_lists are directories
+    for file in &opt.inputted_word_lists {
+        if file.is_dir() {
+            eprintln!("Given file {:?} is a directory", file);
+            eprintln!("Exiting");
+            process::exit(1);
+        }
+    }
+
     if opt.cards && opt.dice_sides.is_some() {
-        eprintln!("Erroro: Cannot use dice and cards. Must be either cards or dice or neither.");
+        eprintln!("Error: Cannot use dice and cards. Must be either cards or dice or neither.");
         process::exit(1);
     }
 
@@ -324,7 +334,7 @@ fn main() {
     // it later, unfortunately.
     let this_tidy_request = TidyRequest {
         list: make_vec_from_filenames(
-            &opt.inputted_word_list,
+            &opt.inputted_word_lists,
             opt.skip_rows_start,
             opt.skip_rows_end,
         ),
