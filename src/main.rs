@@ -1,4 +1,5 @@
 use clap::Parser;
+use std::env;
 use std::path::Path;
 use std::path::PathBuf;
 use std::process;
@@ -63,9 +64,10 @@ struct Args {
     #[clap(short = 'z', long = "normalization-form")]
     normalization_form: Option<String>,
 
-    /// Specify a locale for words on the list. Aids with sorting. Examples: en-US, es-ES
-    #[clap(long = "locale", default_value = "en-US")]
-    locale: String,
+    /// Specify a locale for words on the list. Aids with sorting. Examples: en-US, es-ES. Defaults
+    /// to system LANG
+    #[clap(long = "locale")]
+    locale: Option<String>,
 
     /// Lowercase all words on new list
     #[clap(short = 'l', long = "lowercase")]
@@ -345,7 +347,13 @@ fn main() {
         ignore_before_delimiter: opt.ignore_before_delimiter,
         to_lowercase: opt.to_lowercase,
         normalization_form: opt.normalization_form,
-        locale: opt.locale,
+        locale: match opt.locale {
+            Some(lang) => lang,
+            None => match get_system_lang() {
+                Some(lang) => lang,
+                None => "en-US".to_string(),
+            },
+        },
         should_straighten_quotes: opt.straighten_quotes,
         should_remove_prefix_words: opt.remove_prefix_words,
         should_remove_suffix_words: opt.remove_suffix_words,
@@ -464,4 +472,13 @@ fn main() {
         ignore_after_delimiter,
     };
     print_list(this_print_request);
+}
+
+/// Read LANG environmental variable, if possible
+fn get_system_lang() -> Option<String> {
+    let name_of_environmental_variable = "LANG";
+    match env::var(name_of_environmental_variable) {
+        Ok(l) => Some(l.split('.').collect::<Vec<_>>()[0].to_string()),
+        Err(_e) => None,
+    }
 }
