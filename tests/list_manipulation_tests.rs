@@ -72,6 +72,7 @@ mod list_manipulation_tests {
             .collect(),
             vec![
                 "énigme", "enlever", "abbey", "zoo", "Zambia", "eager", "ezra", "año", "antena",
+                "anaconda",
             ]
             .iter()
             .map(|word| word.to_string())
@@ -567,6 +568,7 @@ mod list_manipulation_tests {
 
         let how_list_should_be_sorted: Vec<String> = vec![
             "abbey",
+            "anaconda",
             "antena",
             "año",
             "eager",
