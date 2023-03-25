@@ -65,7 +65,7 @@ struct Args {
     normalization_form: Option<String>,
 
     /// Specify a locale for words on the list. Aids with sorting. Examples: en-US, es-ES. Defaults
-    /// to system LANG
+    /// to system LANG. If LANG environmental variable is not set, uses en-US.
     #[clap(long = "locale")]
     locale: Option<String>,
 

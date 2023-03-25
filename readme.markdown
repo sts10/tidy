@@ -100,9 +100,8 @@ Options:
           (case insensitive). May negatively affect Tidy's performance
 
       --locale <LOCALE>
-          Specify a locale for words on the list. Aids with sorting. Examples: en-US, es-ES
-
-          [default: en-US]
+          Specify a locale for words on the list. Aids with sorting. Examples: en-US, es-ES. 
+          Defaults to system LANG. If LANG environmental variable is not set, uses en-US
 
   -l, --lowercase
           Lowercase all words on new list
