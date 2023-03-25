@@ -72,7 +72,7 @@ mod list_manipulation_tests {
             .collect(),
             vec![
                 "énigme", "enlever", "abbey", "zoo", "Zambia", "eager", "ezra", "año", "antena",
-                "anaconda",
+                "anaconda", "aptitude",
             ]
             .iter()
             .map(|word| word.to_string())
@@ -571,6 +571,7 @@ mod list_manipulation_tests {
             "anaconda",
             "antena",
             "año",
+            "aptitude",
             "eager",
             &normalize_unicode("énigme", "nfkd").unwrap(),
             "enlever",
