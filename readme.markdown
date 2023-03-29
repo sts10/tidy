@@ -264,9 +264,9 @@ Options:
 
 -   `tidy -lPiO -o new_list.txt inputted_word_list.txt` Same as above, but the added `-O` flag preserves the original order of the list, rather than sort it alphabetically. Note that duplicates and blank lines are still removed.
 
--   `tidy -I -o new_list.txt inputted_word_list.txt` Using the `-I` flag removes any words with integers from the list. For example, "hello1" would be removed from the list.
+-   `tidy -I -o new_list.txt inputted_word_list.txt` Using the `-I` flag removes any words with integers from the list. For example, "hello1" would be completely removed from the list, since it has an integer in it. Note that this is distinct from the lowercase `-i` flag, which would leave the word "hello" on the resulting list (removing the "1").
 
--   `tidy -AA -I -o new_list.txt inputted_word_list.txt` Adding `-AA` prints some information about the created list to the terminal.
+-   `tidy -AA -I -o new_list.txt inputted_word_list.txt` Adding `-AA` prints some information about the created list to the terminal. You can add up to 4 `A` flags to get the maximum amount of information that Tidy can print about a list. See below for more information.
 
 -   `tidy -l -o new_list.txt -r profane_words.txt inputted_word_list.txt` Similar to above, but ensures that none of the words in the profane_words.txt file make it on to the final list that is printed to new_list.txt. The reject list is case sensitive, so you may want to run it through tidy using the -l flag before using it. (You can find lists of profane words [here](https://github.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words) and [here](https://code.google.com/archive/p/badwordslist/downloads).)
 
@@ -276,7 +276,7 @@ Options:
 
 -   `tidy -lA -m 3 -o new-list.txt inputted_word_list.txt` Similar to above, but the `-m 3` means new list won't have any words under 3 characters in length. Have Tidy also print some attributes about the new list to the terminal screen.
 
--   `tidy -z nfkd --locale fr -o bip-0039/french.txt --force bip-0039/french.txt` Verify that [the BIP-0039 French list](https://github.com/bitcoin/bips/blob/master/bip-0039/french.txt) is (a) normalized to [Unicode Normalization Form](https://www.unicode.org/reports/tr15/) Compatibility Decomposition (abbreviated as NFKD) (as per [the BIP-0039 specification](https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki#wordlist)) and (b) sorted appropriately for the French language (thanks to specifying `--locale fr`). Locales can also be specified like "en-US" or "es-ES". If a `locale` is not specified, locale defaults to "en-US" (America!). This locale setting only really affects how the words on the outputted list are **sorted**, so it's not _crucial_ for users to specify one.
+-   `tidy -z nfkd --locale fr -o bip-0039/french.txt --force bip-0039/french.txt` Verify that [the BIP-0039 French list](https://github.com/bitcoin/bips/blob/master/bip-0039/french.txt) is (a) normalized to [Unicode Normalization Form](https://www.unicode.org/reports/tr15/) Compatibility Decomposition (abbreviated as NFKD) (as per [the BIP-0039 specification](https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki#wordlist)) and (b) sorted appropriately for the French language (thanks to specifying `--locale fr`). Locales can also be specified like "en-US" or "es-ES". If a `locale` is not specified, locale uses system LANG. If no LANG is found, uses "en-US". This locale setting only really affects how the words on the outputted list are **sorted**, so it's not _crucial_ for most use-cases to specify one.
 
 -   `tidy -d t -o just_the_words.txt diceware_list.txt` If you've got [a diceware list with numbers and a tab before each word](https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt), the `-d t` flag will delete everything up to and including the first tab in each line ("11133 abruptly" becomes "abruptly").
 
