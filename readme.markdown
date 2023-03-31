@@ -206,7 +206,7 @@ Options:
           Just before printing generated list, cut list down to a set number of
           words. Can accept expressions in the form of base**exponent (helpful
           for generating diceware lists). Words are selected from the beginning
-              of processed list, and before it is sorted alphabetically
+          of processed list, and before it is sorted alphabetically
 
   -m, --minimum-word-length <MINIMUM_LENGTH>
           Set minimum word length
