@@ -136,8 +136,9 @@ struct Args {
     #[clap(short = 'D', long = "delete-before")]
     delete_before_delimiter: Option<char>,
 
-    /// Only take first N words from inputted word list.
-    /// If two or more word lists are inputted, it will combine arbitrarily and then take first N words.
+    /// Only take first N words from inputted word list. If two or more word list files are
+    /// inputted, it will combine all given lists by alternating words from the given word list
+    /// files until it has N words
     #[clap(long = "take-first", value_parser=eval_list_length)]
     take_first: Option<usize>,
 

@@ -167,9 +167,9 @@ Options:
           -G options
 
       --take-first <TAKE_FIRST>
-          Only take first N words from inputted word list. If two or more word
-          lists are inputted, it will combine arbitrarily and then take first N
-          words
+          Only take first N words from inputted word list. If two or more word 
+          list files are inputted, it will combine all given lists by 
+          alternating words from the given word list files until it has N words
 
       --take-rand <TAKE_RAND>
           Only take a random N number of words from inputted word list. If two
