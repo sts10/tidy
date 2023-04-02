@@ -3,6 +3,7 @@ use std::fs::File;
 use std::io::BufRead;
 use std::io::BufReader;
 use std::path::PathBuf;
+
 /// Takes a slice of `PathBuf`s representing the word list(s)
 /// that the user has inputted to the program. Then iterates
 /// through each file and addes each line to Vec<String>. (Blank
@@ -12,7 +13,7 @@ pub fn make_vec_from_filenames(
     skip_rows_start: Option<usize>,
     skip_rows_end: Option<usize>,
 ) -> Vec<String> {
-    let mut word_list: Vec<String> = [].to_vec();
+    let mut word_lists_by_file: Vec<Vec<String>> = [].to_vec();
     for filename in filenames {
         let f = match File::open(filename) {
             Ok(file) => file,
@@ -33,32 +34,55 @@ pub fn make_vec_from_filenames(
             };
             raw_lines.push(l);
         }
-        let number_of_lines_in_file = raw_lines.len();
-
+        let size_of_raw_lines = raw_lines.len();
+        let mut word_list_from_this_file = [].to_vec();
         for (line_number, line) in raw_lines.into_iter().enumerate() {
             match (skip_rows_start, skip_rows_end) {
                 (Some(skip_rows_start), Some(skip_rows_end)) => {
                     if line_number >= skip_rows_start
-                        && line_number < number_of_lines_in_file - skip_rows_end
+                        && line_number < size_of_raw_lines - skip_rows_end
                     {
-                        word_list.push(line);
+                        word_list_from_this_file.push(line);
                     }
                 }
                 (Some(skip_rows_start), None) => {
                     if line_number >= skip_rows_start {
-                        word_list.push(line);
+                        word_list_from_this_file.push(line);
                     }
                 }
                 (None, Some(skip_rows_end)) => {
-                    if line_number < number_of_lines_in_file - skip_rows_end {
-                        word_list.push(line);
+                    if line_number < size_of_raw_lines - skip_rows_end {
+                        word_list_from_this_file.push(line);
                     }
                 }
-                (None, None) => word_list.push(line),
+                (None, None) => word_list_from_this_file.push(line),
+            }
+        }
+        word_lists_by_file.push(word_list_from_this_file);
+    }
+    // Finally, "blend" words into one Vec<String>
+    blend(&word_lists_by_file)
+}
+
+/// "Blend" words together one at a time, like dealing cards in reverse
+pub fn blend(word_lists_by_file: &[Vec<String>]) -> Vec<String> {
+    let mut size_of_longest_vector = 0;
+    for word_list in word_lists_by_file {
+        if size_of_longest_vector < word_list.len() {
+            size_of_longest_vector = word_list.len();
+        }
+    }
+    // "Blend" words together one at a time, like dealing cards in reverse
+    let mut blended = [].to_vec();
+    for i in 0..size_of_longest_vector {
+        for list in word_lists_by_file {
+            if list.len() > i {
+                // Dunno how to not call clone here...
+                blended.push(list[i].clone());
             }
         }
     }
-    word_list
+    blended
 }
 
 /// Like `make_vec_from_filenames`, this function takes a slice of `PathBuf`s of
