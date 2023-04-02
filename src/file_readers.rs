@@ -3,6 +3,7 @@ use std::fs::File;
 use std::io::BufRead;
 use std::io::BufReader;
 use std::path::PathBuf;
+
 /// Takes a slice of `PathBuf`s representing the word list(s)
 /// that the user has inputted to the program. Then iterates
 /// through each file and addes each line to Vec<String>. (Blank
@@ -59,9 +60,14 @@ pub fn make_vec_from_filenames(
         }
         word_lists_by_file.push(word_list_from_this_file);
     }
+    // Finally, "blend" words into one Vec<String>
+    blend(&word_lists_by_file)
+}
 
+/// "Blend" words together one at a time, like dealing cards in reverse
+pub fn blend(word_lists_by_file: &[Vec<String>]) -> Vec<String> {
     let mut size_of_longest_vector = 0;
-    for word_list in &word_lists_by_file {
+    for word_list in word_lists_by_file {
         if size_of_longest_vector < word_list.len() {
             size_of_longest_vector = word_list.len();
         }
@@ -69,9 +75,9 @@ pub fn make_vec_from_filenames(
     // "Blend" words together one at a time, like dealing cards in reverse
     let mut blended = [].to_vec();
     for i in 0..size_of_longest_vector {
-        for list in &word_lists_by_file {
+        for list in word_lists_by_file {
             if list.len() > i {
-                // Dunno how to not call clone here
+                // Dunno how to not call clone here...
                 blended.push(list[i].clone());
             }
         }
