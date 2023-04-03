@@ -144,7 +144,7 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         // Trim new word, then normalize unicode if user gave an
         // nromalization form to use
         new_word = match &req.normalization_form {
-            Some(nf) => match normalize_unicode(new_word.trim(), &nf) {
+            Some(nf) => match normalize_unicode(new_word.trim(), nf) {
                 Ok(word) => word,
                 Err(e) => panic!("{}", e),
             },
