@@ -534,6 +534,7 @@ See [this repo](https://github.com/sts10/splitter) for more information.
 -   [Monero's word list](https://github.com/monero-project/monero/blob/master/src/mnemonics/english.h) (1,626 words) (h/t [atoponce](https://www.reddit.com/r/Passwords/comments/sqrymt/comment/hwnfb94/))
 -   [Mnemonicode](https://github.com/schollz/mnemonicode/blob/master/word_list.go) is another word list optimized for pronunciation. I believe [croc](https://github.com/schollz/croc), a file transferring tool, uses it.
 -   [Magic Wormhole](https://github.com/magic-wormhole/magic-wormhole/), a tool for transferring files, uses [a version of the PGP Word List](https://github.com/magic-wormhole/magic-wormhole/blob/master/src/wormhole/_wordlist.py), which specifically tries to use pairs of words that are phonetically distinct.
+-   [A list of word lists](http://www.webplaces.com/passwords/passphrase-word-lists.htm).
 -   A collection of a few [Public Domain Word Lists](https://github.com/MichaelWehar/Public-Domain-Word-Lists)
 -  [ulif's "diceware"](https://github.com/ulif/diceware) seems to have collected [a few word lists](https://github.com/ulif/diceware/tree/master/diceware/wordlists) in its Github repo, along with [a separate page that explains each of the lists](https://github.com/ulif/diceware/blob/master/docs/wordlists.rst).
 -   [dmuth's "diceware" program](https://github.com/dmuth/diceware) has a [collection of lists](https://github.com/dmuth/diceware/tree/master/wordlist) (h/t [atoponce](https://www.reddit.com/r/Passwords/comments/sqrymt/comment/hwnfb94/))
@@ -549,7 +550,7 @@ See [this repo](https://github.com/sts10/splitter) for more information.
 
 ### Shameless plug
 
--   I've created [a few word lists](https://github.com/sts10/generated-wordlists) using Tidy.
+-   I used Tidy to create [Orchard Street Wordlists](https://github.com/sts10/orchard-street-wordlists) ([as well as a few other word lists](https://github.com/sts10/generated-wordlists)).
 
 ## Appendix B: Tools that seem similar to Tidy
 -   [cook](https://github.com/giteshnxtlvl/cook): "An overpower[ed] wordlist generator, splitter, merger, finder, saver, create words permutation and combinations, apply different encoding/decoding and everything you need." Written in Go.
