@@ -524,8 +524,8 @@ See [this repo](https://github.com/sts10/splitter) for more information.
 -   The [Electronic Frontier Foundation](https://www.eff.org/) has published [a few word lists for creating diceware passphrases](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases). 
     -   I'm pretty sure password manager BitWarden uses [the EFF long list](https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt). 
     -   [KeePassXC](https://keepassxc.org/) uses [the EFF long list with some minor modifications](https://github.com/keepassxreboot/keepassxc/blob/develop/share/wordlists/eff_large.wordlist). 
-    -   The EFF also has some [fandom-inspired lists](https://www.eff.org/deeplinks/2018/08/dragon-con-diceware). They use a space between dice numbers and words, so Tidy can clean up with the `-D s` option.
     -   Note: These lists often have a tab between the dice numbers and each word. Tidy can delete the dice numbers easily with something like `tidy -D t -o clean_eff.txt eff_large_wordlist.txt` or using the `-i` flag.
+    <!-- -   The EFF also has some [fandom-inspired lists](https://www.eff.org/deeplinks/2018/08/dragon-con-diceware). They use a space between dice numbers and words, so Tidy can clean up with the `-D s` option. -->
 -   I'm [pretty sure](https://twitter.com/1Password/status/1462885816569577480) this is [1Password](https://1password.com/)'s [word list](https://1password.com/txt/agwordlist.txt) as of 2021.
     -   1Password published a slightly different [word list](https://github.com/agilebits/crackme/blob/master/doc/AgileWords.txt) in 2018.
 -   If you're using Linux or MacOS, you've likely got some long lists on your computer. Check `/usr/share/dict/words` or `/usr/share/dict/american-english`.
