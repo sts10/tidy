@@ -545,6 +545,8 @@ See [this repo](https://github.com/sts10/splitter) for more information.
 -   [Original "Reinhold" diceware list](https://theworld.com/%7Ereinhold/diceware.wordlist.asc) created by [Arnold Reinhold](https://theworld.com/~reinhold/). Though it has some issues.
     -   Arnold Reinhold hosts [diceware lists in a variety of languages](https://theworld.com/~reinhold/diceware.html#Diceware%20in%20Other%20Languages|outline).
 -   [simple1024](https://github.com/pera/simple1024) is a word list with 1024 common English words, an alternative to EFF's short word lists.
+-   [SCOWL (Spell Checker Oriented Word Lists) and Friends](http://wordlist.aspell.net/) "is a database of information on English words useful for creating high-quality word lists suitable for use in spell checkers of most dialects of English."
+    -   [ENABLE2K](https://web.archive.org/web/20090122025747/http://personal.riverusers.com/~thegrendel/software.html) seems to be an older version of the SCOWL project? 
 -   [Danish wordlists](https://github.com/n0kovo/danish-wordlists) is a "collection of [Danish] wordlists for cracking danish passwords"
 -   [r/wordlists subreddit](https://www.reddit.com/r/wordlists/), which seems to have links to a few non-English word lists.
 -   You can also scan [GitHub's #wordlists topic](https://github.com/topics/wordlists)
