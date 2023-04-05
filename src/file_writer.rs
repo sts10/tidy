@@ -90,9 +90,15 @@ pub fn print_list(print_req: PrintRequest) {
             eprintln!("-------------------------------------------");
             for n in 0..30 {
                 if n != 0 && n % 6 == 0 {
+                    // if we're at the end of the 6th word,
+                    // print a newline
                     eprintln!();
+                } else if n != 0 {
+                    // else just print a space to go between each
+                    // word
+                    eprint!(" ");
                 }
-                eprint!("{} ", samples[n]);
+                eprint!("{}", samples[n]);
             }
             eprintln!();
         }
