@@ -44,7 +44,7 @@ Optionally, the tool can...
 -   print corresponding dice rolls before words, separated by a tab. Dice can have 2 to 36 sides. (`--dice`)
 -   print information about the new list, such as entropy per word, to the terminal (`-A`, `-AA`, `-AAA`, or `-AAAA` depending on how much information you want to printed)
 
-and more! 
+and more!
 
 If you do NOT want Tidy to sort list alphabetically, you can use the `--no-sort` option.
 
@@ -167,8 +167,8 @@ Options:
           -G options
 
       --take-first <TAKE_FIRST>
-          Only take first N words from inputted word list. If two or more word 
-          list files are inputted, it will combine all given lists by 
+          Only take first N words from inputted word list. If two or more word
+          list files are inputted, it will combine all given lists by
           alternating words from the given word list files until it has N words
 
       --take-rand <TAKE_RAND>
@@ -185,13 +185,13 @@ Options:
           this option may cause Tidy to take a moment to produce the finished
           list. Can accept expressions in the form of base**exponent (helpful
           for generating diceware lists).
-          
+
           This option should generally only be used if all of the following
           conditions are met: (a) the inputted word list is sorted by
           desirability (e.g. ordered by word frequency); (b) the user is either
           removing prefix words, removing suffix words, or doing a Schlinkert
           prune; (c) the user needs the resulting list to be a specified length.
-          
+
           Optionally can also take a "starting point" after a comma. For
           example, --whittle-to 7776,15000 would start by taking the first
           15,000 words from the inputted list(s) as a first attempt at making a
@@ -308,7 +308,7 @@ Options:
 
 -   `tidy -P -x 4 --print-rand 7776 --dice 6 --output diceware.txt 1password-2021.txt` Make a 7,776-word list from a [1Password (~18k) word list](https://1password.com/txt/agwordlist.txt), removing prefix words and guaranteeing 4 characters can auto-complete any word. Lastly, add corresponding 6-sided dice role for each word.
 
--   `tidy -o d-and-d.txt --dice 20 --print-rand 20**3 wordlist.txt` Create an 8,000-word list where each word corresponds to 3 rolls of a 20-sided die (`06-07-07	dragon`). `--print-rand` randomly truncates the resulting list to the specified amount -- can accept integers (`8000`) or informal exponent notation (`20**3`). 
+-   `tidy -o d-and-d.txt --dice 20 --print-rand 20**3 wordlist.txt` Create an 8,000-word list where each word corresponds to 3 rolls of a 20-sided die (`06-07-07	dragon`). `--print-rand` randomly truncates the resulting list to the specified amount -- can accept integers (`8000`) or informal exponent notation (`20**3`).
 
 -   `tidy -d s --whittle-to 7776 -PlL -m 3 -M 12 --dice 6 -o wiki-diceware.txt ~/Downloads/enwiki-20190320-words-frequency-sorted.txt` Carefully make a 7,776-word list by only taking the words needed from the top of `~/Downloads/enwiki-20190320-words-frequency-sorted.txt` [file](https://github.com/IlyaSemenov/wikipedia-word-frequency/blob/master/results/enwiki-20190320-words-frequency.txt). Assumes this file is sorted by word frequencies, with a frequency count after the word, separated by a space (example line: `located 1039008`). Since we only want to use the most common words, we'll use Tidy's `--whittle-to` option to only take exactly how many words we need to construct a list of 7,776 words. Note that this may take longer that usual Tidy executions, since Tidy will very likely need to make multiple attempts to make a list that's exactly the requested length. [More info on whittle](https://github.com/sts10/tidy/issues/15#issuecomment-1215907335).
 
@@ -342,10 +342,10 @@ Using the `--samples` flag will print 5 sample passphrases to the terminal. (Not
 ```txt
 Pseudorandomly generated sample words
 -------------------------------------
-departure traitor augmented supremacy device annoying 
-steep frigidity wreath barterer tibia reprimand 
-creamlike strum snowfall tannery clean protrude 
-favorable unlivable vanquish crate sarcastic exclude 
+departure traitor augmented supremacy device annoying
+steep frigidity wreath barterer tibia reprimand
+creamlike strum snowfall tannery clean protrude
+favorable unlivable vanquish crate sarcastic exclude
 fastness september boasting unbroken battalion sweep
 ```
 
@@ -384,9 +384,9 @@ Generate docs: `cargo doc --document-private-items --no-deps`. Add `--open` flag
 
 ## Using Tidy with non-English words and/or accented characters
 
-Tidy does its best to work well with all languages. That said, I'm an English speaker and have not tested Tidy with other languages all that much. 
+Tidy does its best to work well with all languages. That said, I'm an English speaker and have not tested Tidy with other languages all that much.
 
-There are a few steps you can take to help Tidy produce a good word list in all languages. 
+There are a few steps you can take to help Tidy produce a good word list in all languages.
 
 If you're using Tidy to work a word list with accented characters, it is highly recommended that you:
 1. have Tidy normalize the Unicode of all characters on the list (e.g. `-z nfc` or `-z nfkd`). This will better ensure that there are no duplicate-looking words on the list, which could cause Tidy and others to over-estimate the strength of passphrases generated from the outputted list. Note that if you're passing a reject list file or approved list file to Tidy, you should normalize those lists _before_ using them. For example: `tidy -z nfc --locale ES-es -l --force -o profane-spanish-words.txt profane-spanish-words.txt && tidy -z nfc --locale ES-es -r profane-spanish-words.txt -o my-new-spanish-word-list.txt -l a-bunch-of-spanish-words.txt`
@@ -412,7 +412,7 @@ If you're looking for a relatively long list of English homophones, I'd humbly p
 
 If a word list is "uniquely decodable" that means that words from the list can be combined with a delimiter.
 
-As a brief example, if a list has "boy", "hood", and "boyhood" on it, users who specified they wanted two words worth of randomness (entropy) might end up with "boyhood", which an attacker guessing single words would try. Removing the word "boy", which makes the remaining list uniquely decodable, prevents this possibility from occurring. 
+As a brief example, if a list has "boy", "hood", and "boyhood" on it, users who specified they wanted two words worth of randomness (entropy) might end up with "boyhood", which an attacker guessing single words would try. Removing the word "boy", which makes the remaining list uniquely decodable, prevents this possibility from occurring.
 
 To make a list uniquely decodable, Tidy removes words. Tidy offers three (3) distinct procedures to make cuts until a list is uniquely decodable. Users can (1) remove all [prefix words](https://en.wikipedia.org/wiki/Prefix_code), (2) remove all suffix words, or (3) perform a procedure based on [the Sardinas–Patterson algorithm](https://en.wikipedia.org/wiki/Sardinas%E2%80%93Patterson_algorithm) that I have named "Schlinkert pruning." You can learn more about uniquely decodable codes and Schlinkert pruning from [this blog post](https://sts10.github.io/2022/08/12/efficiently-pruning-until-uniquely-decodable.html).
 
@@ -420,9 +420,9 @@ Tidy can also simply check if a list is uniquely decodable. It does this using [
 
 ## Whittling
 
-Tidy offers an option `--whittle-to`. This option should **only** be used in specific situations -- users generally should prefer `--print-rand` or `--print-first` options. The situation where whittling gives an advantage over the `print` options is when the following conditions are met: 
+Tidy offers an option `--whittle-to`. This option should **only** be used in specific situations -- users generally should prefer `--print-rand` or `--print-first` options. The situation where whittling gives an advantage over the `print` options is when the following conditions are met:
 (a) the inputted word list is sorted by desirability (e.g. ordered by word frequency) and
-(b) the user is either removing prefix words (`-P`), removing suffix words (`-S`), and/or doing a Schlinkert prune (`-K`). 
+(b) the user is either removing prefix words (`-P`), removing suffix words (`-S`), and/or doing a Schlinkert prune (`-K`).
 
 To see why whittling is best for this particular situation, see [this document](https://gist.github.com/sts10/25e75d39acdeeafddad943d4d32684ff).
 
@@ -430,7 +430,7 @@ To see why whittling is best for this particular situation, see [this document](
 
 Tidy allows users to set a maximum shared prefix length.
 
-Setting this value to say, 4, means that knowing the first 4 characters of any word on the generated list is sufficient to know which word it is. 
+Setting this value to say, 4, means that knowing the first 4 characters of any word on the generated list is sufficient to know which word it is.
 
 On this example generated list where we told Tidy to make the maximum shared prefix length 4 characters, we'd know that if a word starts with "radi", we know it must be the word "radius" (if "radical" had been on the list, Tidy would have removed it).
 
@@ -442,7 +442,7 @@ Use the attributes flag twice (`-AA`) to get information about shared prefix len
 
 ## What is "Efficiency per character" and "Assumed entropy per char" and what's the difference?
 
-If we take the entropy per word from a list (log<sub>2</sub>(list_length)) and divide it by the **average** word length of words on the list, we get a value we might call "efficiency per character". This just means that, on average, you get _E_ bits per character typed. 
+If we take the entropy per word from a list (log<sub>2</sub>(list_length)) and divide it by the **average** word length of words on the list, we get a value we might call "efficiency per character". This just means that, on average, you get _E_ bits per character typed.
 
 If we take the entropy per word from a list (log<sub>2</sub>(list_length)) and divide it by the length of the **shortest** word on the list, we get a value we might call "assumed entropy per char" (or character).
 
@@ -462,7 +462,7 @@ To see if a given generated list falls above or below this line, use the `-A`/`-
 
 #### Maximum word list lengths to clear the Brute Force Line
 
-Formula: 
+Formula:
 
 Where _S_ is the length of the shortest word on the list, 26 is the number of letters in the English alphabet, and _M_ is max list length: _M_ = 2<sup>_S_ * log<sub>2</sub>(26)</sup>. Conveniently, [this simplifies rather nicely](https://github.com/sts10/tidy/issues/9#issuecomment-1216003299) to _M_ = 26<sup>_S_</sup>.
 
@@ -481,7 +481,7 @@ If we go by [a 1951 Claude Shannon paper](https://www.princeton.edu/~wbialek/rom
 
 #### Maximum word list lengths to clear the Shannon Line
 
-Formula: 
+Formula:
 
 Where _S_ is the length of the shortest word on the list and _M_ is max list length: 2<sup>_S_ * 2.6</sup> = _M_
 
@@ -513,7 +513,7 @@ See [this repo](https://github.com/sts10/splitter) for more information.
 
 ## To do
 
--   [X] Add option to remove suffix words 
+-   [X] Add option to remove suffix words
 -   [X] Add option to remove words that have characters from certain character sets, for example non-ASCII characters
 -   [ ] Figure out how to have Tidy read from stdin (See [issue #12](https://github.com/sts10/tidy/issues/12))
 -   [ ] Improve performance of Sardinas-Patterson functions
@@ -521,9 +521,9 @@ See [this repo](https://github.com/sts10/splitter) for more information.
 
 ## Appendix A: Where can I find some word lists?
 
--   The [Electronic Frontier Foundation](https://www.eff.org/) has published [a few word lists for creating diceware passphrases](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases). 
-    -   I'm pretty sure password manager BitWarden uses [the EFF long list](https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt). 
-    -   [KeePassXC](https://keepassxc.org/) uses [the EFF long list with some minor modifications](https://github.com/keepassxreboot/keepassxc/blob/develop/share/wordlists/eff_large.wordlist). 
+-   The [Electronic Frontier Foundation](https://www.eff.org/) has published [a few word lists for creating diceware passphrases](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases).
+    -   I'm pretty sure password manager BitWarden uses [the EFF long list](https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt).
+    -   [KeePassXC](https://keepassxc.org/) uses [the EFF long list with some minor modifications](https://github.com/keepassxreboot/keepassxc/blob/develop/share/wordlists/eff_large.wordlist).
     -   Note: These lists often have a tab between the dice numbers and each word. Tidy can delete the dice numbers easily with something like `tidy -D t -o clean_eff.txt eff_large_wordlist.txt` or using the `-i` flag.
     <!-- -   The EFF also has some [fandom-inspired lists](https://www.eff.org/deeplinks/2018/08/dragon-con-diceware). They use a space between dice numbers and words, so Tidy can clean up with the `-D s` option. -->
 -   I'm [pretty sure](https://twitter.com/1Password/status/1462885816569577480) this is [1Password](https://1password.com/)'s [word list](https://1password.com/txt/agwordlist.txt) as of 2021.
