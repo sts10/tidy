@@ -86,8 +86,8 @@ pub fn print_list(print_req: PrintRequest) {
                 print_req.ignore_after_delimiter,
                 print_req.ignore_before_delimiter,
             );
-            eprintln!("\nPseudorandomly generated sample passphrases");
-            eprintln!("-------------------------------------------");
+            eprintln!("\nWord samples");
+            eprintln!("------------");
             for n in 0..30 {
                 if n != 0 && n % 6 == 0 {
                     // if we're at the end of the 6th word,
