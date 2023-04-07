@@ -144,6 +144,7 @@ pub fn display_list_information(
         eprintln!("Kraft-McMillan inequality : {}", mcmillan);
     }
 }
+
 use rand::seq::SliceRandom;
 /// Print 5 sample 6-word passphrases from the newly created
 /// word list.
@@ -155,32 +156,42 @@ pub fn generate_samples(
     let mut samples: Vec<String> = vec![];
     for _n in 0..30 {
         match list.choose(&mut rand::thread_rng()) {
-            Some(word) => {
-                match (
-                    ignore_ending_metadata_delimiter,
-                    ignore_starting_metadata_delimiter,
-                ) {
-                    (Some(delimiter), None) => {
-                        let delimiter = parse_delimiter(delimiter).unwrap();
-                        samples
-                            .push(split_and_vectorize(word, &delimiter.to_string())[1].to_string())
-                    }
-                    (None, Some(delimiter)) => {
-                        let delimiter = parse_delimiter(delimiter).unwrap();
-                        samples
-                            .push(split_and_vectorize(word, &delimiter.to_string())[0].to_string())
-                    }
-                    (Some(_delimiter1), Some(_delimiter2)) => {
-                        panic!("Can't have starting and ending delimiters")
-                    }
-
-                    (None, None) => samples.push(word.to_string()),
-                }
-            }
+            Some(word) => samples.push(clean_word_of_metadata_using_delimiter(
+                word,
+                ignore_ending_metadata_delimiter,
+                ignore_starting_metadata_delimiter,
+            )),
             None => panic!("Couldn't pick a random word"),
         }
     }
     samples
+}
+
+/// Removes "metadata" from word, as specified by ending or starting
+/// delimiter
+fn clean_word_of_metadata_using_delimiter(
+    word: &str,
+    ignore_ending_metadata_delimiter: Option<char>,
+    ignore_starting_metadata_delimiter: Option<char>,
+) -> String {
+    match (
+        ignore_ending_metadata_delimiter,
+        ignore_starting_metadata_delimiter,
+    ) {
+        (Some(delimiter), None) => {
+            let delimiter = parse_delimiter(delimiter).unwrap();
+            split_and_vectorize(word, &delimiter.to_string())[1].to_string()
+        }
+        (None, Some(delimiter)) => {
+            let delimiter = parse_delimiter(delimiter).unwrap();
+            split_and_vectorize(word, &delimiter.to_string())[0].to_string()
+        }
+        (Some(_delimiter1), Some(_delimiter2)) => {
+            panic!("Can't have starting and ending delimiters")
+        }
+
+        (None, None) => word.to_string(),
+    }
 }
 
 /// Calculate the entropy per word of a word list, given its size.
