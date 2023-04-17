@@ -511,14 +511,6 @@ Tidy's function for removing characters on either side of a given delimiter uses
 
 See [this repo](https://github.com/sts10/splitter) for more information.
 
-## To do
-
--   [X] Add option to remove suffix words
--   [X] Add option to remove words that have characters from certain character sets, for example non-ASCII characters
--   [ ] Figure out how to have Tidy read from stdin (See [issue #12](https://github.com/sts10/tidy/issues/12))
--   [ ] Improve performance of Sardinas-Patterson functions
-<!-- -   [ ] Investigate making the list variable as [AHashSet](https://github.com/tkaitchuck/ahash)<String> rather than a `Vec<String>` to potentially boost performance. Will probably need to write some benchmarks with Criterion to measure potential performance gains. -->
-
 ## Appendix A: Where can I find some word lists?
 
 -   The [Electronic Frontier Foundation](https://www.eff.org/) has published [a few word lists for creating diceware passphrases](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases).
