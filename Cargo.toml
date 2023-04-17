@@ -6,7 +6,7 @@ license = "MIT"
 edition = "2021"
 
 [dependencies]
-clap = { version = "4.0.32", features = ["derive"] }
+clap = { version = "4.2.2", features = ["derive"] }
 memchr = "2.5"
 radix_fmt = "1.0.0"
 rand = "0.8.4"
