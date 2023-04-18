@@ -105,7 +105,7 @@ allow = [
     "MIT",
     "Apache-2.0",
     "Unicode-DFS-2016",
-    #"Apache-2.0 WITH LLVM-exception",
+    "Unlicense"
 ]
 # List of explicitly disallowed licenses
 # See https://spdx.org/licenses/ for list of possible licenses
@@ -263,8 +263,8 @@ allow-git = []
 
 [sources.allow-org]
 # 1 or more github.com organizations to allow git sources for
-# github = [""]
+github = []
 # 1 or more gitlab.com organizations to allow git sources for
-# gitlab = [""]
+gitlab = []
 # 1 or more bitbucket.org organizations to allow git sources for
-# bitbucket = [""]
+bitbucket = []
