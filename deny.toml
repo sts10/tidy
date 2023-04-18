@@ -103,16 +103,11 @@ unlicensed = "deny"
 # [possible values: any SPDX 3.11 short identifier (+ optional exception)].
 allow = [
     "Apache-2.0",
-    "BSD-2-Clause",
-    "BSD-2-Clause-Patent",
-    "BSD-3-Clause",
-    "BlueOak-1.0.0",
     "MIT",
     "Unicode-DFS-2016",
     "Unlicense"
 ]
-# It's fine if any of the above allowed licenses are NOT found.
-unused-allowed-license = "allow"
+unused-allowed-license = "warn"
 # List of explicitly disallowed licenses
 # See https://spdx.org/licenses/ for list of possible licenses
 # [possible values: any SPDX 3.11 short identifier (+ optional exception)].
