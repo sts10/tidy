@@ -141,11 +141,36 @@ pub fn guarantee_maximum_prefix_length(
 /// Executes Schlinkert prune. Attempts to make list uniquely decodable
 /// by removing the fewest number of code words possible. Adapted from
 /// Sardinas-Patterson algorithm.
+/// Runs word list in both as given and reversed, prefering which ever
+/// preserves more words from the given list.
 pub fn schlinkert_prune(list: &[String]) -> Vec<String> {
-    let offenders_to_remove = get_sardinas_patterson_final_intersection(list);
+    let offenders_to_remove_forwards = get_sardinas_patterson_final_intersection(list);
+    // Reversing all words before running the Schlinkert prune gives a
+    // different list of offending words
+    let offenders_to_remove_backwards =
+        get_sardinas_patterson_final_intersection(&reverse_all_words(list));
     let mut new_list = list.to_owned();
-    new_list.retain(|x| !offenders_to_remove.contains(x));
+    // If running the prune on the reversed words yielded fewer offenders
+    // we'll use that list, since our assumed goal is to remove the fewest
+    // number of words as possible.
+    if offenders_to_remove_forwards.len() <= offenders_to_remove_backwards.len() {
+        new_list.retain(|x| !offenders_to_remove_forwards.contains(x));
+    } else {
+        new_list.retain(|x| !offenders_to_remove_backwards.contains(x));
+    }
     new_list
+}
+
+/// Reverse all words on given list
+/// ["hotdog", "hamburger", "alligator"] becomes
+/// ["godtoh", "regrubmah", "rotagilla"]
+/// Probably doesn't work well on complex graphmemes...
+fn reverse_all_words(list: &[String]) -> Vec<String> {
+    let mut reversed_list = vec![];
+    for word in list {
+        reversed_list.push(word.chars().rev().collect::<String>());
+    }
+    reversed_list
 }
 
 use unicode_segmentation::UnicodeSegmentation;
