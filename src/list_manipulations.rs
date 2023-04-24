@@ -163,14 +163,14 @@ pub fn schlinkert_prune(list: &[String]) -> Vec<String> {
     new_list
 }
 
-/// Reverse all words on given list
-/// ["hotdog", "hamburger", "alligator"] becomes
-/// ["godtoh", "regrubmah", "rotagilla"]
-/// Probably doesn't work well on complex graphmemes...
-fn reverse_all_words(list: &[String]) -> Vec<String> {
+/// Reverse all words on given list. For example,
+/// `["hotdog", "hamburger", "alligator"]` becomes
+/// `["godtoh", "regrubmah", "rotagilla"]`
+/// Uses graphemes to ensure it handles accented characters correctly.
+pub fn reverse_all_words(list: &[String]) -> Vec<String> {
     let mut reversed_list = vec![];
     for word in list {
-        reversed_list.push(word.chars().rev().collect::<String>());
+        reversed_list.push(word.graphemes(true).rev().collect::<String>());
     }
     reversed_list
 }
