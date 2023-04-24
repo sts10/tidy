@@ -6,13 +6,11 @@
 /// very closely.
 use std::collections::HashSet;
 
-/// Return true if the list is uniquely decodable, false if not
+/// Return true if the list is uniquely decodable, false if not. I
+/// don't _think_ we need to check reversed words in this case.
 pub fn check_decodability(c: &[String]) -> bool {
-    let is_c_uniquely_decodable_forwards = sardinas_patterson_theorem(vec_to_hash(c));
-    // We need to check both forward and reverse
-    let c_reversed = reverse_all_words(c);
-    let is_c_uniquely_decodable_backwards = sardinas_patterson_theorem(vec_to_hash(&c_reversed));
-    is_c_uniquely_decodable_forwards || is_c_uniquely_decodable_backwards
+    let is_c_uniquely_decodable = sardinas_patterson_theorem(vec_to_hash(c));
+    is_c_uniquely_decodable
 }
 
 fn vec_to_hash(v: &[String]) -> HashSet<String> {
@@ -75,14 +73,6 @@ fn generate_c_infinity_with_a_halt_break(c: HashSet<String>) -> HashSet<String> 
         }
     }
     c_infinity
-}
-
-fn reverse_all_words(list: &[String]) -> Vec<String> {
-    let mut reversed_list = vec![];
-    for word in list {
-        reversed_list.push(word.chars().rev().collect::<String>());
-    }
-    reversed_list
 }
 
 /// Returns true if c is uniquely decodable

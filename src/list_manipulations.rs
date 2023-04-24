@@ -146,9 +146,11 @@ pub fn guarantee_maximum_prefix_length(
 pub fn schlinkert_prune(list: &[String]) -> Vec<String> {
     let offenders_to_remove_forwards = get_sardinas_patterson_final_intersection(list);
     // Reversing all words before running the Schlinkert prune gives a
-    // different list of offending words
-    let offenders_to_remove_backwards =
-        get_sardinas_patterson_final_intersection(&reverse_all_words(list));
+    // different list of offending words. (We then have to un-reverse all the
+    // offending words.)
+    let offenders_to_remove_backwards = reverse_all_words(
+        &get_sardinas_patterson_final_intersection(&reverse_all_words(list)),
+    );
     let mut new_list = list.to_owned();
     // If running the prune on the reversed words yielded fewer offenders
     // we'll use that list, since our assumed goal is to remove the fewest
