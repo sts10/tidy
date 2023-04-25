@@ -141,20 +141,23 @@ pub fn guarantee_maximum_prefix_length(
 /// Executes Schlinkert prune. Attempts to make list uniquely decodable
 /// by removing the fewest number of code words possible. Adapted from
 /// Sardinas-Patterson algorithm.
-/// Runs word list in both as given and reversed, prefering which ever
-/// preserves more words from the given list.
+/// Runs word list both as given and with each word reversed, preferring
+/// which ever preserves more words from the given list.
 pub fn schlinkert_prune(list: &[String]) -> Vec<String> {
+    // Clumisily clone the list into a new variable.
+    let mut new_list = list.to_owned();
+    // First, simply find the "offenders" with the list as given.
     let offenders_to_remove_forwards = get_sardinas_patterson_final_intersection(list);
-    // Reversing all words before running the Schlinkert prune gives a
-    // different list of offending words. (We then have to un-reverse all the
-    // offending words.)
+    // Now, reverse all words before running the Schlinkert prune.
+    // This will give a different list of offending words -- and potentially FEWER
+    // than running the prune forwards. (We call reverse_all_words function
+    // twice because we have to un-reverse all the offending words at the end.)
     let offenders_to_remove_backwards = reverse_all_words(
         &get_sardinas_patterson_final_intersection(&reverse_all_words(list)),
     );
-    let mut new_list = list.to_owned();
     // If running the prune on the reversed words yielded fewer offenders
-    // we'll use that list, since our assumed goal is to remove the fewest
-    // number of words as possible.
+    // we'll remove those offending words, since our goal is to remove
+    // the fewest number of words as possible.
     if offenders_to_remove_forwards.len() <= offenders_to_remove_backwards.len() {
         new_list.retain(|x| !offenders_to_remove_forwards.contains(x));
     } else {
