@@ -144,7 +144,7 @@ pub fn guarantee_maximum_prefix_length(
 /// Runs word list both as given and with each word reversed, preferring
 /// which ever preserves more words from the given list.
 pub fn schlinkert_prune(list: &[String]) -> Vec<String> {
-    // Clumisily clone the list into a new variable.
+    // Clumsily clone the list into a new variable.
     let mut new_list = list.to_owned();
     // First, simply find the "offenders" with the list as given.
     let offenders_to_remove_forwards = get_sardinas_patterson_final_intersection(list);
