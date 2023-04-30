@@ -1,5 +1,5 @@
 mod pruning_tests {
-    use tidy::display_information::uniquely_decodable::check_decodability;
+    use tidy::display_information::uniquely_decodable::is_uniquely_decodable;
     use tidy::*;
 
     #[test]
@@ -32,6 +32,6 @@ mod pruning_tests {
         // And now let's confirm that the new list is indeed
         // uniquely decodable, at least as far as Tidy is able
         // to confirm.
-        assert!(check_decodability(&new_list));
+        assert!(is_uniquely_decodable(&new_list));
     }
 }

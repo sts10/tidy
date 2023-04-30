@@ -88,7 +88,7 @@ pub fn delete_before_first_char(s: &str, ch: char) -> &str {
 /// [a separate repo](https://github.com/sts10/splitter/blob/main/src/lib.rs).
 pub fn delete_after_first_char(s: &str, ch: char) -> &str {
     match memchr(ch as u8, s.as_bytes()) {
-        None => s, // not found => return the whole string
+        None => s, // delimiting charcter not found in string s => return the whole string
         Some(pos) => &s[0..pos],
     }
 }

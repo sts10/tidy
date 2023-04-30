@@ -8,9 +8,9 @@ use std::collections::HashSet;
 
 /// Return true if the list is uniquely decodable, false if not. I
 /// don't _think_ we need to check reversed words in this case.
-pub fn check_decodability(c: &[String]) -> bool {
-    let is_c_uniquely_decodable = sardinas_patterson_theorem(vec_to_hash(c));
-    is_c_uniquely_decodable
+pub fn is_uniquely_decodable(c: &[String]) -> bool {
+    let c = vec_to_hash(c);
+    sardinas_patterson_theorem(c)
 }
 
 fn vec_to_hash(v: &[String]) -> HashSet<String> {

@@ -2,7 +2,7 @@
 
 pub mod uniquely_decodable;
 use crate::count_characters;
-use crate::display_information::uniquely_decodable::check_decodability;
+use crate::display_information::uniquely_decodable::is_uniquely_decodable;
 use crate::parse_delimiter;
 use crate::split_and_vectorize;
 
@@ -78,7 +78,10 @@ pub fn display_list_information(
 
     // At least for now, this one is EXPENSIVE
     if level >= 4 {
-        eprintln!("Uniquely decodable?       : {}", check_decodability(&list));
+        eprintln!(
+            "Uniquely decodable?       : {}",
+            is_uniquely_decodable(&list)
+        );
     }
 
     let entropy_per_word = calc_entropy_per_word(list.len());
