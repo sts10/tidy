@@ -340,13 +340,13 @@ Unique character prefix   : 9
 Using the `--samples` flag will print 5 sample passphrases to the terminal. (Note that these sample passphrases should not be used for security purposes, as Tidy has not been audited.)
 
 ```txt
-Pseudorandomly generated sample words
--------------------------------------
-departure traitor augmented supremacy device annoying
-steep frigidity wreath barterer tibia reprimand
-creamlike strum snowfall tannery clean protrude
-favorable unlivable vanquish crate sarcastic exclude
-fastness september boasting unbroken battalion sweep
+Word samples
+------------
+destruct subpar dizzy outshine stipend ovary
+slapstick hastily tremor visibly gizzard unloaded
+salaried unwieldy churn vanity speak vessel
+deserve humble pantyhose dayroom reprise unnatural
+vascular stencil visible sporty embellish submarine
 ```
 
 ## How Tidy counts the length of a word
