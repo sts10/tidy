@@ -1,5 +1,6 @@
 mod list_manipulation_tests {
     use tidy::dice::print_as_dice; // not exactly sure why I need this here...
+    use tidy::list_manipulations::reverse_all_words;
     use tidy::*;
 
     fn make_lists() -> (Vec<String>, Vec<String>, Vec<String>, Vec<String>) {
@@ -658,6 +659,18 @@ mod list_manipulation_tests {
                 .chars()
                 .count()
         );
+    }
+
+    #[test]
+    fn can_reverse_list() {
+        let list = vec![
+            "hotdog".to_string(),
+            "hamburger".to_string(),
+            "alligator".to_string(),
+            "😀😁😆".to_string(),
+        ];
+        let rev_list = reverse_all_words(&list);
+        assert_eq!(rev_list, ["godtoh", "regrubmah", "rotagilla", "😆😁😀"]);
     }
 
     #[test]

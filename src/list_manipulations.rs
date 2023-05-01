@@ -88,7 +88,7 @@ pub fn delete_before_first_char(s: &str, ch: char) -> &str {
 /// [a separate repo](https://github.com/sts10/splitter/blob/main/src/lib.rs).
 pub fn delete_after_first_char(s: &str, ch: char) -> &str {
     match memchr(ch as u8, s.as_bytes()) {
-        None => s, // not found => return the whole string
+        None => s, // delimiting character not found in string s, so return the whole string
         Some(pos) => &s[0..pos],
     }
 }
@@ -141,11 +141,41 @@ pub fn guarantee_maximum_prefix_length(
 /// Executes Schlinkert prune. Attempts to make list uniquely decodable
 /// by removing the fewest number of code words possible. Adapted from
 /// Sardinas-Patterson algorithm.
+/// Runs word list both as given and with each word reversed, preferring
+/// which ever preserves more words from the given list.
 pub fn schlinkert_prune(list: &[String]) -> Vec<String> {
-    let offenders_to_remove = get_sardinas_patterson_final_intersection(list);
+    // Clumsily clone the list into a new variable.
     let mut new_list = list.to_owned();
-    new_list.retain(|x| !offenders_to_remove.contains(x));
+    // First, simply find the "offenders" with the list as given.
+    let offenders_to_remove_forwards = get_sardinas_patterson_final_intersection(list);
+    // Now, reverse all words before running the Schlinkert prune.
+    // This will give a different list of offending words -- and potentially FEWER
+    // than running the prune forwards. (We call reverse_all_words function
+    // twice because we have to un-reverse all the offending words at the end.)
+    let offenders_to_remove_backwards = reverse_all_words(
+        &get_sardinas_patterson_final_intersection(&reverse_all_words(list)),
+    );
+    // If running the prune on the reversed words yielded fewer offenders
+    // we'll remove those offending words, since our goal is to remove
+    // the fewest number of words as possible.
+    if offenders_to_remove_forwards.len() <= offenders_to_remove_backwards.len() {
+        new_list.retain(|x| !offenders_to_remove_forwards.contains(x));
+    } else {
+        new_list.retain(|x| !offenders_to_remove_backwards.contains(x));
+    }
     new_list
+}
+
+/// Reverse all words on given list. For example,
+/// `["hotdog", "hamburger", "alligator"]` becomes
+/// `["godtoh", "regrubmah", "rotagilla"]`
+/// Uses graphemes to ensure it handles accented characters correctly.
+pub fn reverse_all_words(list: &[String]) -> Vec<String> {
+    let mut reversed_list = vec![];
+    for word in list {
+        reversed_list.push(word.graphemes(true).rev().collect::<String>());
+    }
+    reversed_list
 }
 
 use unicode_segmentation::UnicodeSegmentation;

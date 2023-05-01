@@ -371,9 +371,11 @@ I occasionally [build releases](https://github.com/sts10/tidy/releases) of Tidy 
 
 ## For Tidy developers
 
-Run all code tests: `cargo test`
+* Run all code tests: `cargo test`
+* Generate docs: `cargo doc --document-private-items --no-deps`. Add `--open` flag to open docs after generation. Locally, docs are printed to `./target/doc/tidy/index.html`.
+* Check license compatibility of Tidy's dependencies: `cargo deny check licenses` (requires that you [have cargo-deny installed locally](https://github.com/EmbarkStudios/cargo-deny#install-cargo-deny))
 
-Generate docs: `cargo doc --document-private-items --no-deps`. Add `--open` flag to open docs after generation. Locally, docs are printed to `./target/doc/tidy/index.html`.
+Pull Requests welcome!
 
 ## Blog posts related to this project
 
