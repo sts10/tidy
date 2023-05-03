@@ -2,8 +2,11 @@
 name = "tidy"
 version = "0.2.90"
 authors = ["sts10 <sschlinkert@gmail.com>"]
-license = "MIT"
 edition = "2021"
+license = "MIT"
+repository = "https://github.com/sts10/tidy"
+description = "Combine and clean word lists"
+categories = ["command-line-utilities"]
 
 [dependencies]
 clap = { version = "4.2.2", features = ["derive"] }
