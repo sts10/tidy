@@ -414,7 +414,7 @@ If you're looking for a relatively long list of English homophones, I'd humbly p
 
 ## Prefix codes, suffix codes, and uniquely decodable codes
 
-If a word list is "uniquely decodable" that means that words from the list can be combined with a delimiter.
+If a word list is "uniquely decodable" that means that words from the list can be safely combined _without_ a delimiter between each word, e.g. `enticingneurosistriflecubeshiningdupe`.
 
 As a brief example, if a list has "boy", "hood", and "boyhood" on it, users who specified they wanted two words worth of randomness (entropy) might end up with "boyhood", which an attacker guessing single words would try. Removing the word "boy", which makes the remaining list uniquely decodable, prevents this possibility from occurring.
 
