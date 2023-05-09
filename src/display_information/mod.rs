@@ -110,16 +110,18 @@ pub fn display_list_information(
         list_length <= g.pow(shortest_word_length)
     );
 
-    // In 1951, Claude Shannon estimated that English words only have
-    // about 2.6 bits of entropy per character, rather than (roughly) 4.7 bits per character.
-    // https://www.princeton.edu/~wbialek/rome/refs/shannon_51.pdf
-    // Thus, this is a more difficult line for a given list to pass above than
-    // the "brute force" line described above.
-    let g: f64 = 6.1; // 2**2.6 is 6.1 when we maintain correct number of significant digits.
-    eprintln!(
-        "Above Shannon line?       : {}",
-        list_length as f64 <= g.powf(shortest_word_length.into())
-    );
+    if level >= 5 {
+        // In 1951, Claude Shannon estimated that English words only have
+        // about 2.6 bits of entropy per character, rather than (roughly) 4.7 bits per character.
+        // https://www.princeton.edu/~wbialek/rome/refs/shannon_51.pdf
+        // Thus, this is a more difficult line for a given list to pass above than
+        // the "brute force" line described above.
+        let g: f64 = 6.1; // 2**2.6 is 6.1 when we maintain correct number of significant digits.
+        eprintln!(
+            "Above Shannon line?       : {}",
+            list_length as f64 <= g.powf(shortest_word_length.into())
+        );
+    }
 
     if level >= 2 {
         eprintln!(

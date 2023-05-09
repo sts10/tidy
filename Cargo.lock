@@ -690,7 +690,7 @@ dependencies = [
 
 [[package]]
 name = "tidy"
-version = "0.2.90"
+version = "0.2.91"
 dependencies = [
  "clap",
  "icu",
