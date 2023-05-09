@@ -533,6 +533,7 @@ See [this repo](https://github.com/sts10/splitter) for more information.
 -   [A list of word lists](http://www.webplaces.com/passwords/passphrase-word-lists.htm).
 -   A collection of a few [Public Domain Word Lists](https://github.com/MichaelWehar/Public-Domain-Word-Lists)
 -  [ulif's "diceware"](https://github.com/ulif/diceware) seems to have collected [a few word lists](https://github.com/ulif/diceware/tree/master/diceware/wordlists) in its Github repo, along with [a separate page that explains each of the lists](https://github.com/ulif/diceware/blob/master/docs/wordlists.rst).
+-  [NSA's RandPassGenerator](https://github.com/nsacyber/RandPassGenerator) uses [a massive 117,828-word list](https://github.com/nsacyber/RandPassGenerator/blob/master/RandPassGenerator/data/wordlist.txt).
 -   [Niceware list](https://github.com/diracdeltas/niceware/blob/master/lib/wordlist.js) (~65,000 words). [I used Tidy to help create v 4.0.0 of this list](https://github.com/diracdeltas/niceware/pull/52)!<!-- (there's also [a Rust port of niceware](https://github.com/healeycodes/niceware)).-->
 -   [dmuth's "diceware" program](https://github.com/dmuth/diceware) has a [collection of lists](https://github.com/dmuth/diceware/tree/master/wordlist) (h/t [atoponce](https://www.reddit.com/r/Passwords/comments/sqrymt/comment/hwnfb94/))
 -   [Norvig Natural Language Corpus Data](https://norvig.com/ngrams/) has [a list of 333,000 commonly used words](https://norvig.com/ngrams/count_1w.txt) from the Google Web Trillion Word Corpus, as well as an assortment of other word lists.
