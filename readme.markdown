@@ -316,6 +316,8 @@ Options:
 
 Tidy can also calculate different attributes about a created list. `tidy -AAAA -G t --dry-run eff_long_list.txt` prints:
 
+**Note when using Tidy to audit a list**: Tidy will remove blank lines and duplicate lines (words) _before_ calculating these list attributes. For example, if you're 4,000-word list has, say, 5 duplicate words, Tidy will report that the list has 3,995 words. No warning of duplicate words is given.
+
 ```text
 Attributes of new list
 ----------------------
