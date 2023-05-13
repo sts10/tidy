@@ -525,6 +525,7 @@ See [this repo](https://github.com/sts10/splitter) for more information.
 -   I'm [pretty sure](https://twitter.com/1Password/status/1462885816569577480) this is [1Password](https://1password.com/)'s [word list](https://1password.com/txt/agwordlist.txt) as of 2021.
     -   1Password published a slightly different [word list](https://github.com/agilebits/crackme/blob/master/doc/AgileWords.txt) in 2018.
 -   If you're using Linux or MacOS, you've likely got some long lists on your computer. Check `/usr/share/dict/words` or `/usr/share/dict/american-english`.
+-   [**A great list of word lists** by Aaron Toponce](https://gist.github.com/atoponce/95c4f36f2bc12ec13242a3ccc55023af).
 -   [SecureDrop](https://github.com/freedomofpress/securedrop/) has a few lists, including one of [adjectives](https://github.com/freedomofpress/securedrop/blob/develop/securedrop/dictionaries/adjectives.txt) and one of [nouns](https://github.com/freedomofpress/securedrop/blob/develop/securedrop/dictionaries/nouns.txt).
 -   [Bitcoin BIPS-0039](https://github.com/bitcoin/bips/tree/master/bip-0039) (2,048 words) (h/t [atoponce](https://www.reddit.com/r/Passwords/comments/sqrymt/comment/hwnfb94/))
 -   [Monero's word list](https://github.com/monero-project/monero/blob/master/src/mnemonics/english.h) (1,626 words) (h/t [atoponce](https://www.reddit.com/r/Passwords/comments/sqrymt/comment/hwnfb94/))
@@ -545,6 +546,8 @@ See [this repo](https://github.com/sts10/splitter) for more information.
 -   [SCOWL (Spell Checker Oriented Word Lists) and Friends](http://wordlist.aspell.net/) "is a database of information on English words useful for creating high-quality word lists suitable for use in spell checkers of most dialects of English."
     -   [ENABLE2K](https://web.archive.org/web/20090122025747/http://personal.riverusers.com/~thegrendel/software.html) seems to be an older version of the SCOWL project? 
 -   [Danish wordlists](https://github.com/n0kovo/danish-wordlists) is a "collection of [Danish] wordlists for cracking danish passwords"
+
+
 -   [r/wordlists subreddit](https://www.reddit.com/r/wordlists/), which seems to have links to a few non-English word lists.
 -   You can also scan [GitHub's #wordlists topic](https://github.com/topics/wordlists)
 
