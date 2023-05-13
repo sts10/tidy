@@ -312,7 +312,29 @@ Options:
 
 -   `tidy -d s --whittle-to 7776 -PlL -m 3 -M 12 --dice 6 -o wiki-diceware.txt ~/Downloads/enwiki-20190320-words-frequency-sorted.txt` Carefully make a 7,776-word list by only taking the words needed from the top of `~/Downloads/enwiki-20190320-words-frequency-sorted.txt` [file](https://github.com/IlyaSemenov/wikipedia-word-frequency/blob/master/results/enwiki-20190320-words-frequency.txt). Assumes this file is sorted by word frequencies, with a frequency count after the word, separated by a space (example line: `located 1039008`). Since we only want to use the most common words, we'll use Tidy's `--whittle-to` option to only take exactly how many words we need to construct a list of 7,776 words. Note that this may take longer that usual Tidy executions, since Tidy will very likely need to make multiple attempts to make a list that's exactly the requested length. [More info on whittle](https://github.com/sts10/tidy/issues/15#issuecomment-1215907335).
 
-## List attributes
+## Installation
+
+### Using Rust and cargo (suggested method)
+1. [Install Rust](https://www.rust-lang.org/tools/install) if you haven't already
+2. Run: `cargo install --git https://github.com/sts10/tidy --branch main` (Run this same command to upgrade Tidy.)
+
+You should then be able to run `tidy --help` for help text.
+
+Uninstall Tidy by running `cargo uninstall tidy`.
+
+### Releases
+
+I occasionally [build releases](https://github.com/sts10/tidy/releases) of Tidy and upload them to GitHub. Note that most releases contain a binary only suitable for Mac and Linux users. If you'd like to help package Tidy for Windows, let me know.
+
+## For Tidy developers
+
+* Run all code tests: `cargo test`
+* Generate docs: `cargo doc --document-private-items --no-deps`. Add `--open` flag to open docs after generation. Locally, docs are printed to `./target/doc/tidy/index.html`.
+* Check license compatibility of Tidy's dependencies: `cargo deny check licenses` (requires that you [have cargo-deny installed locally](https://github.com/EmbarkStudios/cargo-deny#install-cargo-deny))
+
+Pull Requests welcome!
+
+## Tidy can print attributes about a word list
 
 Tidy can also calculate different attributes about a created list. `tidy -AAAA -G t --dry-run eff_long_list.txt` prints:
 
@@ -358,28 +380,6 @@ When counting the length of a word, Tidy counts the number of [grapheme clusters
 ## On verbs used
 
 In both Tidy's code and documentation, "remove" means that a word will be removed (e.g. words with integers will be removed from the list), while "delete" means that a word will only be modified (e.g. integers removed from words). Uppercase flags remove words, while lowercase flags delete specified characters. All delete calls and word modifications (like "to lowercase") occur _before_ any remove call.
-
-## Installation
-
-### Using Rust and cargo (suggested method)
-1. [Install Rust](https://www.rust-lang.org/tools/install) if you haven't already
-2. Run: `cargo install --git https://github.com/sts10/tidy --branch main` (Run this same command to upgrade Tidy.)
-
-You should then be able to run `tidy --help` for help text.
-
-Uninstall Tidy by running `cargo uninstall tidy`.
-
-### Releases
-
-I occasionally [build releases](https://github.com/sts10/tidy/releases) of Tidy and upload them to GitHub. Note that most releases contain a binary only suitable for Mac and Linux users. If you'd like to help package Tidy for Windows, let me know.
-
-## For Tidy developers
-
-* Run all code tests: `cargo test`
-* Generate docs: `cargo doc --document-private-items --no-deps`. Add `--open` flag to open docs after generation. Locally, docs are printed to `./target/doc/tidy/index.html`.
-* Check license compatibility of Tidy's dependencies: `cargo deny check licenses` (requires that you [have cargo-deny installed locally](https://github.com/EmbarkStudios/cargo-deny#install-cargo-deny))
-
-Pull Requests welcome!
 
 ## Blog posts related to this project
 
