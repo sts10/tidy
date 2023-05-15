@@ -224,7 +224,9 @@ struct Args {
     approved_list: Option<Vec<PathBuf>>,
 
     /// Path(s) to file(s) containing homophone pairs. There must be one pair
-    /// of homophones per line, separated by a comma (sun,son).
+    /// of homophones per line, separated by a comma (sun,son). If BOTH words
+    /// are found on a list, the SECOND word is removed. File(s) can be a CSV
+    /// (with no column headers) or TXT file(s).
     #[clap(long = "homophones")]
     homophones_list: Option<Vec<PathBuf>>,
 

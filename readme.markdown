@@ -240,8 +240,10 @@ Options:
           Path(s) for optional list of approved words. Can accept multiple files
 
       --homophones <HOMOPHONES_LIST>
-          Path(s) to file(s) containing homophone pairs. There must be one pair
-          of homophones per line, separated by a comma (sun,son)
+          Path(s) to file(s) containing homophone pairs. There must be one pair 
+          of homophones per line, separated by a comma (sun,son). If BOTH words 
+          are found on a list, the SECOND word is removed. File(s) can be a CSV 
+          (with no column headers) or TXT file(s)
 
       --dice <DICE_SIDES>
           Print dice roll before word in output. Set number of sides of dice.
