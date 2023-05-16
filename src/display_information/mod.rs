@@ -153,7 +153,7 @@ pub fn display_list_information(
     ignore_ending_metadata_delimiter: Option<char>,
     ignore_starting_metadata_delimiter: Option<char>,
 ) {
-    let list = make_list(
+    let list = make_list_free_of_metadata(
         list,
         ignore_starting_metadata_delimiter,
         ignore_ending_metadata_delimiter,
@@ -248,7 +248,7 @@ fn print_attributes_as_json(list_attributes: &ListAttributes) {
     eprintln!("{}", json);
 }
 
-fn make_list(
+fn make_list_free_of_metadata(
     list: &[String],
     ignore_ending_metadata_delimiter: Option<char>,
     ignore_starting_metadata_delimiter: Option<char>,
