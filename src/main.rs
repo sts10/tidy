@@ -33,7 +33,7 @@ struct Args {
     #[clap(short = 'A', long = "attributes", action = clap::ArgAction::Count)]
     attributes: u8,
 
-    /// Print attributes in JSON format
+    /// Print attributes and word samples in JSON format
     #[clap(short = 'j', long = "json")]
     attributes_as_json: bool,
 

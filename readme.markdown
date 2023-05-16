@@ -74,7 +74,7 @@ Options:
           amount of time to calculate
 
   -j, --json
-          Print attributes in JSON format
+          Print attributes and word samples in JSON format
 
   -s, --samples
           Print a handful of pseudorandomly selected words from the created list
