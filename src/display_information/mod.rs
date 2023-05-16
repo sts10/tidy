@@ -46,72 +46,68 @@ fn make_attributes(list: &[String], level: u8) -> ListAttributes {
         .unwrap()
         .to_string();
 
-    if level == 1 {
-        ListAttributes {
-            list_length: list.len(),
-            mean_word_length: mean_word_length(list),
-            entropy_per_word: calc_entropy_per_word(list.len()),
-            shortest_word_length: count_characters(&shortest_word_example),
-            shortest_word_example,
-            longest_word_length: count_characters(&longest_word_example),
-            longest_word_example,
-            efficiency_per_character: efficiency_per_character(list),
-            assumed_entropy_per_character: assumed_entropy_per_character(list),
-            is_above_brute_force_line: is_above_brute_force_line(list),
-            is_above_shannon_line: is_above_shannon_line(list),
-            is_free_of_prefix_words: None,
-            is_free_of_suffix_words: None,
-            is_uniquely_decodable: None,
-            shortest_edit_distance: None,
-            mean_edit_distance: None,
-            longest_shared_prefix: None,
-            unique_character_prefix: None,
-            mcmillan: satisfies_mcmillan(list),
-        }
-    } else if level == 2 {
-        ListAttributes {
-            list_length: list.len(),
-            mean_word_length: mean_word_length(list),
-            entropy_per_word: calc_entropy_per_word(list.len()),
-            shortest_word_length: count_characters(&shortest_word_example),
-            shortest_word_example,
-            longest_word_length: count_characters(&longest_word_example),
-            longest_word_example,
-            efficiency_per_character: efficiency_per_character(list),
-            assumed_entropy_per_character: assumed_entropy_per_character(list),
-            is_above_brute_force_line: is_above_brute_force_line(list),
-            is_above_shannon_line: is_above_shannon_line(list),
-            is_free_of_prefix_words: Some(!has_prefix_words(list)),
-            is_free_of_suffix_words: Some(!has_suffix_words(list)),
-            is_uniquely_decodable: Some(is_uniquely_decodable(list)),
-            shortest_edit_distance: None,
-            mean_edit_distance: None,
-            longest_shared_prefix: None,
-            unique_character_prefix: None,
-            mcmillan: satisfies_mcmillan(list),
+    let is_free_of_prefix_words = if level >= 2 {
+        Some(!has_prefix_words(list))
+    } else {
+        None
+    };
+
+    let is_free_of_suffix_words = if level >= 2 {
+        Some(!has_suffix_words(list))
+    } else {
+        None
+    };
+
+    let is_uniquely_decodable = if level >= 2 {
+        Some(is_uniquely_decodable(list))
+    } else {
+        None
+    };
+
+    let shortest_edit_distance = if level >= 3 {
+        Some(find_shortest_edit_distance(list))
+    } else {
+        None
+    };
+    let mean_edit_distance = if level >= 3 {
+        Some(find_mean_edit_distance(list))
+    } else {
+        None
+    };
+
+    let longest_shared_prefix = if level >= 4 {
+        Some(find_longest_shared_prefix(list))
+    } else {
+        None
+    };
+    let unique_character_prefix = if level >= 4 {
+        match longest_shared_prefix {
+            Some(longest_shared_prefix) => Some(longest_shared_prefix + 1),
+            None => None,
         }
     } else {
-        ListAttributes {
-            list_length: list.len(),
-            mean_word_length: mean_word_length(list),
-            entropy_per_word: calc_entropy_per_word(list.len()),
-            shortest_word_length: count_characters(&shortest_word_example),
-            shortest_word_example,
-            longest_word_length: count_characters(&longest_word_example),
-            longest_word_example,
-            efficiency_per_character: efficiency_per_character(list),
-            assumed_entropy_per_character: assumed_entropy_per_character(list),
-            is_above_brute_force_line: is_above_brute_force_line(list),
-            is_above_shannon_line: is_above_shannon_line(list),
-            is_free_of_prefix_words: Some(!has_prefix_words(list)),
-            is_free_of_suffix_words: Some(!has_suffix_words(list)),
-            is_uniquely_decodable: Some(is_uniquely_decodable(list)),
-            shortest_edit_distance: Some(find_shortest_edit_distance(list)),
-            mean_edit_distance: Some(find_mean_edit_distance(list)),
-            longest_shared_prefix: Some(find_longest_shared_prefix(list)),
-            unique_character_prefix: Some(find_longest_shared_prefix(list) + 1),
-            mcmillan: satisfies_mcmillan(list),
-        }
+        None
+    };
+    ListAttributes {
+        list_length: list.len(),
+        mean_word_length: mean_word_length(list),
+        entropy_per_word: calc_entropy_per_word(list.len()),
+        shortest_word_length: count_characters(&shortest_word_example),
+        shortest_word_example,
+        longest_word_length: count_characters(&longest_word_example),
+        longest_word_example,
+        efficiency_per_character: efficiency_per_character(list),
+        assumed_entropy_per_character: assumed_entropy_per_character(list),
+        is_above_brute_force_line: is_above_brute_force_line(list),
+        is_above_shannon_line: is_above_shannon_line(list),
+        is_free_of_prefix_words,
+        is_free_of_suffix_words,
+        is_uniquely_decodable,
+        shortest_edit_distance,
+        mean_edit_distance,
+        longest_shared_prefix,
+        unique_character_prefix,
+        mcmillan: satisfies_mcmillan(list),
     }
 }
 
@@ -390,6 +386,12 @@ pub fn find_mean_edit_distance(list: &[String]) -> f64 {
 /// longest shared prefix, a notable cryptographic metric.
 pub fn find_longest_shared_prefix(list: &[String]) -> usize {
     let mut longest_shared_prefix = 0;
+
+    let longest_word_length = count_characters(
+        list.iter()
+            .max_by(|a, b| count_characters(a).cmp(&count_characters(b)))
+            .unwrap(),
+    );
     for word1 in list {
         for word2 in list {
             if word1 != word2 {
@@ -400,6 +402,12 @@ pub fn find_longest_shared_prefix(list: &[String]) -> usize {
                     find_first_different_character_zero_indexed(word1, word2);
                 if this_shared_prefix_length > longest_shared_prefix {
                     longest_shared_prefix = this_shared_prefix_length;
+                }
+                // If we found a shared prefix that's only one fewer than the longest word on
+                // the list, we know this is the longest shared prefix we'll ever find.
+                // We can short-circuit return to save time.
+                if this_shared_prefix_length == longest_word_length - 1 {
+                    return this_shared_prefix_length;
                 }
             }
         }

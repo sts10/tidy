@@ -85,6 +85,11 @@ mod list_information_tests {
         .map(|x| x.to_string())
         .collect();
         assert_eq!(find_longest_shared_prefix(&list), 7);
+        let list: Vec<String> = vec!["to", "canopy", "cancel", "seasons", "fire", "Christmas"]
+            .iter()
+            .map(|x| x.to_string())
+            .collect();
+        assert_eq!(find_longest_shared_prefix(&list), 3);
     }
     #[test]
     fn can_get_shortest_word_length() {
