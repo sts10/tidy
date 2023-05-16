@@ -31,7 +31,7 @@ pub struct ListAttributes {
     pub mean_edit_distance: Option<f64>,
     pub longest_shared_prefix: Option<usize>,
     pub unique_character_prefix: Option<usize>,
-    pub mcmillan: bool,
+    pub kraft_mcmillan: bool,
 }
 
 fn make_attributes(list: &[String], level: u8) -> ListAttributes {
@@ -107,7 +107,7 @@ fn make_attributes(list: &[String], level: u8) -> ListAttributes {
         mean_edit_distance,
         longest_shared_prefix,
         unique_character_prefix,
-        mcmillan: satisfies_mcmillan(list),
+        kraft_mcmillan: satisfies_kraft_mcmillan(list),
     }
 }
 
@@ -229,12 +229,12 @@ pub fn display_list_information(
         }
 
         if level >= 4 {
-            let mcmillan = if list_attributes.mcmillan {
+            let kraft_mcmillan = if list_attributes.kraft_mcmillan {
                 "satisfied"
             } else {
                 "not satisfied"
             };
-            eprintln!("Kraft-McMillan inequality : {}", mcmillan);
+            eprintln!("Kraft-McMillan inequality : {}", kraft_mcmillan);
         }
     }
 }
@@ -515,7 +515,7 @@ pub fn efficiency_per_character(list: &[String]) -> f64 {
 /// This function returns a bool based on whether the list fulfills something
 /// called the McMillan Inequality
 /// See: https://www.youtube.com/watch?v=yHw1ka-4g0s
-pub fn satisfies_mcmillan(list: &[String]) -> bool {
+pub fn satisfies_kraft_mcmillan(list: &[String]) -> bool {
     let alphabet_size = count_unique_characters(list);
     let mut running_total: f64 = 0.0;
     for word in list {
