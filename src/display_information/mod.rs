@@ -30,7 +30,7 @@ pub struct ListAttributes {
     pub shortest_edit_distance: Option<usize>,
     pub mean_edit_distance: Option<f64>,
     pub longest_shared_prefix: usize,
-    pub unqiue_character_prefix: usize,
+    pub unique_character_prefix: usize,
     pub mcmillan: bool,
 }
 
@@ -65,7 +65,7 @@ fn make_attributes(list: &[String], level: u8) -> ListAttributes {
             shortest_edit_distance: None,
             mean_edit_distance: None,
             longest_shared_prefix: find_longest_shared_prefix(list),
-            unqiue_character_prefix: find_longest_shared_prefix(list) + 1,
+            unique_character_prefix: find_longest_shared_prefix(list) + 1,
             mcmillan: satisfies_mcmillan(list),
         }
     } else if level == 2 {
@@ -87,7 +87,7 @@ fn make_attributes(list: &[String], level: u8) -> ListAttributes {
             shortest_edit_distance: None,
             mean_edit_distance: None,
             longest_shared_prefix: find_longest_shared_prefix(list),
-            unqiue_character_prefix: find_longest_shared_prefix(list) + 1,
+            unique_character_prefix: find_longest_shared_prefix(list) + 1,
             mcmillan: satisfies_mcmillan(list),
         }
     } else {
@@ -109,7 +109,7 @@ fn make_attributes(list: &[String], level: u8) -> ListAttributes {
             shortest_edit_distance: Some(find_shortest_edit_distance(list)),
             mean_edit_distance: Some(find_mean_edit_distance(list)),
             longest_shared_prefix: find_longest_shared_prefix(list),
-            unqiue_character_prefix: find_longest_shared_prefix(list) + 1,
+            unique_character_prefix: find_longest_shared_prefix(list) + 1,
             mcmillan: satisfies_mcmillan(list),
         }
     }
@@ -230,7 +230,7 @@ pub fn display_list_information(
         // prefix
         eprintln!(
             "Unique character prefix   : {}",
-            list_attributes.unqiue_character_prefix
+            list_attributes.unique_character_prefix
         );
         if level >= 4 {
             let mcmillan = if list_attributes.mcmillan {
