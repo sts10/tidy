@@ -5,6 +5,141 @@ use crate::count_characters;
 use crate::display_information::uniquely_decodable::is_uniquely_decodable;
 use crate::parse_delimiter;
 use crate::split_and_vectorize;
+use serde::{Deserialize, Serialize};
+// use serde_json::Result;
+
+#[derive(Serialize, Deserialize)]
+pub struct ListAttributes {
+    pub list_length: usize,
+    pub mean_word_length: f32,
+    pub entropy_per_word: f64,
+    pub shortest_word_length: usize,
+    pub shortest_word_example: String,
+    pub longest_word_length: usize,
+    pub longest_word_example: String,
+
+    pub is_free_of_prefix_words: Option<bool>,
+    pub is_free_of_suffix_words: Option<bool>,
+
+    pub is_uniquely_decodable: Option<bool>,
+
+    pub efficiency_per_character: f64,
+    pub assumed_entropy_per_character: f64,
+    pub is_above_brute_force_line: bool,
+    pub is_above_shannon_line: bool,
+    pub shortest_edit_distance: Option<usize>,
+    pub mean_edit_distance: Option<f64>,
+    pub longest_shared_prefix: usize,
+    pub unqiue_character_prefix: usize,
+    pub mcmillan: bool,
+}
+
+fn make_attributes(list: &[String], level: u8) -> ListAttributes {
+    let shortest_word_example = list
+        .iter()
+        .min_by(|a, b| count_characters(a).cmp(&count_characters(b)))
+        .unwrap()
+        .to_string();
+    let longest_word_example = list
+        .iter()
+        .max_by(|a, b| count_characters(a).cmp(&count_characters(b)))
+        .unwrap()
+        .to_string();
+
+    if level == 1 {
+        ListAttributes {
+            list_length: list.len(),
+            mean_word_length: mean_word_length(list),
+            entropy_per_word: calc_entropy_per_word(list.len()),
+            shortest_word_length: count_characters(&shortest_word_example),
+            shortest_word_example,
+            longest_word_length: count_characters(&longest_word_example),
+            longest_word_example,
+            efficiency_per_character: efficiency_per_character(list),
+            assumed_entropy_per_character: assumed_entropy_per_character(list),
+            is_above_brute_force_line: is_above_brute_force_line(list),
+            is_above_shannon_line: is_above_shannon_line(list),
+            is_free_of_prefix_words: None,
+            is_free_of_suffix_words: None,
+            is_uniquely_decodable: None,
+            shortest_edit_distance: None,
+            mean_edit_distance: None,
+            longest_shared_prefix: find_longest_shared_prefix(list),
+            unqiue_character_prefix: find_longest_shared_prefix(list) + 1,
+            mcmillan: satisfies_mcmillan(list),
+        }
+    } else if level == 2 {
+        ListAttributes {
+            list_length: list.len(),
+            mean_word_length: mean_word_length(list),
+            entropy_per_word: calc_entropy_per_word(list.len()),
+            shortest_word_length: count_characters(&shortest_word_example),
+            shortest_word_example,
+            longest_word_length: count_characters(&longest_word_example),
+            longest_word_example,
+            efficiency_per_character: efficiency_per_character(list),
+            assumed_entropy_per_character: assumed_entropy_per_character(list),
+            is_above_brute_force_line: is_above_brute_force_line(list),
+            is_above_shannon_line: is_above_shannon_line(list),
+            is_free_of_prefix_words: Some(!has_prefix_words(list)),
+            is_free_of_suffix_words: Some(!has_suffix_words(list)),
+            is_uniquely_decodable: Some(is_uniquely_decodable(list)),
+            shortest_edit_distance: None,
+            mean_edit_distance: None,
+            longest_shared_prefix: find_longest_shared_prefix(list),
+            unqiue_character_prefix: find_longest_shared_prefix(list) + 1,
+            mcmillan: satisfies_mcmillan(list),
+        }
+    } else {
+        ListAttributes {
+            list_length: list.len(),
+            mean_word_length: mean_word_length(list),
+            entropy_per_word: calc_entropy_per_word(list.len()),
+            shortest_word_length: count_characters(&shortest_word_example),
+            shortest_word_example,
+            longest_word_length: count_characters(&longest_word_example),
+            longest_word_example,
+            efficiency_per_character: efficiency_per_character(list),
+            assumed_entropy_per_character: assumed_entropy_per_character(list),
+            is_above_brute_force_line: is_above_brute_force_line(list),
+            is_above_shannon_line: is_above_shannon_line(list),
+            is_free_of_prefix_words: Some(!has_prefix_words(list)),
+            is_free_of_suffix_words: Some(!has_suffix_words(list)),
+            is_uniquely_decodable: Some(is_uniquely_decodable(list)),
+            shortest_edit_distance: Some(find_shortest_edit_distance(list)),
+            mean_edit_distance: Some(find_mean_edit_distance(list)),
+            longest_shared_prefix: find_longest_shared_prefix(list),
+            unqiue_character_prefix: find_longest_shared_prefix(list) + 1,
+            mcmillan: satisfies_mcmillan(list),
+        }
+    }
+}
+
+/// If user gets a passphrase consisting entirely of shortest words,
+/// it's theoretically possible that we could OVERESTIMATE entropy
+/// per word. We can deterimine if we've done this by comparing out
+/// entropy estimate against a simple brute force attack of all lowercase
+/// English letters, under which we assume each character adds roughly 4.7 bits of entropy.
+/// Note that this slightly obscure method of calculation ensures that floating-point arithmetic is
+/// not used, thus ensuring a higher level of accuracy.
+fn is_above_brute_force_line(list: &[String]) -> bool {
+    let g: i32 = 26; // roughly: assumed alphabet length
+    let shortest_word_length = get_shortest_word_length(list) as u32;
+    let list_length = list.len() as i32;
+    list_length as f64 <= g.pow(shortest_word_length).into()
+}
+
+/// In 1951, Claude Shannon estimated that English words only have
+/// about 2.6 bits of entropy per character, rather than (roughly) 4.7 bits per character.
+/// https://www.princeton.edu/~wbialek/rome/refs/shannon_51.pdf
+/// Thus, this is a more difficult line for a given list to pass above than
+/// the "brute force" line described above.
+fn is_above_shannon_line(list: &[String]) -> bool {
+    let shortest_word_length = get_shortest_word_length(list) as u32;
+    let g: f64 = 6.1; // 2**2.6 is 6.1 when we maintain correct number of significant digits.
+    let list_length = list.len() as i32;
+    list_length as f64 <= g.powf(shortest_word_length.into())
+}
 
 /// This is a large and long function that prints all of the attributes of
 /// the generated (new) list.
@@ -14,10 +149,111 @@ use crate::split_and_vectorize;
 pub fn display_list_information(
     list: &[String],
     level: u8,
+    attributes_as_json: bool,
     ignore_ending_metadata_delimiter: Option<char>,
     ignore_starting_metadata_delimiter: Option<char>,
 ) {
-    let list = match (
+    let list = make_list(
+        list,
+        ignore_starting_metadata_delimiter,
+        ignore_ending_metadata_delimiter,
+    );
+    let list_attributes = make_attributes(&list, level);
+    if attributes_as_json {
+        print_attributes_as_json(&list_attributes);
+    } else {
+        eprintln!("Attributes of new list");
+        eprintln!("----------------------");
+        eprintln!(
+            "List length               : {} words",
+            list_attributes.list_length
+        );
+        eprintln!(
+            "Mean word length          : {:.2} characters",
+            list_attributes.mean_word_length
+        );
+        eprintln!(
+            "Length of shortest word   : {} characters ({})",
+            list_attributes.shortest_word_length, list_attributes.shortest_word_example
+        );
+        eprintln!(
+            "Length of longest word    : {} characters ({})",
+            list_attributes.longest_word_length, list_attributes.longest_word_example
+        );
+        if let Some(is_free_of_prefix_words) = list_attributes.is_free_of_prefix_words {
+            eprintln!("Free of prefix words?     : {}", is_free_of_prefix_words);
+        }
+        if let Some(is_free_of_suffix_words) = list_attributes.is_free_of_suffix_words {
+            eprintln!("Free of suffix words?     : {:?}", is_free_of_suffix_words);
+        }
+
+        // At least for now, this one is EXPENSIVE
+        if let Some(is_uniquely_decodable) = list_attributes.is_uniquely_decodable {
+            eprintln!("Uniquely decodable?       : {:?}", is_uniquely_decodable);
+        }
+
+        eprintln!(
+            "Entropy per word          : {:.3} bits",
+            list_attributes.entropy_per_word
+        );
+        eprintln!(
+            "Efficiency per character  : {:.3} bits",
+            list_attributes.efficiency_per_character
+        );
+        eprintln!(
+            "Assumed entropy per char  : {:.3} bits",
+            list_attributes.assumed_entropy_per_character
+        );
+        eprintln!(
+            "Above brute force line?   : {}",
+            list_attributes.is_above_brute_force_line
+        );
+
+        if level >= 4 {
+            eprintln!(
+                "Above Shannon line?       : {}",
+                list_attributes.is_above_shannon_line
+            );
+        }
+
+        if let Some(shortest_edit_distance) = list_attributes.shortest_edit_distance {
+            eprintln!("Shortest edit distance    : {}", shortest_edit_distance)
+        };
+        if let Some(mean_edit_distance) = list_attributes.mean_edit_distance {
+            eprintln!("Mean edit distance        : {:.3}", mean_edit_distance)
+        }
+        eprintln!(
+            "Longest shared prefix     : {}",
+            list_attributes.longest_shared_prefix
+        );
+        // Numbers of characters required to definitely get to a unique
+        // prefix
+        eprintln!(
+            "Unique character prefix   : {}",
+            list_attributes.unqiue_character_prefix
+        );
+        if level >= 4 {
+            let mcmillan = if list_attributes.mcmillan {
+                "satisfied"
+            } else {
+                "not satisfied"
+            };
+            eprintln!("Kraft-McMillan inequality : {}", mcmillan);
+        }
+    }
+}
+
+fn print_attributes_as_json(list_attributes: &ListAttributes) {
+    let json = serde_json::to_string(&list_attributes).unwrap();
+    eprintln!("{}", json);
+}
+
+fn make_list(
+    list: &[String],
+    ignore_ending_metadata_delimiter: Option<char>,
+    ignore_starting_metadata_delimiter: Option<char>,
+) -> Vec<String> {
+    match (
         ignore_ending_metadata_delimiter,
         ignore_starting_metadata_delimiter,
     ) {
@@ -43,110 +279,6 @@ pub fn display_list_information(
             panic!("Can't ignore metadata on both sides currently")
         }
         (None, None) => list.to_vec(),
-    };
-    eprintln!("Attributes of new list");
-    eprintln!("----------------------");
-    let list_length = list.len();
-    eprintln!("List length               : {} words", list_length);
-    eprintln!(
-        "Mean word length          : {:.2} characters",
-        mean_word_length(&list)
-    );
-    let shortest_word = list
-        .iter()
-        .min_by(|a, b| count_characters(a).cmp(&count_characters(b)))
-        .unwrap();
-    eprintln!(
-        "Length of shortest word   : {} characters ({})",
-        count_characters(shortest_word),
-        shortest_word
-    );
-    let longest_word = list
-        .iter()
-        .max_by(|a, b| count_characters(a).cmp(&count_characters(b)))
-        .unwrap();
-    eprintln!(
-        "Length of longest word    : {} characters ({})",
-        count_characters(longest_word),
-        longest_word
-    );
-    let free_of_prefix_words = !has_prefix_words(&list);
-    eprintln!("Free of prefix words?     : {}", free_of_prefix_words);
-
-    let free_of_suffix_words = !has_suffix_words(&list);
-    eprintln!("Free of suffix words?     : {}", free_of_suffix_words);
-
-    // At least for now, this one is EXPENSIVE
-    if level >= 4 {
-        eprintln!(
-            "Uniquely decodable?       : {}",
-            is_uniquely_decodable(&list)
-        );
-    }
-
-    let entropy_per_word = calc_entropy_per_word(list.len());
-    eprintln!("Entropy per word          : {:.3} bits", entropy_per_word);
-    eprintln!(
-        "Efficiency per character  : {:.3} bits",
-        efficiency_per_character(&list)
-    );
-    let assumed_entropy_per_character = assumed_entropy_per_character(&list);
-    eprintln!(
-        "Assumed entropy per char  : {:.3} bits",
-        assumed_entropy_per_character
-    );
-    // If user gets a passphrase consisting entirely of shortest words,
-    // it's theoretically possible that we could OVERESTIMATE entropy
-    // per word. We can deterimine if we've done this by comparing out
-    // entropy estimate against a simple brute force attack of all lowercase
-    // English letters, under which we assume each character adds roughly 4.7 bits of entropy.
-    // Note that this slightly obscure method of calculation ensures that floating-point arithmetic is
-    // not used, thus ensuring a higher level of accuracy.
-    let g: i32 = 26; // roughly: assumed alphabet length
-    let shortest_word_length = get_shortest_word_length(&list) as u32;
-    let list_length = list.len() as i32;
-    eprintln!(
-        "Above brute force line?   : {}",
-        list_length <= g.pow(shortest_word_length)
-    );
-
-    if level >= 5 {
-        // In 1951, Claude Shannon estimated that English words only have
-        // about 2.6 bits of entropy per character, rather than (roughly) 4.7 bits per character.
-        // https://www.princeton.edu/~wbialek/rome/refs/shannon_51.pdf
-        // Thus, this is a more difficult line for a given list to pass above than
-        // the "brute force" line described above.
-        let g: f64 = 6.1; // 2**2.6 is 6.1 when we maintain correct number of significant digits.
-        eprintln!(
-            "Above Shannon line?       : {}",
-            list_length as f64 <= g.powf(shortest_word_length.into())
-        );
-    }
-
-    if level >= 2 {
-        eprintln!(
-            "Shortest edit distance    : {}",
-            find_shortest_edit_distance(&list)
-        );
-        if level >= 3 {
-            eprintln!(
-                "Mean edit distance        : {:.3}",
-                find_mean_edit_distance(&list)
-            );
-        }
-        let longest_shared_prefix = find_longest_shared_prefix(&list);
-        eprintln!("Longest shared prefix     : {}", longest_shared_prefix);
-        // Numbers of characters required to definitely get to a unique
-        // prefix
-        eprintln!("Unique character prefix   : {}", longest_shared_prefix + 1);
-    }
-    if level >= 5 {
-        let mcmillan = if satisfies_mcmillan(&list) {
-            "satisfied"
-        } else {
-            "not satisfied"
-        };
-        eprintln!("Kraft-McMillan inequality : {}", mcmillan);
     }
 }
 

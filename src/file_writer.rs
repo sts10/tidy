@@ -16,6 +16,7 @@ pub struct PrintRequest {
     pub cards: bool,
     pub print_dice_sides_as_their_base: bool,
     pub attributes: u8,
+    pub attributes_as_json: bool,
     pub samples: bool,
     pub ignore_before_delimiter: Option<char>,
     pub ignore_after_delimiter: Option<char>,
@@ -76,6 +77,7 @@ pub fn print_list(print_req: PrintRequest) {
             display_list_information(
                 &print_req.tidied_list,
                 print_req.attributes,
+                print_req.attributes_as_json,
                 print_req.ignore_after_delimiter,
                 print_req.ignore_before_delimiter,
             );
