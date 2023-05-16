@@ -32,9 +32,15 @@ pub struct ListAttributes {
     pub longest_shared_prefix: Option<usize>,
     pub unique_character_prefix: Option<usize>,
     pub kraft_mcmillan: bool,
+    pub samples: Option<Vec<String>>,
 }
 
-fn make_attributes(list: &[String], level: u8) -> ListAttributes {
+fn make_attributes(list: &[String], level: u8, samples: bool) -> ListAttributes {
+    let samples = if samples {
+        Some(generate_samples(list))
+    } else {
+        None
+    };
     let shortest_word_example = list
         .iter()
         .min_by(|a, b| count_characters(a).cmp(&count_characters(b)))
@@ -108,6 +114,7 @@ fn make_attributes(list: &[String], level: u8) -> ListAttributes {
         longest_shared_prefix,
         unique_character_prefix,
         kraft_mcmillan: satisfies_kraft_mcmillan(list),
+        samples,
     }
 }
 
@@ -148,93 +155,99 @@ pub fn display_list_information(
     attributes_as_json: bool,
     ignore_ending_metadata_delimiter: Option<char>,
     ignore_starting_metadata_delimiter: Option<char>,
+    samples: bool,
 ) {
     let list = make_list_free_of_metadata(
         list,
         ignore_starting_metadata_delimiter,
         ignore_ending_metadata_delimiter,
     );
-    let list_attributes = make_attributes(&list, level);
+    let list_attributes = make_attributes(&list, level, samples);
     if attributes_as_json {
         print_attributes_as_json(&list_attributes);
     } else {
-        eprintln!("Attributes of new list");
-        eprintln!("----------------------");
-        eprintln!(
-            "List length               : {} words",
-            list_attributes.list_length
-        );
-        eprintln!(
-            "Mean word length          : {:.2} characters",
-            list_attributes.mean_word_length
-        );
-        eprintln!(
-            "Length of shortest word   : {} characters ({})",
-            list_attributes.shortest_word_length, list_attributes.shortest_word_example
-        );
-        eprintln!(
-            "Length of longest word    : {} characters ({})",
-            list_attributes.longest_word_length, list_attributes.longest_word_example
-        );
-        if let Some(is_free_of_prefix_words) = list_attributes.is_free_of_prefix_words {
-            eprintln!("Free of prefix words?     : {}", is_free_of_prefix_words);
-        }
-        if let Some(is_free_of_suffix_words) = list_attributes.is_free_of_suffix_words {
-            eprintln!("Free of suffix words?     : {:?}", is_free_of_suffix_words);
-        }
-
-        // At least for now, this one is EXPENSIVE
-        if let Some(is_uniquely_decodable) = list_attributes.is_uniquely_decodable {
-            eprintln!("Uniquely decodable?       : {:?}", is_uniquely_decodable);
-        }
-
-        eprintln!(
-            "Entropy per word          : {:.3} bits",
-            list_attributes.entropy_per_word
-        );
-        eprintln!(
-            "Efficiency per character  : {:.3} bits",
-            list_attributes.efficiency_per_character
-        );
-        eprintln!(
-            "Assumed entropy per char  : {:.3} bits",
-            list_attributes.assumed_entropy_per_character
-        );
-        eprintln!(
-            "Above brute force line?   : {}",
-            list_attributes.is_above_brute_force_line
-        );
-
-        if level >= 4 {
+        if level >= 1 {
+            eprintln!("Attributes of new list");
+            eprintln!("----------------------");
             eprintln!(
-                "Above Shannon line?       : {}",
-                list_attributes.is_above_shannon_line
+                "List length               : {} words",
+                list_attributes.list_length
             );
-        }
+            eprintln!(
+                "Mean word length          : {:.2} characters",
+                list_attributes.mean_word_length
+            );
+            eprintln!(
+                "Length of shortest word   : {} characters ({})",
+                list_attributes.shortest_word_length, list_attributes.shortest_word_example
+            );
+            eprintln!(
+                "Length of longest word    : {} characters ({})",
+                list_attributes.longest_word_length, list_attributes.longest_word_example
+            );
+            if let Some(is_free_of_prefix_words) = list_attributes.is_free_of_prefix_words {
+                eprintln!("Free of prefix words?     : {}", is_free_of_prefix_words);
+            }
+            if let Some(is_free_of_suffix_words) = list_attributes.is_free_of_suffix_words {
+                eprintln!("Free of suffix words?     : {:?}", is_free_of_suffix_words);
+            }
 
-        if let Some(shortest_edit_distance) = list_attributes.shortest_edit_distance {
-            eprintln!("Shortest edit distance    : {}", shortest_edit_distance)
-        }
-        if let Some(mean_edit_distance) = list_attributes.mean_edit_distance {
-            eprintln!("Mean edit distance        : {:.3}", mean_edit_distance)
-        }
+            // At least for now, this one is EXPENSIVE
+            if let Some(is_uniquely_decodable) = list_attributes.is_uniquely_decodable {
+                eprintln!("Uniquely decodable?       : {:?}", is_uniquely_decodable);
+            }
 
-        if let Some(longest_shared_prefix) = list_attributes.longest_shared_prefix {
-            eprintln!("Longest shared prefix     : {}", longest_shared_prefix)
-        }
-        // Numbers of characters required to definitely get to a unique
-        // prefix
-        if let Some(unique_character_prefix) = list_attributes.unique_character_prefix {
-            eprintln!("Unique character prefix   : {}", unique_character_prefix)
-        }
+            eprintln!(
+                "Entropy per word          : {:.3} bits",
+                list_attributes.entropy_per_word
+            );
+            eprintln!(
+                "Efficiency per character  : {:.3} bits",
+                list_attributes.efficiency_per_character
+            );
+            eprintln!(
+                "Assumed entropy per char  : {:.3} bits",
+                list_attributes.assumed_entropy_per_character
+            );
+            eprintln!(
+                "Above brute force line?   : {}",
+                list_attributes.is_above_brute_force_line
+            );
 
-        if level >= 4 {
-            let kraft_mcmillan = if list_attributes.kraft_mcmillan {
-                "satisfied"
-            } else {
-                "not satisfied"
-            };
-            eprintln!("Kraft-McMillan inequality : {}", kraft_mcmillan);
+            if level >= 4 {
+                eprintln!(
+                    "Above Shannon line?       : {}",
+                    list_attributes.is_above_shannon_line
+                );
+            }
+
+            if let Some(shortest_edit_distance) = list_attributes.shortest_edit_distance {
+                eprintln!("Shortest edit distance    : {}", shortest_edit_distance)
+            }
+            if let Some(mean_edit_distance) = list_attributes.mean_edit_distance {
+                eprintln!("Mean edit distance        : {:.3}", mean_edit_distance)
+            }
+
+            if let Some(longest_shared_prefix) = list_attributes.longest_shared_prefix {
+                eprintln!("Longest shared prefix     : {}", longest_shared_prefix)
+            }
+            // Numbers of characters required to definitely get to a unique
+            // prefix
+            if let Some(unique_character_prefix) = list_attributes.unique_character_prefix {
+                eprintln!("Unique character prefix   : {}", unique_character_prefix)
+            }
+
+            if level >= 4 {
+                let kraft_mcmillan = if list_attributes.kraft_mcmillan {
+                    "satisfied"
+                } else {
+                    "not satisfied"
+                };
+                eprintln!("Kraft-McMillan inequality : {}", kraft_mcmillan);
+            }
+        }
+        if let Some(samples) = list_attributes.samples {
+            print_samples(samples)
         }
     }
 }
@@ -281,50 +294,15 @@ fn make_list_free_of_metadata(
 use rand::seq::SliceRandom;
 /// Print 5 sample 6-word passphrases from the newly created
 /// word list.
-pub fn generate_samples(
-    list: &[String],
-    ignore_ending_metadata_delimiter: Option<char>,
-    ignore_starting_metadata_delimiter: Option<char>,
-) -> Vec<String> {
+pub fn generate_samples(list: &[String]) -> Vec<String> {
     let mut samples: Vec<String> = vec![];
     for _n in 0..30 {
         match list.choose(&mut rand::thread_rng()) {
-            Some(word) => samples.push(clean_word_of_metadata_using_delimiter(
-                word,
-                ignore_ending_metadata_delimiter,
-                ignore_starting_metadata_delimiter,
-            )),
+            Some(word) => samples.push(word.to_string()),
             None => panic!("Couldn't pick a random word"),
         }
     }
     samples
-}
-
-/// Removes "metadata" from word, as specified by ending or starting
-/// delimiter
-fn clean_word_of_metadata_using_delimiter(
-    word: &str,
-    ignore_ending_metadata_delimiter: Option<char>,
-    ignore_starting_metadata_delimiter: Option<char>,
-) -> String {
-    match (
-        ignore_ending_metadata_delimiter,
-        ignore_starting_metadata_delimiter,
-    ) {
-        (Some(delimiter), None) => {
-            let delimiter = parse_delimiter(delimiter).unwrap();
-            split_and_vectorize(word, &delimiter.to_string())[1].to_string()
-        }
-        (None, Some(delimiter)) => {
-            let delimiter = parse_delimiter(delimiter).unwrap();
-            split_and_vectorize(word, &delimiter.to_string())[0].to_string()
-        }
-        (Some(_delimiter1), Some(_delimiter2)) => {
-            panic!("Can't have starting and ending delimiters")
-        }
-
-        (None, None) => word.to_string(),
-    }
 }
 
 /// Calculate the entropy per word of a word list, given its size.
@@ -554,4 +532,22 @@ pub fn mean_word_length(list: &[String]) -> f32 {
         .map(|word| count_characters(word))
         .sum::<usize>() as f32
         / list.len() as f32
+}
+
+fn print_samples(samples: Vec<String>) {
+    eprintln!("\nWord samples");
+    eprintln!("------------");
+    for n in 0..30 {
+        if n != 0 && n % 6 == 0 {
+            // if we're at the end of the 6th word,
+            // print a newline
+            eprintln!();
+        } else if n != 0 {
+            // else just print a space to go between each
+            // word
+            eprint!(" ");
+        }
+        eprint!("{}", samples[n]);
+    }
+    eprintln!();
 }
