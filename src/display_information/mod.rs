@@ -29,8 +29,8 @@ pub struct ListAttributes {
     pub is_above_shannon_line: bool,
     pub shortest_edit_distance: Option<usize>,
     pub mean_edit_distance: Option<f64>,
-    pub longest_shared_prefix: usize,
-    pub unique_character_prefix: usize,
+    pub longest_shared_prefix: Option<usize>,
+    pub unique_character_prefix: Option<usize>,
     pub mcmillan: bool,
 }
 
@@ -64,8 +64,8 @@ fn make_attributes(list: &[String], level: u8) -> ListAttributes {
             is_uniquely_decodable: None,
             shortest_edit_distance: None,
             mean_edit_distance: None,
-            longest_shared_prefix: find_longest_shared_prefix(list),
-            unique_character_prefix: find_longest_shared_prefix(list) + 1,
+            longest_shared_prefix: None,
+            unique_character_prefix: None,
             mcmillan: satisfies_mcmillan(list),
         }
     } else if level == 2 {
@@ -86,8 +86,8 @@ fn make_attributes(list: &[String], level: u8) -> ListAttributes {
             is_uniquely_decodable: Some(is_uniquely_decodable(list)),
             shortest_edit_distance: None,
             mean_edit_distance: None,
-            longest_shared_prefix: find_longest_shared_prefix(list),
-            unique_character_prefix: find_longest_shared_prefix(list) + 1,
+            longest_shared_prefix: None,
+            unique_character_prefix: None,
             mcmillan: satisfies_mcmillan(list),
         }
     } else {
@@ -108,8 +108,8 @@ fn make_attributes(list: &[String], level: u8) -> ListAttributes {
             is_uniquely_decodable: Some(is_uniquely_decodable(list)),
             shortest_edit_distance: Some(find_shortest_edit_distance(list)),
             mean_edit_distance: Some(find_mean_edit_distance(list)),
-            longest_shared_prefix: find_longest_shared_prefix(list),
-            unique_character_prefix: find_longest_shared_prefix(list) + 1,
+            longest_shared_prefix: Some(find_longest_shared_prefix(list)),
+            unique_character_prefix: Some(find_longest_shared_prefix(list) + 1),
             mcmillan: satisfies_mcmillan(list),
         }
     }
@@ -218,20 +218,20 @@ pub fn display_list_information(
 
         if let Some(shortest_edit_distance) = list_attributes.shortest_edit_distance {
             eprintln!("Shortest edit distance    : {}", shortest_edit_distance)
-        };
+        }
         if let Some(mean_edit_distance) = list_attributes.mean_edit_distance {
             eprintln!("Mean edit distance        : {:.3}", mean_edit_distance)
         }
-        eprintln!(
-            "Longest shared prefix     : {}",
-            list_attributes.longest_shared_prefix
-        );
+
+        if let Some(longest_shared_prefix) = list_attributes.longest_shared_prefix {
+            eprintln!("Longest shared prefix     : {}", longest_shared_prefix)
+        }
         // Numbers of characters required to definitely get to a unique
         // prefix
-        eprintln!(
-            "Unique character prefix   : {}",
-            list_attributes.unique_character_prefix
-        );
+        if let Some(unique_character_prefix) = list_attributes.unique_character_prefix {
+            eprintln!("Unique character prefix   : {}", unique_character_prefix)
+        }
+
         if level >= 4 {
             let mcmillan = if list_attributes.mcmillan {
                 "satisfied"
