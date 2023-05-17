@@ -82,7 +82,10 @@ fn make_attributes(list: &[String], level: u8, samples: bool) -> ListAttributes 
     };
 
     let longest_shared_prefix = if level >= 4 {
-        Some(find_longest_shared_prefix(list))
+        Some(find_longest_shared_prefix(
+            list,
+            Some(count_characters(&longest_word_example)),
+        ))
     } else {
         None
     };
@@ -362,14 +365,20 @@ pub fn find_mean_edit_distance(list: &[String]) -> f64 {
 /// Nested loops in this function get the `longest_shared_prefix`
 /// between any two words on the given list. Returns length of this
 /// longest shared prefix, a notable cryptographic metric.
-pub fn find_longest_shared_prefix(list: &[String]) -> usize {
+/// Optionally takes longest_word_length to speed up process.
+pub fn find_longest_shared_prefix(list: &[String], longest_word_length: Option<usize>) -> usize {
     let mut longest_shared_prefix = 0;
 
-    let longest_word_length = count_characters(
-        list.iter()
-            .max_by(|a, b| count_characters(a).cmp(&count_characters(b)))
-            .unwrap(),
-    );
+    // If longest_word_length is given, use that. If not,
+    // calculate it here.
+    let longest_word_length = match longest_word_length {
+        Some(longest_word_length) => longest_word_length,
+        None => count_characters(
+            list.iter()
+                .max_by(|a, b| count_characters(a).cmp(&count_characters(b)))
+                .unwrap(),
+        ),
+    };
     for word1 in list {
         for word2 in list {
             if word1 != word2 {
