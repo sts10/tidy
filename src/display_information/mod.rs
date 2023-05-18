@@ -6,6 +6,7 @@ use crate::display_information::uniquely_decodable::is_uniquely_decodable;
 use crate::parse_delimiter;
 use crate::split_and_vectorize;
 use serde::{Deserialize, Serialize};
+use std::fmt;
 // use serde_json::Result;
 
 #[derive(Serialize, Deserialize)]
@@ -31,8 +32,22 @@ pub struct ListAttributes {
     pub mean_edit_distance: Option<f64>,
     pub longest_shared_prefix: Option<usize>,
     pub unique_character_prefix: Option<usize>,
-    pub kraft_mcmillan: bool,
+    pub kraft_mcmillan: KraftMcmillanOutcome,
     pub samples: Option<Vec<String>>,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub enum KraftMcmillanOutcome {
+    Satisfied,
+    NotSatisfied,
+}
+impl fmt::Display for KraftMcmillanOutcome {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            KraftMcmillanOutcome::Satisfied => write!(f, "satisfied"),
+            KraftMcmillanOutcome::NotSatisfied => write!(f, "not satisfied"),
+        }
+    }
 }
 
 fn make_attributes(list: &[String], level: u8, samples: bool) -> ListAttributes {
@@ -241,12 +256,10 @@ pub fn display_list_information(
             }
 
             if level >= 4 {
-                let kraft_mcmillan = if list_attributes.kraft_mcmillan {
-                    "satisfied"
-                } else {
-                    "not satisfied"
-                };
-                eprintln!("Kraft-McMillan inequality : {}", kraft_mcmillan);
+                eprintln!(
+                    "Kraft-McMillan inequality : {}",
+                    list_attributes.kraft_mcmillan
+                );
             }
         }
         if let Some(samples) = list_attributes.samples {
@@ -502,14 +515,18 @@ pub fn efficiency_per_character(list: &[String]) -> f64 {
 /// This function returns a bool based on whether the list fulfills something
 /// called the McMillan Inequality
 /// See: https://www.youtube.com/watch?v=yHw1ka-4g0s
-pub fn satisfies_kraft_mcmillan(list: &[String]) -> bool {
+pub fn satisfies_kraft_mcmillan(list: &[String]) -> KraftMcmillanOutcome {
     let alphabet_size = count_unique_characters(list);
     let mut running_total: f64 = 0.0;
     for word in list {
         running_total +=
             1.0 / (alphabet_size.pow(count_characters(word).try_into().unwrap()) as f64);
     }
-    running_total <= 1.0
+    if running_total <= 1.0 {
+        KraftMcmillanOutcome::Satisfied
+    } else {
+        KraftMcmillanOutcome::NotSatisfied
+    }
 }
 
 fn count_unique_characters(list: &[String]) -> usize {
