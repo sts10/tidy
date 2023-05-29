@@ -73,6 +73,9 @@ Options:
           once to print more attributes. Some attributes may take a nontrivial
           amount of time to calculate
 
+  -j, --json
+          Print attributes and word samples in JSON format
+
   -s, --samples
           Print a handful of pseudorandomly selected words from the created list
           to the terminal. Should NOT be used as secure passphrases

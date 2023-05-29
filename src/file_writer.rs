@@ -1,7 +1,6 @@
 use crate::cards::print_as_cards;
 use crate::dice::print_as_dice;
 use crate::display_information::display_list_information;
-use crate::display_information::generate_samples;
 use std::fs::File;
 use std::io::Write;
 use std::path::PathBuf;
@@ -16,6 +15,7 @@ pub struct PrintRequest {
     pub cards: bool,
     pub print_dice_sides_as_their_base: bool,
     pub attributes: u8,
+    pub attributes_as_json: bool,
     pub samples: bool,
     pub ignore_before_delimiter: Option<char>,
     pub ignore_after_delimiter: Option<char>,
@@ -72,35 +72,15 @@ pub fn print_list(print_req: PrintRequest) {
         } else if print_req.dry_run {
             eprintln!("Dry run complete");
         }
-        if print_req.attributes > 0 {
+        if print_req.attributes > 0 || print_req.samples {
             display_list_information(
                 &print_req.tidied_list,
                 print_req.attributes,
+                print_req.attributes_as_json,
                 print_req.ignore_after_delimiter,
                 print_req.ignore_before_delimiter,
+                print_req.samples,
             );
-        }
-        if print_req.samples {
-            let samples = generate_samples(
-                &print_req.tidied_list,
-                print_req.ignore_after_delimiter,
-                print_req.ignore_before_delimiter,
-            );
-            eprintln!("\nWord samples");
-            eprintln!("------------");
-            for n in 0..30 {
-                if n != 0 && n % 6 == 0 {
-                    // if we're at the end of the 6th word,
-                    // print a newline
-                    eprintln!();
-                } else if n != 0 {
-                    // else just print a space to go between each
-                    // word
-                    eprint!(" ");
-                }
-                eprint!("{}", samples[n]);
-            }
-            eprintln!();
         }
     }
 }

@@ -33,6 +33,10 @@ struct Args {
     #[clap(short = 'A', long = "attributes", action = clap::ArgAction::Count)]
     attributes: u8,
 
+    /// Print attributes and word samples in JSON format
+    #[clap(short = 'j', long = "json")]
+    attributes_as_json: bool,
+
     /// Print a handful of pseudorandomly selected words from the created list
     /// to the terminal. Should NOT be used as secure passphrases.
     #[clap(short = 's', long = "samples")]
@@ -470,6 +474,7 @@ fn main() {
         dice_sides: opt.dice_sides,
         print_dice_sides_as_their_base: opt.print_dice_sides_as_their_base,
         attributes: opt.attributes,
+        attributes_as_json: opt.attributes_as_json,
         samples: opt.samples,
         ignore_before_delimiter,
         ignore_after_delimiter,
