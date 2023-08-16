@@ -1,4 +1,4 @@
-# Appendix A: Where can I find some word lists?
+# Where can I find some word lists?
 
 ## Diceware lists (generally 7,776 words long)
 -   The [Electronic Frontier Foundation](https://www.eff.org/) has published [a few word lists for creating diceware passphrases](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases).

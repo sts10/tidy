@@ -46,7 +46,7 @@ Optionally, the tool can...
 
 and more!
 
-If you do NOT want Tidy to sort list alphabetically, you can use the `--no-sort` option.
+NOTE: If you do NOT want Tidy to sort list alphabetically, you can use the `--no-sort` option.
 
 ## Usage
 
