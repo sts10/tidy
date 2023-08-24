@@ -7,7 +7,6 @@ use crate::parse_delimiter;
 use crate::split_and_vectorize;
 use serde::{Deserialize, Serialize};
 use std::fmt;
-// use serde_json::Result;
 
 #[derive(Serialize, Deserialize)]
 pub struct ListAttributes {
@@ -105,10 +104,10 @@ fn make_attributes(list: &[String], level: u8, samples: bool) -> ListAttributes 
         None
     };
     let unique_character_prefix = if level >= 4 {
-        match longest_shared_prefix {
-            Some(longest_shared_prefix) => Some(longest_shared_prefix + 1),
-            None => None,
-        }
+        // By definition, unique_character_prefix == longest_shared_prefix + 1
+        // We have to use map in case longest_shared_prefix is None, which is
+        // unlikely, but technically possible.
+        longest_shared_prefix.map(|longest_shared_prefix| longest_shared_prefix + 1)
     } else {
         None
     };
