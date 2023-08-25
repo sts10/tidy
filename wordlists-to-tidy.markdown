@@ -40,6 +40,7 @@
 -   I'm pretty sure this is [1Password](https://1password.com/)'s [word list](https://1password.com/txt/agwordlist.txt) as of 2021.
     -   1Password published a few slightly different word lists ([one](https://github.com/1Password/spg/blob/master/testdata/agwordlist.txt), [two](https://github.com/agilebits/crackme/blob/master/doc/AgileWords.txt)) in 2018.
 -   [SecureDrop](https://github.com/freedomofpress/securedrop/) has a few lists, including one of [adjectives](https://github.com/freedomofpress/securedrop/blob/develop/securedrop/dictionaries/adjectives.txt) and one of [nouns](https://github.com/freedomofpress/securedrop/blob/develop/securedrop/dictionaries/nouns.txt).
+-   [Jitsi](https://meet.jit.si/) has [lists of nouns, verbs, adjectives, and adverbs](https://github.com/jitsi/js-utils/blob/1c57316514a602f3888f4aafb047e8288066186e/random/roomNameGenerator.js) for generating random room names.
 
 ## Shameless plug
 
