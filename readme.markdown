@@ -381,6 +381,12 @@ vascular stencil visible sporty embellish submarine
 
 When counting the length of a word, Tidy counts the number of [grapheme clusters](https://www.unicode.org/reports/tr29/#Grapheme_Cluster_Boundaries) in the word. Generally, less common characters like accented letters and emoji all count as 1 grapheme cluster and thus, to Tidy, one character. I believe this better fits with how us humans intuitively count characters in a string/word.
 
+## What types of files does Tidy work with?
+In general, Tidy expects inputted files to have one word per line. 
+
+### Line endings
+Tidy supports `\n` and `\r\n` line endings.
+
 ## On verbs used
 
 In both Tidy's code and documentation, "remove" means that a word will be removed (e.g. words with integers will be removed from the list), while "delete" means that a word will only be modified (e.g. integers removed from words). Uppercase flags remove words, while lowercase flags delete specified characters. All delete calls and word modifications (like "to lowercase") occur _before_ any remove call.
