@@ -41,7 +41,8 @@
     -   1Password published a few slightly different word lists ([one](https://github.com/1Password/spg/blob/master/testdata/agwordlist.txt), [two](https://github.com/agilebits/crackme/blob/master/doc/AgileWords.txt)) in 2018.
 -   [SecureDrop](https://github.com/freedomofpress/securedrop/) has a few lists, including one of [adjectives](https://github.com/freedomofpress/securedrop/blob/develop/securedrop/dictionaries/adjectives.txt) and one of [nouns](https://github.com/freedomofpress/securedrop/blob/develop/securedrop/dictionaries/nouns.txt).
 -   [Jitsi](https://meet.jit.si/) has [lists of nouns, verbs, adjectives, and adverbs](https://github.com/jitsi/js-utils/blob/1c57316514a602f3888f4aafb047e8288066186e/random/roomNameGenerator.js) for generating random room names.
-
+-   [A German word list that looks promising](https://github.com/martinhoefling/goxkcdpwgen/blob/master/wordlists/de-7776-v1-diceware.txt)
+    
 ## Shameless plug
 
 -   I used Tidy to create [Orchard Street Wordlists](https://github.com/sts10/orchard-street-wordlists) ([as well as a few other word lists](https://github.com/sts10/generated-wordlists)).
