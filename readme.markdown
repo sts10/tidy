@@ -12,7 +12,9 @@ Tidy performs basic list-cleaning operations like removing duplicate words and b
 
 Tidy also can make word lists more "typo-resistant" by enforcing a minimum edit distance (`-d`), removing homophones and/or enforcing a unique prefix length (`-x`), which can allow users to auto-complete words after a specified number of characters.
 
-Tidy can be used to **create new word lists** (for example, if given more than one list, Tidy will combine and de-duplicate them) with desirable qualities. It can also assist in **audits** of existing lists by removing duplicates and optionally printing notable information about a given word list, and/or a handful of pseudorandomly generated sample passphrases (`--samples`).
+Tidy can be used to **create new word lists** (for example, if given more than one list, Tidy will combine and de-duplicate them) with desirable qualities. You can obviously **edit** existing word lists.
+
+If you want to _audit_ an existing word list, Tidy can do that, but I'd suggest using my related [Word List Auditor](https://github.com/sts10/wla).
 
 ## Features
 
@@ -243,9 +245,9 @@ Options:
           Path(s) for optional list of approved words. Can accept multiple files
 
       --homophones <HOMOPHONES_LIST>
-          Path(s) to file(s) containing homophone pairs. There must be one pair 
-          of homophones per line, separated by a comma (sun,son). If BOTH words 
-          are found on a list, the SECOND word is removed. File(s) can be a CSV 
+          Path(s) to file(s) containing homophone pairs. There must be one pair
+          of homophones per line, separated by a comma (sun,son). If BOTH words
+          are found on a list, the SECOND word is removed. File(s) can be a CSV
           (with no column headers) or TXT file(s)
 
       --dice <DICE_SIDES>
@@ -328,7 +330,6 @@ You should then be able to run `tidy --help` for help text.
 Uninstall Tidy by running `cargo uninstall tidy`.
 
 ### Releases
-
 I occasionally [build releases](https://github.com/sts10/tidy/releases) of Tidy and upload them to GitHub. Note that most releases contain a binary only suitable for Mac and Linux users. If you'd like to help package Tidy for Windows, let me know.
 
 ## For Tidy developers
@@ -341,11 +342,11 @@ Pull Requests welcome!
 
 ## Tidy can print attributes about a word list
 
-Tidy can also calculate different attributes about a created list. `tidy -AAAA -G t --dry-run eff_long_list.txt` prints:
+**Note when using Tidy to audit a list**: Tidy will remove blank lines and duplicate lines (words) _before_ calculating these list attributes. For example, if you're 4,000-word list has, say, 5 duplicate words, Tidy will report that the list has 3,995 words. No warning of duplicate words is given.
 
-**Note when using Tidy to audit a list**: Tidy will remove blank lines and duplicate lines (words) _before_ calculating these list attributes. For example, if you're 4,000-word list has, say, 5 duplicate words, Tidy will report that the list has 3,995 words. No warning of duplicate words is given. 
+If you really want to _audit_ a word list, without making changes to it, try [Word List Auditor](https://github.com/sts10/wla).
 
-(If you really want to _audit_ a word list, without making changes to it, try [Word List Auditor](https://github.com/sts10/wla).)
+That said, Tidy can calculate different attributes about a created list. `tidy -AAAA -G t --dry-run eff_long_list.txt` prints:
 
 ```text
 Attributes of new list
@@ -384,7 +385,7 @@ vascular stencil visible sporty embellish submarine
 When counting the length of a word, Tidy counts the number of [grapheme clusters](https://www.unicode.org/reports/tr29/#Grapheme_Cluster_Boundaries) in the word. Generally, less common characters like accented letters and emoji all count as 1 grapheme cluster and thus, to Tidy, one character. I believe this better fits with how us humans intuitively count characters in a string/word.
 
 ## What types of files does Tidy work with?
-In general, Tidy expects inputted files to have one word per line. 
+In general, Tidy expects inputted files to have one word per line.
 
 ### Line endings
 Tidy supports `\n` and `\r\n` line endings.
