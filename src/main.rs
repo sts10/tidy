@@ -2,7 +2,6 @@ use clap::Parser;
 use std::env;
 use std::path::Path;
 use std::path::PathBuf;
-use std::process;
 use tidy::*;
 pub mod display_information;
 pub mod input_validations;
@@ -270,7 +269,7 @@ struct Args {
     inputted_word_lists: Vec<PathBuf>,
 }
 
-fn main() {
+fn main() -> Result<(), String> {
     let opt = Args::parse();
     if opt.debug {
         eprintln!("Received args: {:?}", opt);
@@ -281,23 +280,22 @@ fn main() {
     match validate_dice_sides(opt.dice_sides) {
         Ok(()) => (),
         Err(e) => {
-            eprintln!("{}", e);
-            process::exit(1);
+            return Err(e.to_string());
         }
     }
 
     // Check if any of inputted_word_lists are directories
     for file in &opt.inputted_word_lists {
         if file.is_dir() {
-            eprintln!("Given file {:?} is a directory", file);
-            eprintln!("Exiting");
-            process::exit(1);
+            return Err(format!("Given file {:?} is a directory", file));
         }
     }
 
     if opt.cards && opt.dice_sides.is_some() {
-        eprintln!("Error: Cannot use dice and cards. Must be either cards or dice or neither.");
-        process::exit(1);
+        return Err(
+            "Error: Cannot use dice and cards. Must be either cards or dice or neither."
+                .to_string(),
+        );
     }
 
     match validate_list_truncation_options(
@@ -308,18 +306,17 @@ fn main() {
     ) {
         Ok(()) => (),
         Err(e) => {
-            eprintln!("{}", e);
-            process::exit(1);
+            return Err(e.to_string());
         }
     }
 
     // Check if output file exists
     if let Some(ref output_file_name) = opt.output {
         if !opt.force_overwrite && Path::new(output_file_name).exists() {
-            eprintln!(
+            return Err(
                 "Specified output file already exists. Use --force flag to force an overwrite."
+                    .to_string(),
             );
-            return;
         }
     }
 
@@ -405,8 +402,7 @@ fn main() {
             (ignore_before_delimiter, ignore_after_delimiter)
         }
         Err(e) => {
-            eprintln!("{}", e);
-            process::exit(1);
+            return Err(e.to_string());
         }
     };
 
@@ -418,8 +414,7 @@ fn main() {
                 (this_tidy_request, length_to_whittle_to, starting_point)
             }
             Err(e) => {
-                eprintln!("{}", e);
-                process::exit(1);
+                return Err(e);
             }
         };
 
@@ -480,6 +475,8 @@ fn main() {
         ignore_after_delimiter,
     };
     print_list(this_print_request);
+
+    Ok(())
 }
 
 /// Read LANG environmental variable, if possible
