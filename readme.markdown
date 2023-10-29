@@ -330,7 +330,11 @@ You should then be able to run `tidy --help` for help text.
 Uninstall Tidy by running `cargo uninstall tidy`.
 
 ### Releases
-I occasionally [build releases](https://github.com/sts10/tidy/releases) of Tidy and upload them to GitHub. Note that most releases contain a binary only suitable for Mac and Linux users. If you'd like to help package Tidy for Windows, let me know.
+I occasionally [build releases](https://github.com/sts10/tidy/releases) of Tidy and upload them to GitHub. Note that most releases contain a binary only suitable for Mac and Linux users.
+
+To install the executable on a Linux/macOS machine, download the `tidy` executable and move it to somewhere in your `$PATH`, like `$HOME/.local/bin` (you can do this on the command line with something like `mv ~/Downloads/phraze ~/.local/bin/`).
+
+(If you'd like to help package Tidy for Windows, let me know!)
 
 ## For Tidy developers
 
