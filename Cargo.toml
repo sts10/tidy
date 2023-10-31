@@ -4,6 +4,7 @@ version = "0.3.4"
 authors = ["sts10 <sschlinkert@gmail.com>"]
 edition = "2021"
 license = "MIT"
+readme = "readme.markdown"
 repository = "https://github.com/sts10/tidy"
 description = "Combine and clean word lists"
 categories = ["command-line-utilities"]
