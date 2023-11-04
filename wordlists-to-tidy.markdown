@@ -34,6 +34,7 @@
 -   [Danish wordlists](https://github.com/n0kovo/danish-wordlists) is a "collection of [Danish] wordlists for cracking danish passwords"
 -   [r/wordlists subreddit](https://www.reddit.com/r/wordlists/), which seems to have links to a few non-English word lists.
 -   You can also scan [GitHub's #wordlists topic](https://github.com/topics/wordlists)
+-   An XKCD-inspired passphrase generator with [a collection of non-English word lists](https://github.com/redacted/XKCD-password-generator/tree/master/xkcdpass/static).
 
 ## Various 
 -   The EFF also has some [fandom-inspired lists](https://www.eff.org/deeplinks/2018/08/dragon-con-diceware). They use a space between dice numbers and words, so Tidy can clean up with the `-D s` option. I prefer [Aaron Toponce's proposed _new_ fandom word lists](https://github.com/sts10/new-fandom-wordlists).
