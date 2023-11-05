@@ -437,9 +437,9 @@ If a word list is "uniquely decodable" that means that words from the list can b
 
 As a brief example, if a list has "boy", "hood", and "boyhood" on it, users who specified they wanted two words worth of randomness (entropy) might end up with "boyhood", which an attacker guessing single words would try. Removing the word "boy", which makes the remaining list uniquely decodable, prevents this possibility from occurring.
 
-To make a list uniquely decodable, Tidy removes words. Tidy offers three (3) distinct procedures to make cuts until a list is uniquely decodable. Users can (1) remove all [prefix words](https://en.wikipedia.org/wiki/Prefix_code), (2) remove all suffix words, or (3) perform a procedure based on [the Sardinas–Patterson algorithm](https://en.wikipedia.org/wiki/Sardinas%E2%80%93Patterson_algorithm) that I have named "Schlinkert pruning." You can learn more about uniquely decodable codes and Schlinkert pruning from [this blog post](https://sts10.github.io/2022/08/12/efficiently-pruning-until-uniquely-decodable.html).
+To make a list uniquely decodable, Tidy removes words. Tidy offers three (3) distinct procedures to make cuts until a list is uniquely decodable. Users can (1) remove all [prefix words](https://en.wikipedia.org/wiki/Prefix_code), (2) remove all suffix words, or (3) perform "Schlinkert pruning," a procedure based on [the Sardinas–Patterson algorithm](https://en.wikipedia.org/wiki/Sardinas%E2%80%93Patterson_algorithm) that I developed for Tidy. Note that Schlinkert pruning a long inputted word list may take hours or days; removing prefix or suffix words should be significantly quicker. You can learn more about uniquely decodable codes and Schlinkert pruning by reading [this blog post](https://sts10.github.io/2022/08/12/efficiently-pruning-until-uniquely-decodable.html).
 
-Tidy can also simply check if a list is uniquely decodable. It does this using [the Sardinas–Patterson algorithm](https://en.wikipedia.org/wiki/Sardinas%E2%80%93Patterson_algorithm). You can do this by passing Tidy four `attributes` flag (`-AAAA`).
+Tidy can also simply _check_ if the inputted list is (already) uniquely decodable. It does this using [the Sardinas–Patterson algorithm](https://en.wikipedia.org/wiki/Sardinas%E2%80%93Patterson_algorithm). You can do this by passing Tidy four `attributes` flag (`-AAAA`).
 
 ## Whittling
 
