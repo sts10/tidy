@@ -323,7 +323,7 @@ Options:
 
 ### Using Rust and cargo (suggested method)
 1. [Install Rust](https://www.rust-lang.org/tools/install) if you haven't already
-2. Run: `cargo install --git https://github.com/sts10/tidy --branch main` (Run this same command to upgrade Tidy.)
+2. Run: `cargo install --git https://github.com/sts10/tidy --locked --branch main` (Run this same command to upgrade Tidy.)
 
 You should then be able to run `tidy --help` for help text.
 
