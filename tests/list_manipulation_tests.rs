@@ -7,8 +7,8 @@ mod list_manipulation_tests {
         (
             vec![
                 "  zookeeper",
-                "apple",
                 "cHarLie",
+                "keeper",
                 "app",
                 "tea",
                 "addiction",
@@ -18,6 +18,8 @@ mod list_manipulation_tests {
                 "tea",
                 "station",
                 "apple",
+                "sécréter",
+                "séc",
             ]
             .iter()
             .map(|x| x.to_string())
@@ -117,7 +119,7 @@ mod list_manipulation_tests {
         let new_list = tidy_list(this_tidy_request);
         assert!(new_list[0] == "zookeeper".to_string());
         assert!(new_list.contains(&"apple".to_string()));
-        assert!(new_list[new_list.len() - 1] == "station".to_string());
+        assert_eq!(new_list[new_list.len() - 3], "apple".to_string());
     }
 
     #[test]
@@ -377,6 +379,18 @@ mod list_manipulation_tests {
         assert!(!new_list.contains(&"zoo".to_string()));
         assert!(new_list.contains(&"zookeeper".to_string()));
         assert!(new_list.contains(&"apple".to_string()));
+    }
+
+    #[test]
+    fn can_remove_a_prefix_word_that_has_accents() {
+        let this_tidy_request = TidyRequest {
+            list: make_lists().0,
+            should_remove_prefix_words: true,
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
+        assert!(!new_list.contains(&"séc".to_string()));
+        assert!(new_list.contains(&"sécréter".to_string()));
     }
 
     #[test]
