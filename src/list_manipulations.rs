@@ -26,17 +26,13 @@ use icu_collator::CollatorOptions;
 /// `.sorted()` words -> ["Zambia", "abbey", "eager", "enlever", "ezra", "zoo", "énigme"]
 /// sort_carefully words -> ["abbey", "eager", "énigme", "enlever", "ezra", "Zambia", "zoo"]
 pub fn sort_carefully(list: Vec<String>, locale: Locale) -> Vec<String> {
-    // let given_locale: Locale = match given_locale {
-    //     Some(given_locale) => locale!(given_locale),
-    //     None => locale!("en"),
-    // };
-    // let given_locale = locale!("en");
-    let mut options_l2 = CollatorOptions::new();
-    options_l2.strength = Some(Strength::Secondary);
-    let collator_l2: Collator =
-        Collator::try_new_unstable(&icu_testdata::unstable(), &locale.into(), options_l2).unwrap();
+    // https://github.com/unicode-org/icu4x#quick-start
+    let mut options = CollatorOptions::new();
+    options.strength = Some(Strength::Secondary);
+    let collator: Collator = Collator::try_new(&locale.into(), options).unwrap();
+
     let mut newly_sorted_list = list;
-    newly_sorted_list.sort_by(|a, b| collator_l2.compare(a, b));
+    newly_sorted_list.sort_by(|a, b| collator.compare(a, b));
     newly_sorted_list
 }
 
