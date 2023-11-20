@@ -17,7 +17,6 @@ rand = "0.8.5"
 itertools = "0.10.5"
 unicode-normalization = "0.1.22"
 icu = "1.4.0"
-icu_collator = "1.4.0"
 unicode-segmentation = "1.10.1"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
