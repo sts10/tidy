@@ -21,7 +21,7 @@ fn vec_to_hash(v: &[String]) -> HashSet<String> {
     my_hash
 }
 
-// Generate c for any number n
+/// Generate c for any number n
 fn generate_cn(c: &HashSet<String>, n: usize) -> HashSet<String> {
     if n == 0 {
         return c.to_owned();
