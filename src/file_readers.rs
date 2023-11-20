@@ -6,7 +6,7 @@ use std::path::PathBuf;
 
 /// Takes a slice of `PathBuf`s representing the word list(s)
 /// that the user has inputted to the program. Then iterates
-/// through each file and addes each line to Vec<String>. (Blank
+/// through each file and addes each line to `Vec<String>`. (Blank
 /// lines and duplicate links will be handled elsewhere.)
 pub fn make_vec_from_filenames(
     filenames: &[PathBuf],
