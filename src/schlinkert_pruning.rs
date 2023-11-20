@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-/// Return a Vector of words that "caused" the Sardinas- Patterson algorithm to
+/// Return a Vector of words that "caused" the Sardinas-Patterson algorithm to
 /// determine that this list was not uniquely decodable.
 /// These "offending" words can then be removed from the original
 /// list to, theoretically, make the list uniquely decodable.

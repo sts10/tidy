@@ -1,6 +1,6 @@
 use crate::count_characters;
 use crate::edit_distance::find_edit_distance;
-use crate::sardinas_patterson_pruning::get_sardinas_patterson_final_intersection;
+use crate::schlinkert_pruning::get_sardinas_patterson_final_intersection;
 use memchr::memchr;
 use unicode_normalization::UnicodeNormalization;
 
