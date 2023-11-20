@@ -14,17 +14,10 @@ use crate::parsers::*;
 #[derive(Parser, Debug)]
 #[clap(version, about, name = "tidy")]
 struct Args {
-    /// Do not print any extra information
-    #[clap(long = "quiet")]
-    quiet: bool,
-
-    /// Dry run. Don't write new list to file or terminal.
-    #[clap(long = "dry-run")]
-    dry_run: bool,
-
-    /// Debug mode
-    #[clap(long = "debug")]
-    debug: bool,
+    /// Path(s) for optional list of approved words. Can accept multiple
+    /// files.
+    #[clap(short = 'a', long = "approve")]
+    approved_list: Option<Vec<PathBuf>>,
 
     /// Print attributes about new list to terminal. Can be used more than once
     /// to print more attributes. Some attributes may take a nontrivial amount
@@ -36,10 +29,56 @@ struct Args {
     #[clap(short = 'j', long = "json")]
     attributes_as_json: bool,
 
-    /// Print a handful of pseudorandomly selected words from the created list
-    /// to the terminal. Should NOT be used as secure passphrases.
-    #[clap(short = 's', long = "samples")]
-    samples: bool,
+    /// Print playing card abbreviation next to each word.
+    /// Strongly recommend only using on lists with lengths that are powers
+    /// of 26 (26^1, 26^2, 26^3, etc.)
+    #[clap(long = "cards")]
+    cards: bool,
+
+    /// Debug mode
+    #[clap(long = "debug")]
+    debug: bool,
+
+    /// Delete all characters after the first instance of the specified delimiter until the end of line
+    /// (including the delimiter). Delimiter must be a single character (e.g., ','). Use 't' for tab and
+    /// 's' for space. May not be used together with -g or -G options.
+    #[clap(short = 'd', long = "delete-after")]
+    delete_after_delimiter: Option<char>,
+
+    /// Delete all characters before and including the first instance of the specified delimiter. Delimiter
+    /// must be a single character (e.g., ','). Use 't' for tab and 's' for space. May not be used
+    /// together with -g or -G options.
+    #[clap(short = 'D', long = "delete-before")]
+    delete_before_delimiter: Option<char>,
+
+    /// Delete all integers from all words on new list
+    #[clap(short = 'i', long = "delete-integers")]
+    delete_integers: bool,
+
+    /// Delete all non-alphanumeric characters from all words on new list. Characters with diacritics
+    /// will remain
+    #[clap(short = 'n', long = "delete-nonalphanumeric")]
+    delete_nonalphanumeric: bool,
+
+    /// Print dice roll before word in output. Set number of sides
+    /// of dice. Must be between 2 and 36. Use 6 for normal dice.
+    #[clap(long = "dice")]
+    dice_sides: Option<u8>,
+
+    /// Dry run. Don't write new list to file or terminal.
+    #[clap(long = "dry-run")]
+    dry_run: bool,
+
+    /// Force overwrite of output file if it exists.
+    #[clap(short = 'f', long = "force")]
+    force_overwrite: bool,
+
+    /// Path(s) to file(s) containing homophone pairs. There must be one pair
+    /// of homophones per line, separated by a comma (sun,son). If BOTH words
+    /// are found on a list, the SECOND word is removed. File(s) can be a CSV
+    /// (with no column headers) or TXT file(s).
+    #[clap(long = "homophones")]
+    homophones_list: Option<Vec<PathBuf>>,
 
     /// Ignore characters after the first instance of the specified delimiter until the end of line, treating
     /// anything before the delimiter as a word. Delimiter must be a single character (e.g., ','). Use 't'
@@ -57,6 +96,36 @@ struct Args {
     #[clap(short = 'G', long = "ignore-before")]
     ignore_before_delimiter: Option<char>,
 
+    /// Specify a locale for words on the list. Aids with sorting. Examples: en-US, es-ES. Defaults
+    /// to system LANG. If LANG environmental variable is not set, uses en-US.
+    #[clap(long = "locale")]
+    locale: Option<String>,
+
+    /// Lowercase all words on new list
+    #[clap(short = 'l', long = "lowercase")]
+    to_lowercase: bool,
+
+    /// Set maximum word length
+    #[clap(short = 'M', long = "maximum-word-length")]
+    maximum_length: Option<usize>,
+
+    /// Set number of leading characters to get to a unique prefix,
+    /// which can aid auto-complete functionality.
+    /// Setting this value to say, 4, means that knowing the first
+    /// 4 characters of any word on the generated list is enough
+    /// to know which word it is.
+    #[clap(short = 'x', long = "shared-prefix-length")]
+    maximum_shared_prefix_length: Option<usize>,
+
+    /// Set minimum edit distance between words, which
+    /// can reduce the cost of typos when entering words
+    #[clap(short = 'e', long = "minimum-edit-distance")]
+    minimum_edit_distance: Option<usize>,
+
+    /// Set minimum word length
+    #[clap(short = 'm', long = "minimum-word-length")]
+    minimum_length: Option<usize>,
+
     /// Do NOT sort outputted list alphabetically. Preserves original list order.
     /// Note that duplicate lines and blank lines will still be removed.
     #[clap(short = 'O', long = "no-sort")]
@@ -67,42 +136,46 @@ struct Args {
     #[clap(short = 'z', long = "normalization-form")]
     normalization_form: Option<String>,
 
-    /// Specify a locale for words on the list. Aids with sorting. Examples: en-US, es-ES. Defaults
-    /// to system LANG. If LANG environmental variable is not set, uses en-US.
-    #[clap(long = "locale")]
-    locale: Option<String>,
+    /// Path for outputted list file. If none given, generated word list
+    /// will be printed to terminal.
+    #[clap(short = 'o', long = "output")]
+    output: Option<PathBuf>,
 
-    /// Lowercase all words on new list
-    #[clap(short = 'l', long = "lowercase")]
-    to_lowercase: bool,
+    /// When printing dice roll before word in output, print dice values
+    /// according to the base selected through --dice option. Effectively
+    /// this means that letters will be used to represent numbers higher
+    /// than 9. Note that this option also 0-indexes the dice values.
+    /// This setting defaults to `false`, which will 1-indexed dice values,
+    /// and use double-digit numbers when necessary (e.g. 18-03-08).
+    #[clap(long = "sides-as-base")]
+    print_dice_sides_as_their_base: bool,
 
-    /// Replace “smart” quotation marks, both “double” and ‘single’,
-    /// with their "straight" versions
-    #[clap(short = 'q', long = "straighten")]
-    straighten_quotes: bool,
+    /// Just before printing generated list, cut list down
+    /// to a set number of words. Can accept expressions in the
+    /// form of base**exponent (helpful for generating diceware lists).
+    /// Words are selected from the beginning of processed list, and before it is sorted alphabetically.
+    #[clap(long = "print-first", value_parser=eval_list_length)]
+    print_first: Option<usize>,
 
-    /// Remove prefix words from new list
-    #[clap(short = 'P', long = "remove-prefix")]
-    remove_prefix_words: bool,
+    /// Just before printing generated list, cut list down
+    /// to a set number of words. Can accept expressions in the
+    /// form of base**exponent (helpful for generating diceware lists).
+    /// Cuts are done randomly.
+    #[clap(long = "print-rand", value_parser=eval_list_length)]
+    print_rand: Option<usize>,
 
-    /// Remove suffix words from new list
-    #[clap(short = 'S', long = "remove-suffix")]
-    remove_suffix_words: bool,
+    /// Do not print any extra information
+    #[clap(long = "quiet")]
+    quiet: bool,
 
-    /// Use Sardinas-Patterson algorithm to remove words to make list
-    /// uniquely decodable. Experimental!
-    #[clap(short = 'K', long = "schlinkert-prune")]
-    schlinkert_prune: bool,
+    /// Remove all words with integers in them from list
+    #[clap(short = 'I', long = "remove-integers")]
+    remove_integers: bool,
 
     /// Remove all words with non-alphanumeric characters from new list. Words with diacritics will
     /// remain
     #[clap(short = 'N', long = "remove-nonalphanumeric")]
     remove_nonalphanumeric: bool,
-
-    /// Delete all non-alphanumeric characters from all words on new list. Characters with diacritics
-    /// will remain
-    #[clap(short = 'n', long = "delete-nonalphanumeric")]
-    delete_nonalphanumeric: bool,
 
     /// Remove all words with non-alphabetic characters from new list. Words with diacritcis and
     /// other non-Latin characters will remain.
@@ -119,25 +192,43 @@ struct Args {
     #[clap(short = 'C', long = "remove-nonascii")]
     remove_nonascii: bool,
 
-    /// Remove all words with integers in them from list
-    #[clap(short = 'I', long = "remove-integers")]
-    remove_integers: bool,
+    /// Remove prefix words from new list
+    #[clap(short = 'P', long = "remove-prefix")]
+    remove_prefix_words: bool,
 
-    /// Delete all integers from all words on new list
-    #[clap(short = 'i', long = "delete-integers")]
-    delete_integers: bool,
+    /// Remove suffix words from new list
+    #[clap(short = 'S', long = "remove-suffix")]
+    remove_suffix_words: bool,
 
-    /// Delete all characters after the first instance of the specified delimiter until the end of line
-    /// (including the delimiter). Delimiter must be a single character (e.g., ','). Use 't' for tab and
-    /// 's' for space. May not be used together with -g or -G options.
-    #[clap(short = 'd', long = "delete-after")]
-    delete_after_delimiter: Option<char>,
+    /// Path(s) for optional list of words to reject. Can accept multiple
+    /// files.
+    #[clap(short = 'r', long = "reject")]
+    reject_list: Option<Vec<PathBuf>>,
 
-    /// Delete all characters before and including the first instance of the specified delimiter. Delimiter
-    /// must be a single character (e.g., ','). Use 't' for tab and 's' for space. May not be used
-    /// together with -g or -G options.
-    #[clap(short = 'D', long = "delete-before")]
-    delete_before_delimiter: Option<char>,
+    /// Print a handful of pseudorandomly selected words from the created list
+    /// to the terminal. Should NOT be used as secure passphrases.
+    #[clap(short = 's', long = "samples")]
+    samples: bool,
+
+    /// Use Sardinas-Patterson algorithm to remove words to make list
+    /// uniquely decodable. Experimental!
+    #[clap(short = 'K', long = "schlinkert-prune")]
+    schlinkert_prune: bool,
+
+    /// Skip first number of lines from inputted files. Useful for dealing with headers like from
+    /// PGP signatures
+    #[clap(long = "skip-rows-start")]
+    skip_rows_start: Option<usize>,
+
+    /// Skip last number of lines from inputted files. Useful for dealing with footers like from
+    /// PGP signatures.
+    #[clap(long = "skip-rows-end")]
+    skip_rows_end: Option<usize>,
+
+    /// Replace “smart” quotation marks, both “double” and ‘single’,
+    /// with their "straight" versions
+    #[clap(short = 'q', long = "straighten")]
+    straighten_quotes: bool,
 
     /// Only take first N words from inputted word list. If two or more word list files are
     /// inputted, it will combine all given lists by alternating words from the given word list
@@ -170,97 +261,6 @@ struct Args {
     /// if necessary.
     #[clap(short = 'W', long = "whittle-to")]
     whittle_to: Option<String>,
-
-    /// Just before printing generated list, cut list down
-    /// to a set number of words. Can accept expressions in the
-    /// form of base**exponent (helpful for generating diceware lists).
-    /// Cuts are done randomly.
-    #[clap(long = "print-rand", value_parser=eval_list_length)]
-    print_rand: Option<usize>,
-
-    /// Just before printing generated list, cut list down
-    /// to a set number of words. Can accept expressions in the
-    /// form of base**exponent (helpful for generating diceware lists).
-    /// Words are selected from the beginning of processed list, and before it is sorted alphabetically.
-    #[clap(long = "print-first", value_parser=eval_list_length)]
-    print_first: Option<usize>,
-
-    /// Set minimum word length
-    #[clap(short = 'm', long = "minimum-word-length")]
-    minimum_length: Option<usize>,
-
-    /// Set maximum word length
-    #[clap(short = 'M', long = "maximum-word-length")]
-    maximum_length: Option<usize>,
-
-    /// Set minimum edit distance between words, which
-    /// can reduce the cost of typos when entering words
-    #[clap(short = 'e', long = "minimum-edit-distance")]
-    minimum_edit_distance: Option<usize>,
-
-    /// Set number of leading characters to get to a unique prefix,
-    /// which can aid auto-complete functionality.
-    /// Setting this value to say, 4, means that knowing the first
-    /// 4 characters of any word on the generated list is enough
-    /// to know which word it is.
-    #[clap(short = 'x', long = "shared-prefix-length")]
-    maximum_shared_prefix_length: Option<usize>,
-
-    /// Skip first number of lines from inputted files. Useful for dealing with headers like from
-    /// PGP signatures
-    #[clap(long = "skip-rows-start")]
-    skip_rows_start: Option<usize>,
-
-    /// Skip last number of lines from inputted files. Useful for dealing with footers like from
-    /// PGP signatures.
-    #[clap(long = "skip-rows-end")]
-    skip_rows_end: Option<usize>,
-
-    /// Path(s) for optional list of words to reject. Can accept multiple
-    /// files.
-    #[clap(short = 'r', long = "reject")]
-    reject_list: Option<Vec<PathBuf>>,
-
-    /// Path(s) for optional list of approved words. Can accept multiple
-    /// files.
-    #[clap(short = 'a', long = "approve")]
-    approved_list: Option<Vec<PathBuf>>,
-
-    /// Path(s) to file(s) containing homophone pairs. There must be one pair
-    /// of homophones per line, separated by a comma (sun,son). If BOTH words
-    /// are found on a list, the SECOND word is removed. File(s) can be a CSV
-    /// (with no column headers) or TXT file(s).
-    #[clap(long = "homophones")]
-    homophones_list: Option<Vec<PathBuf>>,
-
-    /// Print dice roll before word in output. Set number of sides
-    /// of dice. Must be between 2 and 36. Use 6 for normal dice.
-    #[clap(long = "dice")]
-    dice_sides: Option<u8>,
-
-    /// When printing dice roll before word in output, print dice values
-    /// according to the base selected through --dice option. Effectively
-    /// this means that letters will be used to represent numbers higher
-    /// than 9. Note that this option also 0-indexes the dice values.
-    /// This setting defaults to `false`, which will 1-indexed dice values,
-    /// and use double-digit numbers when necessary (e.g. 18-03-08).
-    #[clap(long = "sides-as-base")]
-    print_dice_sides_as_their_base: bool,
-
-    /// Print playing card abbreviation next to each word.
-    /// Strongly recommend only using on lists with lengths that are powers
-    /// of 26 (26^1, 26^2, 26^3, etc.)
-    #[clap(long = "cards")]
-    cards: bool,
-
-    /// Path for outputted list file. If none given, generated word list
-    /// will be printed to terminal.
-    #[clap(short = 'o', long = "output")]
-    output: Option<PathBuf>,
-
-    /// Force overwrite of output file if it exists.
-    #[clap(short = 'f', long = "force")]
-    force_overwrite: bool,
 
     /// Word list input files. Can be more than one, in which case
     /// they'll be combined and de-duplicated. Requires at least
