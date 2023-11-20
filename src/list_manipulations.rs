@@ -5,7 +5,7 @@ use memchr::memchr;
 use unicode_normalization::UnicodeNormalization;
 
 /// Normalize the Unicode of a string
-/// See https://docs.rs/unicode-normalization/latest/unicode_normalization/trait.UnicodeNormalization.html#tymethod.nfc
+/// See <https://docs.rs/unicode-normalization/latest/unicode_normalization/trait.UnicodeNormalization.html#tymethod.nfc>
 pub fn normalize_unicode(word: &str, nf: &str) -> Result<String, String> {
     match nf.to_lowercase().as_str() {
         "nfc" => Ok(word.nfc().collect()),

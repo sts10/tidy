@@ -1,4 +1,3 @@
-
 use radix_fmt::*; // https://stackoverflow.com/a/50278316
 /// Print dice rolls before each corresponding word. Note
 /// that the `n` parameter should be zero-indexed. A tab (`\t`)

@@ -1,10 +1,10 @@
-/// This is a (rather clumsily) implementation of the Sardinas-Patterson algorithm
-/// by Sam Schlinkert.
-/// The goal is to check if a word list (`c`) is uniquely decodable.
-///
-/// I followed
-/// https://github.com/danhales/blog-sardinas-patterson/blob/master/index.ipynb
-/// very closely.
+//! This is a (rather clumsily) implementation of the Sardinas-Patterson algorithm
+//! by Sam Schlinkert.
+//! The goal is to check if a word list (`c`) is uniquely decodable.
+//!
+//! I followed
+//! <https://github.com/danhales/blog-sardinas-patterson/blob/master/index.ipynb>
+//! very closely. Since then, other contributors have refactored it.
 use std::collections::HashSet;
 
 /// Return true if the list is uniquely decodable, false if not. I

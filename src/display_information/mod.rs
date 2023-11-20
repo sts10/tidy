@@ -151,7 +151,7 @@ fn is_above_brute_force_line(list: &[String]) -> bool {
 
 /// In 1951, Claude Shannon estimated that English words only have
 /// about 2.6 bits of entropy per character, rather than (roughly) 4.7 bits per character.
-/// https://www.princeton.edu/~wbialek/rome/refs/shannon_51.pdf
+/// <https://www.princeton.edu/~wbialek/rome/refs/shannon_51.pdf>
 /// Thus, this is a more difficult line for a given list to pass above than
 /// the "brute force" line described above.
 fn is_above_shannon_line(list: &[String]) -> bool {
@@ -513,7 +513,7 @@ pub fn efficiency_per_character(list: &[String]) -> f64 {
 
 /// This function returns a bool based on whether the list fulfills something
 /// called the McMillan Inequality
-/// See: https://www.youtube.com/watch?v=yHw1ka-4g0s
+/// See: <https://www.youtube.com/watch?v=yHw1ka-4g0s>
 pub fn satisfies_kraft_mcmillan(list: &[String]) -> KraftMcmillanOutcome {
     let alphabet_size = count_unique_characters(list);
     let mut running_total: f64 = 0.0;
