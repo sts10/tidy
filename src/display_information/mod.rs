@@ -375,7 +375,7 @@ pub fn find_mean_edit_distance(list: &[String]) -> f64 {
         "Number of edit distances recorded: {}\nSum of all edit distances: {}",
         number_of_edit_distances_measured, sum_of_all_edit_distances
     );
-    (sum_of_all_edit_distances as f64) / (number_of_edit_distances_measured as f64)
+    sum_of_all_edit_distances / number_of_edit_distances_measured
 }
 
 /// Nested loops in this function get the `longest_shared_prefix`
@@ -532,6 +532,7 @@ pub fn satisfies_kraft_mcmillan(list: &[String]) -> KraftMcmillanOutcome {
     }
 }
 
+/// Helper function for calculating the Kraft McMillian Inequality
 fn count_unique_characters(list: &[String]) -> usize {
     let mut characters = vec![];
     for word in list {
