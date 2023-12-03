@@ -522,6 +522,12 @@ Tidy's function for removing characters on either side of a given delimiter uses
 
 See [this repo](https://github.com/sts10/splitter) for more information.
 
+## For developers: How to create a release
+
+This project uses [cargo-dist](https://opensource.axo.dev/cargo-dist/) to create releases.
+
+Some of [my personal docs are here](https://sts10.github.io/docs/cargo-dist-tips.html); but basically, `cargo install cargo-dist`. When you're ready to cut a new release, test the current state of the project with `cargo dist build` and `cargo dist plan`. If that went well, create a new git tag that matches the current project version in `Cargo.toml` with `git tag vX.X.X`. Finally, run `git push --tags` to kick off the release process. GitHub will handle it from here -- check your project's GitHub Releases page in about 5 to 10 minutes.
+
 ## Appendix: Tools that seem similar to Tidy
 -   [cook](https://github.com/giteshnxtlvl/cook): "An overpower[ed] wordlist generator, splitter, merger, finder, saver, create words permutation and combinations, apply different encoding/decoding and everything you need." Written in Go.
 -   [duplict](https://github.com/nil0x42/duplicut): "Remove duplicates from MASSIVE wordlist, without sorting it". Seems to indeed be much faster (10x) than `tidy --no-sort` for large word lists.
