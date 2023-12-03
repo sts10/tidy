@@ -311,7 +311,7 @@ Options:
 
 ## Installation
 
-### Using Rust and cargo (suggested method)
+### Using Rust and cargo
 1. [Install Rust](https://www.rust-lang.org/tools/install) if you haven't already
 2. Run: `cargo install --git https://github.com/sts10/tidy --locked --branch main` (Run this same command to upgrade Tidy.)
 
@@ -320,11 +320,9 @@ You should then be able to run `tidy --help` for help text.
 Uninstall Tidy by running `cargo uninstall tidy`.
 
 ### Releases
-I occasionally [build releases](https://github.com/sts10/tidy/releases) of Tidy and upload them to GitHub. Note that most releases contain a binary only suitable for Mac and Linux users.
+Check the [GitHub Releases page](https://github.com/sts10/tidy/releases) for binaries suitable for Mac, Windows, and Linux users.
 
 To install the executable on a Linux/macOS machine, download the `tidy` executable and move it to somewhere in your `$PATH`, like `$HOME/.local/bin` (you can do this on the command line with something like `mv ~/Downloads/tidy ~/.local/bin/`).
-
-(If you'd like to help package Tidy for Windows, let me know!)
 
 ## For Tidy developers
 
