@@ -793,7 +793,7 @@ dependencies = [
 
 [[package]]
 name = "tidy"
-version = "0.3.6"
+version = "0.3.7"
 dependencies = [
  "clap",
  "icu",
