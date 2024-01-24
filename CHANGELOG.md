@@ -1,3 +1,7 @@
+# v0.3.8
+
+* Uses version 0.8.0 of cargo-dist to create release binaries and a shell installation script.
+
 # v0.3.7
 
 First release using [cargo-dist](https://opensource.axo.dev/cargo-dist/). Should create binaries for Mac and Windows users. Cool!
