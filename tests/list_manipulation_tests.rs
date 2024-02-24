@@ -1,13 +1,14 @@
 mod list_manipulation_tests {
     use tidy::dice::print_as_dice; // not exactly sure why I need this here...
+    use tidy::list_manipulations::reverse_all_words;
     use tidy::*;
 
     fn make_lists() -> (Vec<String>, Vec<String>, Vec<String>, Vec<String>) {
         (
             vec![
                 "  zookeeper",
-                "apple",
                 "cHarLie",
+                "keeper",
                 "app",
                 "tea",
                 "addiction",
@@ -17,6 +18,8 @@ mod list_manipulation_tests {
                 "tea",
                 "station",
                 "apple",
+                "sécréter",
+                "séc",
             ]
             .iter()
             .map(|x| x.to_string())
@@ -72,6 +75,7 @@ mod list_manipulation_tests {
             .collect(),
             vec![
                 "énigme", "enlever", "abbey", "zoo", "Zambia", "eager", "ezra", "año", "antena",
+                "anaconda", "aptitude",
             ]
             .iter()
             .map(|word| word.to_string())
@@ -115,7 +119,7 @@ mod list_manipulation_tests {
         let new_list = tidy_list(this_tidy_request);
         assert!(new_list[0] == "zookeeper".to_string());
         assert!(new_list.contains(&"apple".to_string()));
-        assert!(new_list[new_list.len() - 1] == "station".to_string());
+        assert_eq!(new_list[new_list.len() - 3], "apple".to_string());
     }
 
     #[test]
@@ -378,6 +382,18 @@ mod list_manipulation_tests {
     }
 
     #[test]
+    fn can_remove_a_prefix_word_that_has_accents() {
+        let this_tidy_request = TidyRequest {
+            list: make_lists().0,
+            should_remove_prefix_words: true,
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
+        assert!(!new_list.contains(&"séc".to_string()));
+        assert!(new_list.contains(&"sécréter".to_string()));
+    }
+
+    #[test]
     fn can_remove_suffix_words() {
         let this_tidy_request = TidyRequest {
             list: make_lists().0,
@@ -567,8 +583,10 @@ mod list_manipulation_tests {
 
         let how_list_should_be_sorted: Vec<String> = vec![
             "abbey",
+            "anaconda",
             "antena",
             "año",
+            "aptitude",
             "eager",
             &normalize_unicode("énigme", "nfkd").unwrap(),
             "enlever",
@@ -655,6 +673,18 @@ mod list_manipulation_tests {
                 .chars()
                 .count()
         );
+    }
+
+    #[test]
+    fn can_reverse_list() {
+        let list = vec![
+            "hotdog".to_string(),
+            "hamburger".to_string(),
+            "alligator".to_string(),
+            "😀😁😆".to_string(),
+        ];
+        let rev_list = reverse_all_words(&list);
+        assert_eq!(rev_list, ["godtoh", "regrubmah", "rotagilla", "😆😁😀"]);
     }
 
     #[test]

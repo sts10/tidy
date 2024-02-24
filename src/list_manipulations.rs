@@ -1,46 +1,34 @@
 use crate::count_characters;
 use crate::edit_distance::find_edit_distance;
-use crate::sardinas_patterson_pruning::get_sardinas_patterson_final_intersection;
+use crate::schlinkert_pruning::get_sardinas_patterson_final_intersection;
 use memchr::memchr;
 use unicode_normalization::UnicodeNormalization;
 
 /// Normalize the Unicode of a string
-/// See https://docs.rs/unicode-normalization/latest/unicode_normalization/trait.UnicodeNormalization.html#tymethod.nfc
+/// See <https://docs.rs/unicode-normalization/latest/unicode_normalization/trait.UnicodeNormalization.html#tymethod.nfc>
 pub fn normalize_unicode(word: &str, nf: &str) -> Result<String, String> {
-    if nf.to_lowercase() == "nfc" {
-        Ok(word.nfc().collect::<String>())
-    } else if nf.to_lowercase() == "nfd" {
-        Ok(word.nfd().collect::<String>())
-    } else if nf.to_lowercase() == "nfkc" {
-        Ok(word.nfkc().collect::<String>())
-    } else if nf.to_lowercase() == "nfkd" {
-        Ok(word.nfkd().collect::<String>())
-    } else {
-        Err("Unknown Unicode Normalization Form received in arguments.\nPlease use one of the following normalization forms: nfc, nfd, nfkc, or nfkd.".to_string())
+    match nf.to_lowercase().as_str() {
+        "nfc" => Ok(word.nfc().collect()),
+        "nfd" => Ok(word.nfd().collect()),
+        "nfkc" => Ok(word.nfkc().collect()),
+        "nfkd" => Ok(word.nfkd().collect()),
+        _ => Err("Unknown Unicode Normalization Form received in arguments.\nPlease use one of the following normalization forms: nfc, nfd, nfkc, or nfkd.".to_string()),
     }
 }
 
 use icu::collator::*;
 use icu::locid::Locale;
-use icu_collator::Collator;
-use icu_collator::CollatorOptions;
-/// Sort a Vector of words a bit more carefully than Rust's
-/// default .sort(), treating capitalized letters and accented letters a
-/// bit more smart.
+/// Sort a Vector of words alphabetically, taking into account the locale of the words
 /// `.sorted()` words -> ["Zambia", "abbey", "eager", "enlever", "ezra", "zoo", "énigme"]
 /// sort_carefully words -> ["abbey", "eager", "énigme", "enlever", "ezra", "Zambia", "zoo"]
 pub fn sort_carefully(list: Vec<String>, locale: Locale) -> Vec<String> {
-    // let given_locale: Locale = match given_locale {
-    //     Some(given_locale) => locale!(given_locale),
-    //     None => locale!("en"),
-    // };
-    // let given_locale = locale!("en");
-    let mut options_l2 = CollatorOptions::new();
-    options_l2.strength = Some(Strength::Secondary);
-    let collator_l2: Collator =
-        Collator::try_new_unstable(&icu_testdata::unstable(), &locale.into(), options_l2).unwrap();
+    // https://github.com/unicode-org/icu4x/tree/main/components/collator#examples
+    let mut options = CollatorOptions::new();
+    options.strength = Some(Strength::Secondary);
+    let collator: Collator = Collator::try_new(&locale.into(), options).unwrap();
+
     let mut newly_sorted_list = list;
-    newly_sorted_list.sort_unstable_by(|a, b| collator_l2.compare(a, b));
+    newly_sorted_list.sort_unstable_by(|a, b| collator.compare(a, b));
     newly_sorted_list
 }
 
@@ -92,7 +80,7 @@ pub fn delete_before_first_char(s: &str, ch: char) -> &str {
 /// [a separate repo](https://github.com/sts10/splitter/blob/main/src/lib.rs).
 pub fn delete_after_first_char(s: &str, ch: char) -> &str {
     match memchr(ch as u8, s.as_bytes()) {
-        None => s, // not found => return the whole string
+        None => s, // delimiting character not found in string s, so return the whole string
         Some(pos) => &s[0..pos],
     }
 }
@@ -145,11 +133,41 @@ pub fn guarantee_maximum_prefix_length(
 /// Executes Schlinkert prune. Attempts to make list uniquely decodable
 /// by removing the fewest number of code words possible. Adapted from
 /// Sardinas-Patterson algorithm.
+/// Runs word list both as given and with each word reversed, preferring
+/// which ever preserves more words from the given list.
 pub fn schlinkert_prune(list: &[String]) -> Vec<String> {
-    let offenders_to_remove = get_sardinas_patterson_final_intersection(list);
+    // Clumsily clone the list into a new variable.
     let mut new_list = list.to_owned();
-    new_list.retain(|x| !offenders_to_remove.contains(x));
+    // First, simply find the "offenders" with the list as given.
+    let offenders_to_remove_forwards = get_sardinas_patterson_final_intersection(list);
+    // Now, reverse all words before running the Schlinkert prune.
+    // This will give a different list of offending words -- and potentially FEWER
+    // than running the prune forwards. (We call reverse_all_words function
+    // twice because we have to un-reverse all the offending words at the end.)
+    let offenders_to_remove_backwards = reverse_all_words(
+        &get_sardinas_patterson_final_intersection(&reverse_all_words(list)),
+    );
+    // If running the prune on the reversed words yielded fewer offenders
+    // we'll remove those offending words, since our goal is to remove
+    // the fewest number of words as possible.
+    if offenders_to_remove_forwards.len() <= offenders_to_remove_backwards.len() {
+        new_list.retain(|x| !offenders_to_remove_forwards.contains(x));
+    } else {
+        new_list.retain(|x| !offenders_to_remove_backwards.contains(x));
+    }
     new_list
+}
+
+/// Reverse all words on given list. For example,
+/// `["hotdog", "hamburger", "alligator"]` becomes
+/// `["godtoh", "regrubmah", "rotagilla"]`
+/// Uses graphemes to ensure it handles accented characters correctly.
+pub fn reverse_all_words(list: &[String]) -> Vec<String> {
+    let mut reversed_list = vec![];
+    for word in list {
+        reversed_list.push(word.graphemes(true).rev().collect::<String>());
+    }
+    reversed_list
 }
 
 use unicode_segmentation::UnicodeSegmentation;

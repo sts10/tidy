@@ -1,16 +1,24 @@
-//! This is a (rather clumsily) implementation of the Sardinas-Patterson algorithm
-//! by Sam Schlinkert.
-//! The goal is to check if a word list (`c`) is uniquely decodable.
-//!
-//! I followed
-//! <https://github.com/danhales/blog-sardinas-patterson/blob/master/index.ipynb>
-//! very closely. Since then, other contributors have refactored it.
 use std::collections::HashSet;
 
-/// Return true if the list is uniquely decodable, false if not. I
-/// don't _think_ we need to check reversed words in this case.
-pub fn is_uniquely_decodable<T: AsRef<str>>(c: &[T]) -> bool {
-    sardinas_patterson_theorem(c.iter().map(|f| f.as_ref()).collect())
+/// Return a Vector of words that "caused" the Sardinas-Patterson algorithm to
+/// determine that this list was not uniquely decodable.
+/// These "offending" words can then be removed from the original
+/// list to, theoretically, make the list uniquely decodable.
+pub fn get_sardinas_patterson_final_intersection<T: AsRef<str>>(c: &[T]) -> Vec<String> {
+    // Convert c to a HashSet, I think
+    let c = c.iter().map(|f| f.as_ref()).collect();
+
+    let c_infinity = generate_c_infinity_with_a_halt_break(&c);
+    // We want to collect a list of words that "caused" the Sardinas-Patterson algorithm
+    // to determine that this list was not uniquely decodable.
+    // If the given list is in fact uniquely decodable, this list of words will be empty.
+    // If there are words in the list, we'll return those to src/lib to be
+    // removed from the final list.
+    let final_intersection = c.intersection(&c_infinity);
+    Vec::from_iter(final_intersection)
+        .iter()
+        .map(|w| w.to_string())
+        .collect()
 }
 
 /// Generate c for any number n
@@ -51,10 +59,4 @@ fn generate_c_infinity_with_a_halt_break<'a>(c: &'a HashSet<&str>) -> HashSet<&'
         }
     }
     cs
-}
-
-/// Returns true if c is uniquely decodable
-fn sardinas_patterson_theorem(c: HashSet<&str>) -> bool {
-    let c_infinity = generate_c_infinity_with_a_halt_break(&c);
-    c.is_disjoint(&c_infinity)
 }

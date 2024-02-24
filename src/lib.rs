@@ -1,6 +1,7 @@
 use icu::locid::Locale;
 use rand::seq::SliceRandom;
 use rand::thread_rng;
+pub mod cards;
 pub mod dice;
 pub mod display_information;
 pub mod edit_distance;
@@ -8,7 +9,7 @@ pub mod file_readers;
 pub mod file_writer;
 pub mod list_manipulations;
 pub mod parsers;
-pub mod sardinas_patterson_pruning;
+pub mod schlinkert_pruning;
 use crate::list_manipulations::*;
 
 #[derive(Default, Debug, Clone)]
@@ -143,7 +144,7 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         // Trim new word, then normalize unicode if user gave an
         // nromalization form to use
         new_word = match &req.normalization_form {
-            Some(nf) => match normalize_unicode(new_word.trim(), &nf) {
+            Some(nf) => match normalize_unicode(new_word.trim(), nf) {
                 Ok(word) => word,
                 Err(e) => panic!("{}", e),
             },

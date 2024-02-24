@@ -1,5 +1,5 @@
 mod uniquely_decodable_tests {
-    use tidy::display_information::uniquely_decodable::check_decodability;
+    use tidy::display_information::uniquely_decodable::is_uniquely_decodable;
 
     #[test]
     fn can_determine_a_list_with_prefix_words_is_not_uniquely_decodable() {
@@ -8,7 +8,7 @@ mod uniquely_decodable_tests {
             .map(|x| x.to_string())
             .collect();
 
-        assert!(!check_decodability(&list));
+        assert!(!is_uniquely_decodable(&list));
 
         let list2: Vec<String> = vec![
             "spill".to_string(),
@@ -17,7 +17,7 @@ mod uniquely_decodable_tests {
             "spills".to_string(),
             "unmoved".to_string(),
         ];
-        assert!(!check_decodability(&list2));
+        assert!(!is_uniquely_decodable(&list2));
     }
 
     #[test]
@@ -39,7 +39,7 @@ mod uniquely_decodable_tests {
         .iter()
         .map(|w| w.to_string())
         .collect();
-        assert!(check_decodability(&list));
+        assert!(is_uniquely_decodable(&list));
     }
 
     #[test]
@@ -48,7 +48,7 @@ mod uniquely_decodable_tests {
             .iter()
             .map(|w| w.to_string())
             .collect();
-        assert!(!check_decodability(&list));
+        assert!(!is_uniquely_decodable(&list));
     }
 
     #[test]
@@ -57,26 +57,26 @@ mod uniquely_decodable_tests {
             .iter()
             .map(|w| w.to_string())
             .collect();
-        assert!(check_decodability(&list));
+        assert!(is_uniquely_decodable(&list));
 
         let list: Vec<String> = vec!["0", "10", "010", "101"]
             .iter()
             .map(|w| w.to_string())
             .collect();
-        assert!(!check_decodability(&list));
+        assert!(!is_uniquely_decodable(&list));
 
         let list: Vec<String> = vec!["0", "01", "011", "0111"]
             .iter()
             .map(|w| w.to_string())
             .collect();
-        assert!(check_decodability(&list));
+        assert!(is_uniquely_decodable(&list));
 
         // '0, 1, 00, 11' is not an uniquely decodable code
         let list: Vec<String> = vec!["0", "1", "00", "11"]
             .iter()
             .map(|w| w.to_string())
             .collect();
-        assert!(!check_decodability(&list));
+        assert!(!is_uniquely_decodable(&list));
     }
 
     #[test]
@@ -87,6 +87,6 @@ mod uniquely_decodable_tests {
         .iter()
         .map(|w| w.to_string())
         .collect();
-        assert!(check_decodability(&list));
+        assert!(is_uniquely_decodable(&list));
     }
 }
