@@ -528,4 +528,5 @@ Some of [my personal docs are here](https://sts10.github.io/docs/cargo-dist-tips
 
 ## Appendix: Tools that seem similar to Tidy
 -   [cook](https://github.com/giteshnxtlvl/cook): "An overpower[ed] wordlist generator, splitter, merger, finder, saver, create words permutation and combinations, apply different encoding/decoding and everything you need." Written in Go.
--   [duplict](https://github.com/nil0x42/duplicut): "Remove duplicates from MASSIVE wordlist, without sorting it". Seems to indeed be much faster (10x) than `tidy --no-sort` for large word lists.
+-   [duplict](https://github.com/nil0x42/duplicut): "Remove duplicates from MASSIVE wordlist, without sorting it". Seems to indeed be much faster (approximately 10x) than `tidy --no-sort` for de-duplicating large word lists. Written in C.
+-   [wordlist-knife](https://github.com/kazkansouh/wordlist-knife): "Versatile tool for managing wordlists." Written in Python.
