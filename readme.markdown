@@ -14,9 +14,11 @@ Tidy also can make word lists more "typo-resistant" by enforcing a minimum edit 
 
 Tidy can be used to **create new word lists** (for example, if given more than one list, Tidy will combine and de-duplicate them) with desirable qualities. You can obviously **edit** existing word lists.
 
-If you want to _audit_ an existing word list, Tidy can do that, but I'd suggest using my related [Word List Auditor](https://github.com/sts10/wla).
+### Other resources
+* If you want to _audit_ an existing word list, Tidy can do that, but I'd suggest using my related [Word List Auditor](https://github.com/sts10/wla).
+* If you just want some word lists, you can check out my [Orchard Street Wordlists](https://github.com/sts10/orchard-street-wordlists).
 
-## Features
+## Tidy's features
 
 Given a text file with one word per line, this tool will create a new word list in which...
 
@@ -131,7 +133,8 @@ Options:
 
       --locale <LOCALE>
           Specify a locale for words on the list. Aids with sorting. Examples: en-US,
-          es-ES. Defaults to system LANG. If LANG environmental variable is not set, uses en-US
+          es-ES. Defaults to system LANG. If LANG environmental variable is not set,
+          uses en-US
 
   -l, --lowercase
           Lowercase all words on new list
