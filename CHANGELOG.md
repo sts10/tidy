@@ -1,3 +1,11 @@
+# v0.3.9
+
+* Update all dependencies that have new versions
+* Uses version 0.14.1 of cargo-dist to create release binaries and a shell installation script.
+
+# v0.3.8
+
+* Uses version 0.8.0 of cargo-dist to create release binaries and a shell installation script.
 # v0.3.8
 
 * Uses version 0.8.0 of cargo-dist to create release binaries and a shell installation script.
