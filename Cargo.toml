@@ -10,11 +10,11 @@ description = "Combine and clean word lists"
 categories = ["command-line-utilities"]
 
 [dependencies]
-clap = { version = "4.4.2", features = ["derive"] }
-memchr = "2.5.0"
+clap = { version = "4.5.4", features = ["derive"] }
+memchr = "2.7.2"
 radix_fmt = "1.0.0"
 rand = "0.8.5"
-itertools = "0.10.5"
+itertools = "0.13.0"
 unicode-normalization = "0.1.22"
 unicode-segmentation = "1.10.1"
 icu = "1.4.0"
