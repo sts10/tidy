@@ -15,6 +15,7 @@
 -   [Monero's word list](https://github.com/monero-project/monero/blob/master/src/mnemonics/english.h) (1,626 words) (h/t [atoponce](https://www.reddit.com/r/Passwords/comments/sqrymt/comment/hwnfb94/))
 -   [Mnemonicode](https://github.com/schollz/mnemonicode/blob/master/word_list.go) is another word list optimized for pronunciation. I believe [croc](https://github.com/schollz/croc), a file transferring tool, uses it.
 -   [Magic Wormhole](https://github.com/magic-wormhole/magic-wormhole/), a tool for transferring files, uses [a version of the PGP Word List](https://github.com/magic-wormhole/magic-wormhole/blob/master/src/wormhole/_wordlist.py), which specifically tries to use pairs of words that are phonetically distinct.
+-   [Wagashi](https://codeberg.org/azukitofu/wagashi) is a set of new, short word lists in English. They also offer emoji lists.
 -   [simple1024](https://github.com/pera/simple1024) is a word list with 1024 common English words, an alternative to EFF's short word lists.
 
 ## Pretty long word lists
