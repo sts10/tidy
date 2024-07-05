@@ -32,14 +32,33 @@ pub fn sort_carefully(list: Vec<String>, locale: Locale) -> Vec<String> {
     newly_sorted_list
 }
 
-/// Sort by word length, with longest words first. First sorts word alphabetically, respecting
-/// inputted locale. Since the latter sort is a stable sort, I think this should work.
+/// Sort by word length, with longest words first. For words of equal length, sorts
+/// word alphabetically, respecting inputted locale.
 pub fn sort_by_length(list: Vec<String>, locale: Locale) -> Vec<String> {
-    // First, sort words alphabetically, respecting locale
-    let mut list = sort_carefully(list, locale);
-    // Now sort by word length, putting longer words first.
-    list.sort_by(|word_a, word_b| count_characters(word_b).cmp(&count_characters(word_a)));
+    let mut options = CollatorOptions::new();
+    options.strength = Some(Strength::Secondary);
+    let collator: Collator = Collator::try_new(&locale.into(), options).unwrap();
+
+    let mut list = list;
+    list.sort_by(|word_a, word_b| compare_by_length_then_alphabetically(word_a, word_b, &collator));
     list
+}
+
+use std::cmp::Ordering;
+/// Orders `word1` and `word2` first based on word length (character count), and then
+/// alphabetically
+fn compare_by_length_then_alphabetically(
+    word1: &str,
+    word2: &str,
+    collator: &Collator,
+) -> Ordering {
+    // Compare on word length first
+    match count_characters(word2).cmp(&count_characters(word1)) {
+        Ordering::Greater => Ordering::Greater,
+        Ordering::Less => Ordering::Less,
+        // if equal length, compare alphabetically with locale-aware collator
+        Ordering::Equal => collator.compare(word1, word2),
+    }
 }
 
 /// Given a String (a word), delete all integers from the word.
