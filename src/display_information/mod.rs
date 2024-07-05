@@ -334,7 +334,7 @@ use crate::edit_distance::find_edit_distance;
 /// Calculate the shortest edit distance between any two words on the list.
 fn find_shortest_edit_distance(list: &[String]) -> usize {
     // This use of max_value is smelly, but not sure I know how to do it better.
-    let mut shortest_edit_distance = u32::max_value();
+    let mut shortest_edit_distance = u32::MAX;
     // I think I can cheat and only go through half of the list here
     for word1 in list[0..(list.len() / 2)].iter() {
         for word2 in list {
