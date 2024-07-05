@@ -155,6 +155,9 @@ Options:
   -m, --minimum-word-length <MINIMUM_LENGTH>
           Set minimum word length
 
+      --sort-by-length
+          Sort by word length, with longest words first. First sorts words alphabetically, respecting inputted locale
+
   -O, --no-sort
           Do NOT sort outputted list alphabetically. Preserves original list order. Note
           that duplicate lines and blank lines will still be removed

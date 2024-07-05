@@ -18,6 +18,7 @@ pub struct TidyRequest {
     pub take_first: Option<usize>,
     pub take_rand: Option<usize>,
     pub sort_alphabetically: bool,
+    pub sort_by_length: bool,
     pub ignore_after_delimiter: Option<char>,
     pub ignore_before_delimiter: Option<char>,
     pub normalization_form: Option<String>,
@@ -303,7 +304,7 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     // Remove duplicate words
     tidied_list = dedup_without_sorting(&mut tidied_list);
 
-    // User can choose to print a limited number of  words from nearly finished (but still
+    // User can choose to print a limited number of words from nearly finished (but still
     // unsorted) list.
     // Can do so from the beginning of the nearly finished list...
     tidied_list = match req.print_first {
@@ -336,6 +337,15 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
             .expect("Error: given locale is not parse-able. Try form similar to en-US or es-ES.");
         // Now use that Locale to sort the list more carefully
         tidied_list = sort_carefully(tidied_list, locale);
+    }
+    if req.sort_by_length {
+        // First, parse the given locale into a valid Locale
+        let locale: Locale = req
+            .locale
+            .parse()
+            .expect("Error: given locale is not parse-able. Try form similar to en-US or es-ES.");
+        eprintln!("Calling sort_by_length");
+        tidied_list = sort_by_length(tidied_list, locale);
     }
     // And remove duplicates one more time
     tidied_list = dedup_without_sorting(&mut tidied_list);

@@ -126,9 +126,14 @@ struct Args {
     #[clap(short = 'm', long = "minimum-word-length")]
     minimum_length: Option<usize>,
 
+    /// Sort by word length, with longest words first. First sorts words
+    /// alphabetically, respecting inputted locale.
+    #[clap(long = "sort-by-length", conflicts_with = "no_alpha_sort")]
+    sort_by_length: bool,
+
     /// Do NOT sort outputted list alphabetically. Preserves original list order.
     /// Note that duplicate lines and blank lines will still be removed.
-    #[clap(short = 'O', long = "no-sort")]
+    #[clap(short = 'O', long = "no-sort", conflicts_with = "sort_by_length")]
     no_alpha_sort: bool,
 
     /// Normalize Unicode of all characters of all words. Accepts nfc, nfd, nfkc, or nfkd (case
@@ -347,6 +352,7 @@ fn main() -> Result<(), String> {
         take_first: opt.take_first,
         take_rand: opt.take_rand,
         sort_alphabetically: !opt.no_alpha_sort,
+        sort_by_length: opt.sort_by_length,
         ignore_after_delimiter: opt.ignore_after_delimiter,
         ignore_before_delimiter: opt.ignore_before_delimiter,
         to_lowercase: opt.to_lowercase,
