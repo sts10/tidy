@@ -20,6 +20,7 @@ mod list_manipulation_tests {
                 "apple",
                 "sécréter",
                 "séc",
+                "actor",
             ]
             .iter()
             .map(|x| x.to_string())
@@ -104,7 +105,7 @@ mod list_manipulation_tests {
             ..Default::default()
         };
         let new_list = tidy_list(this_tidy_request);
-        assert!(new_list[0] == "addiction".to_string());
+        assert!(new_list[0] == "actor".to_string());
         assert!(new_list.contains(&"station".to_string()));
         assert!(new_list[new_list.len() - 1] == "zookeeper".to_string());
     }
@@ -119,7 +120,20 @@ mod list_manipulation_tests {
         let new_list = tidy_list(this_tidy_request);
         assert!(new_list[0] == "zookeeper".to_string());
         assert!(new_list.contains(&"apple".to_string()));
-        assert_eq!(new_list[new_list.len() - 3], "apple".to_string());
+        assert_eq!(new_list[new_list.len() - 4], "apple".to_string());
+    }
+
+    #[test]
+    fn can_sort_by_length() {
+        let this_tidy_request = TidyRequest {
+            list: make_lists().0,
+            sort_by_length: true,
+            locale: "en-US".to_string(),
+            ..Default::default()
+        };
+        let new_list = tidy_list(this_tidy_request);
+        assert!(new_list[0] == "stationary".to_string());
+        assert!(new_list[1] == "addiction".to_string());
     }
 
     #[test]

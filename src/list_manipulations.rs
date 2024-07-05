@@ -38,7 +38,7 @@ pub fn sort_by_length(list: Vec<String>, locale: Locale) -> Vec<String> {
     // First, sort words alphabetically, respecting locale
     let mut list = sort_carefully(list, locale);
     // Now sort by word length, putting longer words first.
-    list.sort_by(|word_a, word_b| word_b.len().cmp(&word_a.len()));
+    list.sort_by(|word_a, word_b| count_characters(word_b).cmp(&count_characters(word_a)));
     list
 }
 
