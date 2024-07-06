@@ -35,6 +35,7 @@ pub fn sort_carefully(list: Vec<String>, locale: Locale) -> Vec<String> {
 /// Sort by word length, with longest words first. For words of equal length, sorts
 /// word alphabetically, respecting inputted locale.
 pub fn sort_by_length(list: Vec<String>, locale: Locale) -> Vec<String> {
+    // Set up the collator again
     let mut options = CollatorOptions::new();
     options.strength = Some(Strength::Secondary);
     let collator: Collator = Collator::try_new(&locale.into(), options).unwrap();
