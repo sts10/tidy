@@ -40,25 +40,14 @@ pub fn sort_by_length(list: Vec<String>, locale: Locale) -> Vec<String> {
     let collator: Collator = Collator::try_new(&locale.into(), options).unwrap();
 
     let mut list = list;
-    list.sort_by(|word_a, word_b| compare_by_length_then_alphabetically(word_a, word_b, &collator));
+    // Order by count_characters(w) descending, then within that,
+    // alphabetically
+    list.sort_by(|word1, word2| {
+        count_characters(word2)
+            .cmp(&count_characters(word1))
+            .then_with(|| collator.compare(word1, word2))
+    });
     list
-}
-
-use std::cmp::Ordering;
-/// Orders `word1` and `word2` first based on word length (character count), and then
-/// alphabetically
-fn compare_by_length_then_alphabetically(
-    word1: &str,
-    word2: &str,
-    collator: &Collator,
-) -> Ordering {
-    // Compare on word length first
-    match count_characters(word2).cmp(&count_characters(word1)) {
-        Ordering::Greater => Ordering::Greater,
-        Ordering::Less => Ordering::Less,
-        // if equal length, compare alphabetically with locale-aware collator
-        Ordering::Equal => collator.compare(word1, word2),
-    }
 }
 
 /// Given a String (a word), delete all integers from the word.
