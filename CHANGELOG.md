@@ -1,3 +1,7 @@
+# v0.3.10 
+
+* Adds a new option to sort words by length (`--sort-by-length`). (Thanks to @latk for help with this work.) See [this blog post](https://sts10.github.io/2024/07/06/double-sorting.html) for more about this new feature.
+
 # v0.3.9
 
 * Update all dependencies that have new versions
