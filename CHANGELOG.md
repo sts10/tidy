@@ -1,4 +1,4 @@
-# v0.3.11
+# v0.3.12
 
 * Upgrades some dependencies, including the version of cargo-dist used.
 
