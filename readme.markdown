@@ -331,14 +331,6 @@ Check the [GitHub Releases page](https://github.com/sts10/tidy/releases) for bin
 
 To install the executable on a Linux/macOS machine, download the `tidy` executable and move it to somewhere in your `$PATH`, like `$HOME/.local/bin` (you can do this on the command line with something like `mv ~/Downloads/tidy ~/.local/bin/`).
 
-## For Tidy developers
-
-* Run all code tests: `cargo test`
-* Generate docs: `cargo doc --document-private-items --no-deps`. Add `--open` flag to open docs after generation. Locally, docs are printed to `./target/doc/tidy/index.html`.
-* Check license compatibility of Tidy's dependencies: `cargo deny check licenses` (requires that you [have cargo-deny installed locally](https://github.com/EmbarkStudios/cargo-deny#install-cargo-deny))
-
-Pull Requests welcome!
-
 ## Tidy can print attributes about a word list
 
 **Note when using Tidy to audit a list**: Tidy will remove blank lines and duplicate lines (words) _before_ calculating these list attributes. For example, if you're 4,000-word list has, say, 5 duplicate words, Tidy will report that the list has 3,995 words. No warning of duplicate words is given.
@@ -527,11 +519,19 @@ Tidy's function for removing characters on either side of a given delimiter uses
 
 See [this repo](https://github.com/sts10/splitter) for more information.
 
-## For developers: How to create a release
+## For Tidy developers
+
+* Run all code tests: `cargo test`
+* Generate docs: `cargo doc --document-private-items --no-deps`. Add `--open` flag to open docs after generation. Locally, docs are printed to `./target/doc/tidy/index.html`.
+* Check license compatibility of Tidy's dependencies: `cargo deny check licenses` (requires that you [have cargo-deny installed locally](https://github.com/EmbarkStudios/cargo-deny#install-cargo-deny))
+
+Pull Requests welcome!
+
+### How to create a release
 
 This project uses [cargo-dist](https://opensource.axo.dev/cargo-dist/) to create releases.
 
-Some of [my personal docs are here](https://sts10.github.io/docs/cargo-dist-tips.html); but basically, `cargo install cargo-dist`. When you're ready to cut a new release, test the current state of the project with `cargo dist build` and `cargo dist plan`. If that went well, create a new git tag that matches the current project version in `Cargo.toml` with `git tag vX.X.X`. Finally, run `git push --tags` to kick off the release process. GitHub will handle it from here -- check your project's GitHub Releases page in about 5 to 10 minutes.
+Some of [my personal docs are here](https://sts10.github.io/docs/cargo-dist-tips.html); but basically, `cargo install cargo-dist`. When you're ready to cut a new release, test the current state of the project with `dist build` and `dist plan`. If that went well, create a new git tag that matches the current project version in `Cargo.toml` with `git tag vX.X.X`. Finally, run `git push --tags` to kick off the release process. GitHub will handle it from here -- check your project's GitHub Releases page in about 5 to 10 minutes.
 
 ## Appendix: Tools that seem similar to Tidy
 -   [cook](https://github.com/giteshnxtlvl/cook): "An overpower[ed] wordlist generator, splitter, merger, finder, saver, create words permutation and combinations, apply different encoding/decoding and everything you need." Written in Go.
