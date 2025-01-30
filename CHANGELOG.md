@@ -1,3 +1,8 @@
+# v0.3.13
+
+* Upgrades rand and itertools dependencies ([#59](https://github.com/sts10/tidy/pull/59))
+* Uses latest version of cargo-dist to create new release
+
 # v0.3.12
 
 * Upgrades some dependencies, including the version of cargo-dist used.
