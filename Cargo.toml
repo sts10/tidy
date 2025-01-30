@@ -13,9 +13,8 @@ categories = ["command-line-utilities"]
 clap = { version = "4.5.18", features = ["derive"] }
 memchr = "2.7.4"
 radix_fmt = "1.0.0"
-# rand = "0.8.5"
 rand = "0.9.0"
-itertools = "0.13.0"
+itertools = "0.14.0"
 unicode-normalization = "0.1.24"
 unicode-segmentation = "1.12.0"
 icu = "1.5.0"

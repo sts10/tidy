@@ -1,4 +1,5 @@
 # Tidy
+[![](https://deps.rs/repo/github/sts10/tidy/status.svg)](https://deps.rs/repo/github/sts10/tidy)
 
 A command-line tool for combining and cleaning large word list files.
 
