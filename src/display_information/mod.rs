@@ -306,13 +306,13 @@ fn make_list_free_of_metadata(
     }
 }
 
-use rand::seq::SliceRandom;
+use rand::prelude::IndexedRandom;
 /// Print 5 sample 6-word passphrases from the newly created
 /// word list.
 pub fn generate_samples(list: &[String]) -> Vec<String> {
     let mut samples: Vec<String> = vec![];
     for _n in 0..30 {
-        match list.choose(&mut rand::thread_rng()) {
+        match list.choose(&mut rand::rng()) {
             Some(word) => samples.push(word.to_string()),
             None => panic!("Couldn't pick a random word"),
         }

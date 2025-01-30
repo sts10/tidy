@@ -1,6 +1,6 @@
 use icu::locid::Locale;
-use rand::seq::SliceRandom;
-use rand::thread_rng;
+use rand::prelude::SliceRandom;
+use rand::rng;
 pub mod cards;
 pub mod dice;
 pub mod display_information;
@@ -81,7 +81,7 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     };
     list_to_tidy = match req.take_rand {
         Some(amount_to_take) => {
-            let mut rng = thread_rng();
+            let mut rng = rng();
             list_to_tidy.shuffle(&mut rng);
             list_to_tidy.truncate(amount_to_take);
             list_to_tidy
@@ -317,7 +317,7 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     // And/or can do so randomly
     tidied_list = match req.print_rand {
         Some(amount_to_cut) => {
-            let mut rng = thread_rng();
+            let mut rng = rng();
             tidied_list.shuffle(&mut rng);
             tidied_list.truncate(amount_to_cut);
             tidied_list
