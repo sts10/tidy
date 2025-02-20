@@ -1,3 +1,7 @@
+# v0.3.14
+* Upgrade to Rust edition 2024.
+* Reformats entire codebase.
+
 # v0.3.13
 
 * Upgrades rand and itertools dependencies ([#59](https://github.com/sts10/tidy/pull/59))
