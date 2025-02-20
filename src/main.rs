@@ -333,10 +333,14 @@ fn main() -> Result<(), String> {
         && !opt.quiet
     {
         if opt.print_first.is_some() {
-            eprintln!("RECOMMENDATION: If your input list is sorted by desirability (e.g. word frequency), consider using --whittle-to rather than --print-first if you're removing prefix words, removing suffix words, and/or doing a Schlinkert prune.\n");
+            eprintln!(
+                "RECOMMENDATION: If your input list is sorted by desirability (e.g. word frequency), consider using --whittle-to rather than --print-first if you're removing prefix words, removing suffix words, and/or doing a Schlinkert prune.\n"
+            );
         }
         if opt.print_rand.is_some() {
-            eprintln!("RECOMMENDATION: If your input list is sorted by desirability (e.g. word frequency), consider using --whittle-to rather than --print-rand if you're removing prefix words, removing suffix words, and/or doing a Schlinkert prune.\n");
+            eprintln!(
+                "RECOMMENDATION: If your input list is sorted by desirability (e.g. word frequency), consider using --whittle-to rather than --print-rand if you're removing prefix words, removing suffix words, and/or doing a Schlinkert prune.\n"
+            );
         }
     }
 

@@ -1,8 +1,8 @@
 [package]
 name = "tidy"
-version = "0.3.13"
+version = "0.3.14"
 authors = ["sts10 <sschlinkert@gmail.com>"]
-edition = "2021"
+edition = "2024"
 license = "MIT"
 readme = "readme.markdown"
 repository = "https://github.com/sts10/tidy"

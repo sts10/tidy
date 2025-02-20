@@ -15,9 +15,13 @@ pub fn validate_list_truncation_options(
 ) -> Result<(), &'static str> {
     // Check for invalid whittle_to requests
     if whittle_to.is_some() && cut_to.is_some() {
-        Err("Error: Can not specify BOTH a 'cut to' and 'whittle to' option. Please only use one of these two.")
+        Err(
+            "Error: Can not specify BOTH a 'cut to' and 'whittle to' option. Please only use one of these two.",
+        )
     } else if whittle_to.is_some() && (take_first.is_some() || take_rand.is_some()) {
-        Err("Error: Can not specify BOTH a 'whittle to' amount and a 'take first' or 'take rand' amount. Please only specify a whittle-to amount or a take amount.")
+        Err(
+            "Error: Can not specify BOTH a 'whittle to' amount and a 'take first' or 'take rand' amount. Please only specify a whittle-to amount or a take amount.",
+        )
     } else {
         Ok(())
     }
