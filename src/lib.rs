@@ -194,14 +194,16 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         // IF user has chosen to ignore any metadata, these should be the
         // first edits that we do.
         if req.should_remove_nonascii {
-            // https://doc.rust-lang.org/std/primitive.char.html#method.is_ascii
-            if new_word.chars().any(|chr| !chr.is_ascii()) {
+            // https://doc.rust-lang.org/std/primitive.str.html#method.is_ascii
+            if !new_word.is_ascii() {
                 // If we're here, that means we already know that we
                 // do NOT want to add this word to our ouputted list.
                 // So we can just skip to the next word in our loop.
                 continue;
             }
         }
+        // For these other checks, we have to iterate through every individual
+        // character (char) of each word
         if req.should_remove_nonalphanumeric && new_word.chars().any(|c| !c.is_alphanumeric()) {
             continue;
         }

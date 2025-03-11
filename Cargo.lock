@@ -823,7 +823,7 @@ dependencies = [
 
 [[package]]
 name = "tidy"
-version = "0.3.14"
+version = "0.3.15"
 dependencies = [
  "clap",
  "icu",
