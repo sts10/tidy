@@ -16,8 +16,9 @@ pub fn normalize_unicode(word: &str, nf: &str) -> Result<String, String> {
     }
 }
 
+use icu::collator::options::CollatorOptions;
 use icu::collator::*;
-use icu::locid::Locale;
+// use icu::locid::Locale;
 /// Sort a Vector of words alphabetically, taking into account the locale of the words
 /// `.sorted()` words -> ["Zambia", "abbey", "eager", "enlever", "ezra", "zoo", "énigme"]
 /// sort_carefully words -> ["abbey", "eager", "énigme", "enlever", "ezra", "Zambia", "zoo"]

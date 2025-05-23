@@ -1,4 +1,8 @@
-use icu::locid::Locale;
+use icu::collator::options;
+
+use icu::collator::options::CollatorOptions;
+// use icu::locid::Locale;
+use icu::locale::locale;
 use rand::prelude::SliceRandom;
 use rand::rng;
 pub mod cards;
