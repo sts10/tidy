@@ -2,6 +2,7 @@
 * Fixes error when parsing system language/locale! Use "-" rather than underscores ("\_")!
 
 # v0.3.15
+**WARNING:** Do NOT use this release. Has bug when parsing detected system language.
 * Upgrades `icu` crate dependency to latest version, v2.0. Completes #61.
 
 # v0.3.14
