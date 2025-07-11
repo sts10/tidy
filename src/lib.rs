@@ -336,9 +336,7 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
 
         // First, parse the given locale into a valid Locale
         let loc = req.locale.to_string();
-        let loc: Locale = loc
-            .parse()
-            .expect("Error: given locale is not parse-able. Try form similar to en-US or es-ES.");
+        let loc: Locale = loc.parse().expect("Error: Given locale is not parse-able. Trying using form like 'en-US'; do not use underscores.");
 
         // Now use that Locale to sort the list more carefully
         tidied_list = sort_carefully(tidied_list, loc);
@@ -346,9 +344,7 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
     if req.sort_by_length {
         // First, parse the given locale into a valid Locale
         let loc = req.locale.to_string();
-        let loc: Locale = loc
-            .parse()
-            .expect("Error: given locale is not parse-able. Try form similar to en-US or es-ES.");
+        let loc: Locale = loc.parse().expect("Error: given locale is not parse-able. Trying using form like 'en-US'; do not use underscores.");
 
         eprintln!("Calling sort_by_length");
         tidied_list = sort_by_length(tidied_list, loc);

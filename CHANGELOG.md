@@ -1,3 +1,6 @@
+# v0.3.16
+* Fixes error when parsing system language/locale! Use "-" rather than underscores ("\_")!
+
 # v0.3.15
 * Upgrades `icu` crate dependency to latest version, v2.0. Completes #61.
 

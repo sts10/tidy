@@ -364,7 +364,10 @@ fn main() -> Result<(), String> {
         locale: match opt.locale {
             Some(lang) => lang,
             None => match get_system_lang() {
-                Some(lang) => lang,
+                Some(lang) => {
+                    println!("Using system lang {}", lang);
+                    lang.replace("_", "-")
+                }
                 None => "en-US".to_string(),
             },
         },
