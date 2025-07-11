@@ -1,3 +1,6 @@
+# v0.3.15
+* Upgrades `icu` crate dependency to latest version, v2.0. Completes #61.
+
 # v0.3.14
 * Upgrade to Rust edition 2024.
 * Reformats entire codebase.
