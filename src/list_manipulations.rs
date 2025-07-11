@@ -16,17 +16,20 @@ pub fn normalize_unicode(word: &str, nf: &str) -> Result<String, String> {
     }
 }
 
-use icu::collator::options::CollatorOptions;
-use icu::collator::*;
-// use icu::locid::Locale;
+// use core::cmp::Ordering;
+use icu::collator::{options::*, *};
+// use icu::locale::locale;
+use icu::locale::Locale;
 /// Sort a Vector of words alphabetically, taking into account the locale of the words
 /// `.sorted()` words -> ["Zambia", "abbey", "eager", "enlever", "ezra", "zoo", "énigme"]
 /// sort_carefully words -> ["abbey", "eager", "énigme", "enlever", "ezra", "Zambia", "zoo"]
-pub fn sort_carefully(list: Vec<String>, locale: Locale) -> Vec<String> {
-    // https://github.com/unicode-org/icu4x/tree/main/components/collator#examples
-    let mut options = CollatorOptions::new();
-    options.strength = Some(Strength::Secondary);
-    let collator: Collator = Collator::try_new(&locale.into(), options).unwrap();
+pub fn sort_carefully(list: Vec<String>, loc: Locale) -> Vec<String> {
+    // Examples:  https://github.com/unicode-org/icu4x/tree/main/components/collator#examples
+    // Reference: https://docs.rs/icu/latest/icu/collator/index.html
+    //            https://docs.rs/icu/latest/icu/locale/struct.Locale.html
+    let mut options = CollatorOptions::default();
+    options.strength = Some(Strength::Secondary); // Note this is not the locally defined passphrase Strength!
+    let collator = Collator::try_new(loc.into(), options).unwrap();
 
     let mut newly_sorted_list = list;
     newly_sorted_list.sort_by(|a, b| collator.compare(a, b));
@@ -35,11 +38,12 @@ pub fn sort_carefully(list: Vec<String>, locale: Locale) -> Vec<String> {
 
 /// Sort by word length, with longest words first. For words of equal length, sorts
 /// word alphabetically, respecting inputted locale.
-pub fn sort_by_length(list: Vec<String>, locale: Locale) -> Vec<String> {
+pub fn sort_by_length(list: Vec<String>, loc: Locale) -> Vec<String> {
     // Set up the collator again
-    let mut options = CollatorOptions::new();
+    let mut options = CollatorOptions::default();
     options.strength = Some(Strength::Secondary);
-    let collator: Collator = Collator::try_new(&locale.into(), options).unwrap();
+    // let collator = Collator::try_new(locale, options).unwrap();
+    let collator = Collator::try_new(loc.into(), options).unwrap();
 
     let mut list = list;
     // Order by count_characters(w) descending, then within that,

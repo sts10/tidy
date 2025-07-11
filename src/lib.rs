@@ -1,8 +1,6 @@
-use icu::collator::options;
-
-use icu::collator::options::CollatorOptions;
-// use icu::locid::Locale;
-use icu::locale::locale;
+// use core::cmp::Ordering;
+use icu::locale::Locale;
+// use icu::locale::locale;
 use rand::prelude::SliceRandom;
 use rand::rng;
 pub mod cards;
@@ -337,21 +335,23 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         // accented characters very well.
 
         // First, parse the given locale into a valid Locale
-        let locale: Locale = req
-            .locale
+        let loc = req.locale.to_string();
+        let loc: Locale = loc
             .parse()
             .expect("Error: given locale is not parse-able. Try form similar to en-US or es-ES.");
+
         // Now use that Locale to sort the list more carefully
-        tidied_list = sort_carefully(tidied_list, locale);
+        tidied_list = sort_carefully(tidied_list, loc);
     }
     if req.sort_by_length {
         // First, parse the given locale into a valid Locale
-        let locale: Locale = req
-            .locale
+        let loc = req.locale.to_string();
+        let loc: Locale = loc
             .parse()
             .expect("Error: given locale is not parse-able. Try form similar to en-US or es-ES.");
+
         eprintln!("Calling sort_by_length");
-        tidied_list = sort_by_length(tidied_list, locale);
+        tidied_list = sort_by_length(tidied_list, loc);
     }
     // And remove duplicates one more time
     tidied_list = dedup_without_sorting(&mut tidied_list);
