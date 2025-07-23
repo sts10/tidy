@@ -1,3 +1,6 @@
+# v0.3.17
+* Uses new version of `cargo-dist` (v0.28.2) to cut a fresh release, including binaries.
+
 # v0.3.16
 * Fixes error when parsing system language/locale! Use "-" rather than underscores ("\_")!
 
