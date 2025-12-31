@@ -9,9 +9,9 @@ A command-line tool for combining and cleaning large word list files.
 
 Tidy aims to help users create "_better_" word lists -- generally word lists that will be used to create passphrases like "block insoluble cardinal discounts".
 
-Tidy performs basic list-cleaning operations like removing duplicate words and blank lines by default. It additionally provides various optional standardizations and filters, like lowercasing all words (`-l`), or removing words in with integers in them (`-I`), as well as protections against rare-but-possible passphrase pitfalls, such as prefix codes (`-P`) and low minimum word lengths (see below for explanations).
+Tidy performs basic list-cleaning operations like removing duplicate words and blank lines by default. It additionally provides various optional standardizations and filters, like lowercasing all words (`-l`), or removing words with integers in them (`-I`), as well as protections against rare-but-possible passphrase pitfalls, such as prefix codes (`-P`) and low minimum word lengths (see below for explanations).
 
-Tidy also can make word lists more "typo-resistant" by enforcing a minimum edit distance (`-d`), removing homophones and/or enforcing a unique prefix length (`-x`), which can allow users to auto-complete words after a specified number of characters.
+Tidy can also make word lists more "typo-resistant" by enforcing a minimum edit distance (`-d`), removing homophones and/or enforcing a unique prefix length (`-x`), which can allow users to auto-complete words after a specified number of characters.
 
 Tidy can be used to **create new word lists** (for example, if given more than one list, Tidy will combine and de-duplicate them) with desirable qualities. You can obviously **edit** existing word lists.
 
