@@ -96,6 +96,22 @@ mod list_manipulation_tests {
         assert!(new_list.len() == make_lists().0.len() - 2);
     }
 
+    // Just test this specific function, to make sure it does what it says:
+    // dedup_without_sorting -- so it should remove one of the "zoo"s
+    // but keep "aptitude" as the last word in the new_list
+    use tidy::list_manipulations::dedup_without_sorting;
+    #[test]
+    fn can_remove_duplicate_words_when_combining_two_lists() {
+        let mut list: Vec<String> = vec!["zoo", "anaconda", "zoo", "aptitude"]
+            .iter()
+            .map(|word| word.to_string())
+            .collect();
+        let new_list = dedup_without_sorting(&mut list);
+        assert!(new_list.contains(&"zoo".to_string()));
+        assert!(new_list.len() == 3);
+        assert!(new_list[new_list.len() - 1] == "aptitude".to_string());
+    }
+
     #[test]
     fn can_sort_words_alphabetically() {
         let this_tidy_request = TidyRequest {
