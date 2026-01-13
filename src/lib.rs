@@ -346,7 +346,6 @@ pub fn tidy_list(req: TidyRequest) -> Vec<String> {
         let loc = req.locale.to_string();
         let loc: Locale = loc.parse().expect("Error: given locale is not parse-able. Trying using form like 'en-US'; do not use underscores.");
 
-        eprintln!("Calling sort_by_length");
         tidied_list = sort_by_length(tidied_list, loc);
     }
     // And remove duplicates one more time
