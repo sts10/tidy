@@ -1,6 +1,4 @@
-// use core::cmp::Ordering;
 use icu::locale::Locale;
-// use icu::locale::locale;
 use rand::prelude::SliceRandom;
 use rand::rng;
 pub mod cards;
