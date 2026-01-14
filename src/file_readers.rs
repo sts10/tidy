@@ -61,16 +61,17 @@ pub fn make_vec_from_filenames(
         }
         word_lists_by_file.push(word_list_from_this_file);
     }
-    // Finally, concatenate or "blend" words into one Vec<String>
+    // Finally, concatenate or "blend" words into one Vec<String>,
+    // depending on user's choice via flag
     if !concat_lists {
-        blend(&word_lists_by_file)
+        blend_lists(&word_lists_by_file)
     } else {
-        concat(word_lists_by_file)
+        concatenate_lists(word_lists_by_file)
     }
 }
 
 /// Simply concatenate word lists in the order received
-fn concat(word_lists_by_file: Vec<Vec<String>>) -> Vec<String> {
+pub fn concatenate_lists(word_lists_by_file: Vec<Vec<String>>) -> Vec<String> {
     let mut concatenated_list: Vec<String> = [].to_vec();
     for mut list in word_lists_by_file {
         concatenated_list.append(&mut list);
@@ -79,7 +80,7 @@ fn concat(word_lists_by_file: Vec<Vec<String>>) -> Vec<String> {
 }
 
 /// "Blend" words together one at a time, like dealing cards in reverse
-pub fn blend(word_lists_by_file: &[Vec<String>]) -> Vec<String> {
+pub fn blend_lists(word_lists_by_file: &[Vec<String>]) -> Vec<String> {
     let mut size_of_longest_vector = 0;
     for word_list in word_lists_by_file {
         if size_of_longest_vector < word_list.len() {
