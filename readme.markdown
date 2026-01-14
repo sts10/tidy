@@ -160,6 +160,10 @@ Options:
           Sort by word length, with longest words first. First sorts words 
           alphabetically, respecting inputted locale
 
+  --concat
+        If multiple word list files give, concatenate word lists in order given. 
+        Default behavior is to "blend" them, like dealing playing cards in reverse
+
   -O, --no-sort
           Do NOT sort outputted list alphabetically. Preserves original list order. Note
           that duplicate lines and blank lines will still be removed

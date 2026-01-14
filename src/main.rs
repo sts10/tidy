@@ -137,8 +137,8 @@ struct Args {
     no_alpha_sort: bool,
 
     /// If multiple word list files give, concatenate word lists in
-    /// order given, if multiple word lists given. Default behavior is
-    /// to "blend" them, like dealing playing cards in reverse.
+    /// order given. Default behavior is to "blend" them, like dealing
+    /// playing cards in reverse.
     #[clap(long = "concat")]
     concat_lists: bool,
 
