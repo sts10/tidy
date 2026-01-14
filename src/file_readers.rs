@@ -10,6 +10,7 @@ use std::path::PathBuf;
 /// lines and duplicate links will be handled elsewhere.)
 pub fn make_vec_from_filenames(
     filenames: &[PathBuf],
+    concat_lists: bool,
     skip_rows_start: Option<usize>,
     skip_rows_end: Option<usize>,
 ) -> Vec<String> {
@@ -60,8 +61,21 @@ pub fn make_vec_from_filenames(
         }
         word_lists_by_file.push(word_list_from_this_file);
     }
-    // Finally, "blend" words into one Vec<String>
-    blend(&word_lists_by_file)
+    // Finally, concatenate or "blend" words into one Vec<String>
+    if !concat_lists {
+        blend(&word_lists_by_file)
+    } else {
+        concat(word_lists_by_file)
+    }
+}
+
+/// Simply concatenate word lists in the order received
+fn concat(word_lists_by_file: Vec<Vec<String>>) -> Vec<String> {
+    let mut concatenated_list: Vec<String> = [].to_vec();
+    for mut list in word_lists_by_file {
+        concatenated_list.append(&mut list);
+    }
+    concatenated_list
 }
 
 /// "Blend" words together one at a time, like dealing cards in reverse

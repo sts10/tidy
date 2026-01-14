@@ -136,6 +136,12 @@ struct Args {
     #[clap(short = 'O', long = "no-sort", conflicts_with = "sort_by_length")]
     no_alpha_sort: bool,
 
+    /// If multiple word list files give, concatenate word lists in
+    /// order given, if multiple word lists given. Default behavior is
+    /// to "blend" them, like dealing playing cards in reverse.
+    #[clap(long = "concat")]
+    concat_lists: bool,
+
     /// Normalize Unicode of all characters of all words. Accepts nfc, nfd, nfkc, or nfkd (case
     /// insensitive).
     #[clap(short = 'z', long = "normalization-form")]
@@ -350,6 +356,7 @@ fn main() -> Result<(), String> {
     let this_tidy_request = TidyRequest {
         list: make_vec_from_filenames(
             &opt.inputted_word_lists,
+            opt.concat_lists,
             opt.skip_rows_start,
             opt.skip_rows_end,
         ),
@@ -386,11 +393,11 @@ fn main() -> Result<(), String> {
         // right here.
         reject_list: opt
             .reject_list
-            .map(|list_of_files| make_vec_from_filenames(&list_of_files, None, None)),
+            .map(|list_of_files| make_vec_from_filenames(&list_of_files, true, None, None)),
         // Likewise with approved word lists
         approved_list: opt
             .approved_list
-            .map(|list_of_files| make_vec_from_filenames(&list_of_files, None, None)),
+            .map(|list_of_files| make_vec_from_filenames(&list_of_files, true, None, None)),
         // And homophones
         homophones_list: opt
             .homophones_list

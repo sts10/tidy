@@ -1,3 +1,6 @@
+# v0.3.18
+* Adds new flag `--concat`. If given this flag, and Tidy is given multiple inputted word list files, Tidy will simply concatenate the lists in the order given, rather than "blend" them together. The blending is still the default behavior, as I believe that is the more common use-case. See Issue [63](https://github.com/sts10/tidy/issues/63) for more.
+
 # v0.3.17
 * Uses new version of `cargo-dist` (v0.28.2) to cut a fresh release, including binaries.
 
