@@ -1,6 +1,6 @@
 [package]
 name = "tidy"
-version = "0.3.22"
+version = "0.3.23"
 authors = ["sts10 <sschlinkert@gmail.com>"]
 edition = "2024"
 license = "MIT"
@@ -13,7 +13,7 @@ categories = ["command-line-utilities"]
 clap = { version = "4.5.18", features = ["derive"] }
 memchr = "2.7.4"
 radix_fmt = "1.0.0"
-rand = "0.9.0"
+rand = "0.10.0"
 itertools = "0.14.0"
 unicode-normalization = "0.1.24"
 unicode-segmentation = "1.12.0"

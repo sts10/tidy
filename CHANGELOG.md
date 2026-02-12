@@ -1,3 +1,6 @@
+# v0.3.23
+* Upgrade rand crate dependency to new version, v0.10.0.
+
 # v0.3.22
 * Removes a debug eprint statement.
 
