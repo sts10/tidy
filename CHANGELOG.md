@@ -1,4 +1,4 @@
-# v0.3.23
+# v0.3.24
 * Upgrade rand crate dependency to new version, v0.10.0.
 
 # v0.3.22
