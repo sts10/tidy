@@ -32,7 +32,7 @@ pub fn sort_carefully(list: Vec<String>, loc: Locale) -> Vec<String> {
     let collator = Collator::try_new(loc.into(), options).unwrap();
 
     let mut newly_sorted_list = list;
-    newly_sorted_list.sort_by(|a, b| collator.compare(a, b));
+    newly_sorted_list.sort_unstable_by(|a, b| collator.compare(a, b));
     newly_sorted_list
 }
 
